@@ -1,6 +1,0 @@
-@RpgDex_HostAddress = http://localhost:5096
-
-GET {{RpgDex_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

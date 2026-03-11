@@ -1,0 +1,16 @@
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\bin\Debug\net10.0\RpgDex.Infrastructure.deps.json
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\bin\Debug\net10.0\RpgDex.Infrastructure.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\bin\Debug\net10.0\RpgDex.Infrastructure.pdb
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\bin\Debug\net10.0\RpgDex.Domain.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\bin\Debug\net10.0\RpgDex.Domain.pdb
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\obj\Debug\net10.0\RpgDex.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\obj\Debug\net10.0\RpgDex.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\obj\Debug\net10.0\RpgDex.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\obj\Debug\net10.0\RpgDex.Infrastructure.AssemblyInfo.cs
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\obj\Debug\net10.0\RpgDex.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\obj\Debug\net10.0\RpgDex.Infrastructure.sourcelink.json
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\obj\Debug\net10.0\RpgDex.I.D2184137.Up2Date
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\obj\Debug\net10.0\RpgDex.Infrastructure.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\obj\Debug\net10.0\refint\RpgDex.Infrastructure.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\obj\Debug\net10.0\RpgDex.Infrastructure.pdb
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Infrastructure\obj\Debug\net10.0\ref\RpgDex.Infrastructure.dll

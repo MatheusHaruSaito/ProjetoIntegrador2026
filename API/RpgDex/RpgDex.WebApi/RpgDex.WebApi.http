@@ -1,0 +1,6 @@
+@RpgDex.WebApi_HostAddress = http://localhost:5279
+
+GET {{RpgDex.WebApi_HostAddress}}/CharacterController/
+Accept: application/json
+
+###

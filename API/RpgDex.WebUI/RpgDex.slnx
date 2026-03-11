@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="RpgDex.Application/RpgDex.Application.csproj" />
-  <Project Path="RpgDex.Domain/RpgDex.Domain.csproj" />
-  <Project Path="RpgDex.Infrastructure/RpgDex.Infrastructure.csproj" />
-  <Project Path="RpgDex/RpgDex.WebUI.csproj" />
-</Solution>

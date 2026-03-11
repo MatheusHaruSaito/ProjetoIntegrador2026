@@ -1,0 +1,22 @@
+@hostname = localhost
+@port = 32770
+@baseUrl = http://{{hostname}}:{{port}}
+
+POST {{baseUrl}}/api/Character
+Content-Type: application/json
+
+{
+"name": "Aragorn",
+"description": "Ranger do Norte",
+"attributes": [
+{ "name": "Força", "value": "18" },
+{ "name": "Destreza", "value": "14" }
+],
+"skills": [
+{ "name": "Sobrevivência", "level": 5 }
+]
+}
+
+### Listar Personagens (GET)
+GET {{baseUrl}}/api/Character
+Accept: application/json
