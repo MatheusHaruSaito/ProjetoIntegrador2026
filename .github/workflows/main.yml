@@ -1,0 +1,26 @@
+name: .NET Core Build e Check
+
+on:
+  push:
+    branches: [ "main" ] # Roda sempre que você envia algo para a main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0 # Ou a versão que você está usando
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+      env:
+        # Aqui o GitHub injeta o seu Secret durante o processo de build/teste
+        ConnectionStrings__MongoDbConnection: ${{ secrets.MONGODB_CONNECTION_STRING }}
