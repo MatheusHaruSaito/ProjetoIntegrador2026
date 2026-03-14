@@ -1,5 +1,5 @@
 @hostname = localhost
-@port = 32770
+@port = 32768
 @baseUrl = http://{{hostname}}:{{port}}
 
 POST {{baseUrl}}/api/Character
