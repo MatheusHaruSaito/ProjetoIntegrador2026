@@ -27,3 +27,4 @@ jobs:
       env:
         # Aqui o GitHub injeta o seu Secret durante o processo de build/teste
         ConnectionStrings__MongoDbConnection: ${{ secrets.MONGODB_CONNECTION_STRING }}
+        Jwt__Key: ${{  secrets.JWT_KEY  }}

@@ -9,5 +9,7 @@ namespace RpgDex.Aplication.Dto
         public string Name { get; set; }
         public string Description { get; set; }
         public List<AttributeDTO> Attributes { get; set; }
+        public List<SkillDTO> Skills { get; set; }
+
     }
 }

@@ -7,7 +7,7 @@ namespace RpgDex.Domain.Interfaces
 {
     public interface ICharacterRepository
     {
-        Task<Character> Create(Character character);
+        Task<Character> Post(Character character);
         Task<IEnumerable<Character>> GetAll();
     }
 }

@@ -15,7 +15,13 @@ namespace RpgDex.Aplication.Mapping
                 .NewConfig()
                 .Ignore(dest => dest.Id)
                 .Map(dest => dest.IconPath, src => "default_icon.png");
-                
+            TypeAdapterConfig<CreateUserDTO, ApplicationUser>
+                    .NewConfig()
+                    .Ignore(dest => dest.PasswordHash)
+                    .Map(dest => dest.UserName, src => src.UserName)
+                    .Map(dest => dest.Email, serc => serc.Email);
+                    
+
         }
     }
 }

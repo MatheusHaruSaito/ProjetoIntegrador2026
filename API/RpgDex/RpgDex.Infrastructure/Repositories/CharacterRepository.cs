@@ -20,7 +20,7 @@ namespace RpgDex.Infrastructure.Services
             _entitie = context.Character;
         }
 
-        public async Task<Character> Create(Character character)
+        public async Task<Character> Post(Character character)
         {
             await _entitie.InsertOneAsync(character);
 

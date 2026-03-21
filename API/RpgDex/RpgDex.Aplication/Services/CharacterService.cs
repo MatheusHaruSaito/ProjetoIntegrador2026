@@ -23,7 +23,7 @@ namespace RpgDex.Aplication.Services
             var character = request.Adapt<Character>();
             character.UserId = Guid.NewGuid(); //TEMPORARIO, MUDAR PARA O USUARIO LOGADO DEPOIS
 
-            var response =await _character.Create(character);
+            var response =await _character.Post(character);
             return response.Adapt<CharacterResponse>();
 
 

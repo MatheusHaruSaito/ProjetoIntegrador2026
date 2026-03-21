@@ -52,3 +52,11 @@ C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.WebApi\bin\Debug\
 C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.WebApi\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.WebApi\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.WebApi\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.WebApi\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.WebApi\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.WebApi\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.WebApi\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.WebApi\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.WebApi\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.WebApi\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.WebApi\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll

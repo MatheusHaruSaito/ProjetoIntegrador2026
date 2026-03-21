@@ -6,17 +6,37 @@ POST {{baseUrl}}/api/Character
 Content-Type: application/json
 
 {
-"name": "Aragorn",
-"description": "Ranger do Norte",
-"attributes": [
-{ "name": "Força", "value": "18" },
-{ "name": "Destreza", "value": "14" }
-],
-"skills": [
-{ "name": "Sobrevivência", "level": 5 }
-]
+  "Name": "Gandalf",
+  "Description": "Istar (Mago) e Portador de Narya",
+  "Attributes": [
+    { "Name": "Inteligência", "Value": "20" },
+    { "Name": "Sabedoria", "Value": "19" }
+  ],
+  "Skills": [
+    { "Name": "Arcanismo", "Value": 10 },
+    { "Name": "História", "Value": 8 }
+  ]
 }
 
 ### Listar Personagens (GET)
 GET {{baseUrl}}/api/Character
 Accept: application/json
+
+###
+POST {{baseUrl}}/api/Auth
+Content-Type: application/json
+
+{
+  "userName": "Gandalf_O_Cinzento",
+  "email": "gandalf@rpgdex.com",
+  "password": "SenhaMagica777!"
+}
+
+###
+GET {{baseUrl}}/api/Auth
+Content-Type: application/json
+
+{
+  "email": "gandalf@rpgdex.com",
+  "password": "SenhaMagica777 !"
+}
