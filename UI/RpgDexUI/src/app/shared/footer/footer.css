@@ -1,0 +1,96 @@
+.footer {
+  background-color: #1a1a2e; 
+  color: #ffffff;
+  padding: 60px 0 0 0;
+  border-top: 1px solid rgba(158, 116, 208, 0.1);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer__grid {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding-bottom: 50px;
+}
+
+.footer__brand {
+  flex: 1;
+  min-width: 250px;
+}
+
+.footer__brand .logo {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 1.8rem;
+  color: #80E2FF;
+  letter-spacing: -1px;
+  margin-bottom: 15px;
+}
+
+.footer__slogan {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  opacity: 0.6;
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+.footer__nav {
+  display: flex;
+  gap: 60px;
+}
+
+.footer__title {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #BA9FE7;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+.footer__list {
+  list-style: none;
+  padding: 0;
+}
+
+.footer__list li {
+  margin-bottom: 10px;
+}
+
+.footer__list a {
+  font-family: 'Nunito', sans-serif;
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.footer__list a:hover {
+  opacity: 1;
+  color: #80E2FF;
+  padding-left: 5px;
+}
+
+.footer__bottom {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 20px 0;
+  text-align: center;
+  font-size: 0.8rem;
+  font-family: 'Nunito', sans-serif;
+  opacity: 0.4;
+}
+
+@media (max-width: 768px) {
+  .footer__grid { flex-direction: column; text-align: center; }
+  .footer__nav { justify-content: center; }
+  .footer__brand { margin: 0 auto; }
+}
