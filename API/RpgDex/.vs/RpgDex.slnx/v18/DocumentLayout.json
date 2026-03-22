@@ -151,8 +151,7 @@
               "ViewState": "AgIAABQAAAAAAAAAAAAAwCgAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
               "WhenOpened": "2026-03-11T17:57:27.335Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -164,8 +163,7 @@
               "RelativeToolTip": "RpgDex.WebApi\\Controllers\\CharacterController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-11T17:02:55.78Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-11T17:02:55.78Z"
             },
             {
               "$type": "Document",
@@ -226,8 +224,7 @@
               "RelativeToolTip": "RpgDex.WebApi\\Controllers\\AuthController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-21T15:04:47.749Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-21T15:04:47.749Z"
             },
             {
               "$type": "Document",
@@ -239,8 +236,7 @@
               "RelativeToolTip": "RpgDex.Aplication\\RpgDex.Aplication.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-03-11T16:09:21.495Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-11T16:09:21.495Z"
             },
             {
               "$type": "Document",
@@ -312,8 +308,7 @@
               "RelativeToolTip": "RpgDex.WebApi\\RpgDex.WebApi.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-03-11T13:27:43.137Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-11T13:27:43.137Z"
             },
             {
               "$type": "Document",
@@ -445,8 +440,7 @@
               "RelativeToolTip": "RpgDex.Infrastructure\\RpgDex.Infrastructure.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-03-11T13:39:31.222Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-11T13:39:31.222Z"
             },
             {
               "$type": "Document",
@@ -458,8 +452,7 @@
               "RelativeToolTip": "RpgDex.Domain\\RpgDex.Domain.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-03-11T13:39:33.853Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-11T13:39:33.853Z"
             },
             {
               "$type": "Document",

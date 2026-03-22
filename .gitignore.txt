@@ -5,3 +5,6 @@
 **/*.user 
 **/*.dbmdl 
 **/*.jfm
+
+.dockerignore
+**/*.cache
