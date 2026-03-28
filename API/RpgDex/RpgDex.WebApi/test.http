@@ -12,6 +12,7 @@ Content-Type: application/json
     { "Name": "Inteligência", "Value": "20" },
     { "Name": "Sabedoria", "Value": "19" }
   ],
+  "UserId": "4c8a941a-47cb-4009-8692-5c7f9a08a692",
   "Skills": [
     { "Name": "Arcanismo", "Value": 10 },
     { "Name": "História", "Value": 8 }

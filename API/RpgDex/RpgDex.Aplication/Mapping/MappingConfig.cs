@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using MongoDB.Bson.Serialization;
 using RpgDex.Aplication.Dto;
 using RpgDex.Domain.Entities;
 using System;
@@ -15,11 +16,20 @@ namespace RpgDex.Aplication.Mapping
                 .NewConfig()
                 .Ignore(dest => dest.Id)
                 .Map(dest => dest.IconPath, src => "default_icon.png");
+
+            if (!BsonClassMap.IsClassMapRegistered(typeof(ApplicationUser)))
+            {
+                BsonClassMap.RegisterClassMap<ApplicationUser>(cm =>
+                {
+                    cm.AutoMap();
+                });
+            }
+
             TypeAdapterConfig<CreateUserDTO, ApplicationUser>
                     .NewConfig()
                     .Ignore(dest => dest.PasswordHash)
                     .Map(dest => dest.UserName, src => src.UserName)
-                    .Map(dest => dest.Email, serc => serc.Email);
+                    .Map(dest => dest.Email, src => src.Email);
                     
 
         }

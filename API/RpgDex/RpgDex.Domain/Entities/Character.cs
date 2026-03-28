@@ -11,7 +11,7 @@ namespace RpgDex.Domain.Entities
     {
         [BsonId]
         [BsonRepresentation(BsonType.String)]
-        public Guid Id { get; set; } = new Guid();
+        public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public string IconPath { get; set; }
         public string Name { get; set; }

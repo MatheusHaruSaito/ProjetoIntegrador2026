@@ -16,9 +16,16 @@ namespace RpgDex.WebApi.Controllers
             _characterSevice = characterSevice;
         }
         [HttpPost]
-        public async Task<CharacterResponse> CreateCharacter(CreateCharacterRequest request)
+        public async Task<ActionResult<CharacterResponse>> CreateCharacter(CreateCharacterRequest request)
         {
-            return await _characterSevice.Create(request);
+            try
+            {
+                return await _characterSevice.Create(request);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new {message = ex.Message});
+            }
         }
         [HttpGet]
         public async Task<IEnumerable<CharacterResponse>> GetAll()

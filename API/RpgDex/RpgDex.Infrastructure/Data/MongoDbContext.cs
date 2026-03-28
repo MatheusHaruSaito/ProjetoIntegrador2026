@@ -21,7 +21,7 @@ namespace RpgDex.Infrastructure.Data
         }
 
         public IMongoCollection<ApplicationUser> Users =>
-            _database.GetCollection<ApplicationUser>("Users");
+            _database.GetCollection<ApplicationUser>("applicationUsers");
         public IMongoCollection<Character> Character =>
             _database.GetCollection<Character>("Characters");
     }

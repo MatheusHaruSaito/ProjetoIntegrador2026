@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/h7+dJeQVFQ=",
+  "dgSpecHash": "9IhdYx5oqnA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj",
+  "projectFilePath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI2\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Gener\\.nuget\\packages\\aspnetcore.identity.mongodbcore\\7.0.0\\aspnetcore.identity.mongodbcore.7.0.0.nupkg.sha512",
     "C:\\Users\\Gener\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",

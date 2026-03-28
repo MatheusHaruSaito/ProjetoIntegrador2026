@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RpgDex.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1632b0b3b29b38fa4a5ff1759e48c8c5615d7609")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4e91f6ee382e245cc9594980c3a4aaa67d8ab939")]
 [assembly: System.Reflection.AssemblyProductAttribute("RpgDex.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RpgDex.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -14,8 +14,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using RpgDex.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+
+MappingConfig.Configure();
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 // Add services to the container.
 
@@ -27,6 +30,8 @@ builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
 builder.Services.AddScoped<ICharacterSevice,CharacterService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService,TokenService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 
 MappingConfig.Configure();
 

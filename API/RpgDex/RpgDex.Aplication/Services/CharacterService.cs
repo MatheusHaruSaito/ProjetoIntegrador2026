@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Identity;
 using RpgDex.Aplication.Dto;
 using RpgDex.Aplication.Interfaces;
 using RpgDex.Domain.Entities;
@@ -12,21 +13,29 @@ namespace RpgDex.Aplication.Services
     public class CharacterService : ICharacterSevice
     {
         private readonly ICharacterRepository _character;
+        private readonly IUserRepository _userRepository;
 
-        public CharacterService(ICharacterRepository character)
+        public CharacterService(ICharacterRepository character, IUserRepository userRepository)
         {
             _character = character;
+            _userRepository = userRepository;
         }
         public async Task<CharacterResponse> Create(CreateCharacterRequest request)
         {
 
+            //Converte a requisição em um objeto Character
             var character = request.Adapt<Character>();
-            character.UserId = Guid.NewGuid(); //TEMPORARIO, MUDAR PARA O USUARIO LOGADO DEPOIS
+            character.Id = Guid.NewGuid();
+            character.UserId = request.UserId;
 
-            var response =await _character.Post(character);
+            // coloca o personagem no banco
+            var response = await _character.Post(character);
+
+            //Adiciona o Personagem A lista do Usuario
+            var data = await _userRepository.PushCharacterAsync(request.UserId, response.Id);
+            if (!data) throw new Exception("Falha ao adicinar personagem ao usuario");
+
             return response.Adapt<CharacterResponse>();
-
-
         }
 
         public async Task<IEnumerable<CharacterResponse>> GetAll()
