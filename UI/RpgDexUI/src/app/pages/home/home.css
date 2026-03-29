@@ -66,9 +66,19 @@
   border-radius: 8px;
   cursor: pointer;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  transition: all 0.8s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
   font-family: 'Exo 2', sans-serif;
   text-transform: uppercase;
+}
+
+.hero__cta:hover {
+  transform: translateY(-3px); 
+  filter: brightness(1.1); 
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); 
+}
+
+.hero__cta:active {
+  transform: translateY(-1px); 
 }
 
 /* --- SELETOR DE TEMAS --- */
@@ -128,13 +138,26 @@
   border-radius: 18px;
   text-align: center;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
-  transition: transform 0.4s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid transparent;
+}
+
+.feat-card:hover {
+  transform: translateY(-12px) scale(1.02); 
+  border-color: var(--rpg-purple); 
+  box-shadow: 0 20px 40px rgba(60, 52, 137, 0.1); 
+}
+
+.feat-card:hover .feat-card__icon {
+  transform: scale(1.2) rotate(5deg); 
+  display: inline-block;
+  transition: transform 0.3s ease;
 }
 
 /* --- CTA FINAL (Layout Estável) --- */
 .cta-band {
   position: relative;
-  padding: 100px 20px;
+  padding: 60px 20px;
   text-align: center;
   overflow: hidden;
   min-height: 300px;
@@ -158,15 +181,14 @@
   color: #fff;
   font-family: 'Exo 2', sans-serif;
   font-weight: 800;
-  font-size: 2.8rem;
-  margin-bottom: 40px;
-  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+  font-size: 2.2rem; 
+  margin-bottom: 30px; 
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
-
 .btn-white {
   font-family: 'Exo 2', sans-serif;
-  padding: 20px 60px;
-  font-size: 1.2rem;
+  padding: 15px 45px;
+  font-size: 1.1rem;
   font-weight: 800;
   color: #3C3489;
   background: #fff;
@@ -174,4 +196,11 @@
   border-radius: 12px;
   cursor: pointer;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-white:hover {
+  transform: scale(1.05);
+  background-color: #f8f9fa;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
