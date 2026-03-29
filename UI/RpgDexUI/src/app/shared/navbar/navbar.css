@@ -19,17 +19,24 @@
   color: white;
   cursor: pointer;
   letter-spacing: -1px;
+  transition: transform 0.3s ease;
+  z-index: 1100;
 }
 
-.logo:hover {
-  transform: scale(1.05);
+/* Container que organiza Links e Perfil */
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  margin-left: 50px; /* Espaço após a logo */
 }
 
 .nav-links {
   display: flex;
   list-style: none;
   gap: 40px;
-  margin: 0;
+  margin: 0 auto; /* Centraliza os links no espaço disponível no desktop */
   padding: 0;
 }
 
@@ -68,9 +75,67 @@
   border: 2px solid white;
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s;
 }
 
 .user-profile:hover {
   background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+}
+
+/* --- RESPONSIVIDADE --- */
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+.menu-toggle span {
+  width: 30px;
+  height: 3px;
+  background-color: white;
+  border-radius: 3px;
+  transition: 0.3s;
+}
+
+@media (max-width: 900px) {
+  .menu-toggle {
+    display: flex;
+  }
+
+  .nav-container {
+    position: fixed;
+    top: 0;
+    right: -100%; /* Escondido fora da tela */
+    width: 280px;
+    height: 100vh;
+    background: #9e74d0; /* Cor base do seu tema */
+    flex-direction: column;
+    justify-content: center;
+    gap: 50px; /* Espaço entre a lista e o perfil no mobile */
+    margin-left: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .nav-container.active {
+    right: 0; /* Desliza para dentro */
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    gap: 30px;
+  }
+
+  /* Animação do X no botão */
+  .menu-toggle.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+  .menu-toggle.active span:nth-child(2) { opacity: 0; }
+  .menu-toggle.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
 }

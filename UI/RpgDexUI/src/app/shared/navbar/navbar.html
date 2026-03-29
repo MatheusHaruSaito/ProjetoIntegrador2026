@@ -1,11 +1,19 @@
 <nav class="main-nav">
-  <div class="logo" routerLink="/">RPGDex</div>
+  <div class="logo" routerLink="/" (click)="closeMenu()">RPGDex</div>
 
-  <ul class="nav-links">
-    <li><a routerLink="/home" routerLinkActive="active">Início</a></li>
-    <li><a routerLink="/campanhas" routerLinkActive="active">Jogar</a></li>
-    <li><a routerLink="/biblioteca" routerLinkActive="active">Biblioteca</a></li>
-  </ul>
+  <button class="menu-toggle" (click)="toggleMenu()" [class.active]="isMenuOpen">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 
-  <div class="user-profile" routerLink="/perfil"></div>
+  <div class="nav-container" [class.active]="isMenuOpen">
+    <ul class="nav-links">
+      <li><a routerLink="/home" routerLinkActive="active" (click)="closeMenu()">Início</a></li>
+      <li><a routerLink="/campanhas" routerLinkActive="active" (click)="closeMenu()">Jogar</a></li>
+      <li><a routerLink="/biblioteca" routerLinkActive="active" (click)="closeMenu()">Biblioteca</a></li>
+    </ul>
+
+    <div class="user-profile" routerLink="/perfil" (click)="closeMenu()"></div>
+  </div>
 </nav>
