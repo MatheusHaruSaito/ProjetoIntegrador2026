@@ -23,20 +23,19 @@
   z-index: 1100;
 }
 
-/* Container que organiza Links e Perfil */
 .nav-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex: 1;
-  margin-left: 50px; /* Espaço após a logo */
+  margin-left: 50px; 
 }
 
 .nav-links {
   display: flex;
   list-style: none;
   gap: 40px;
-  margin: 0 auto; /* Centraliza os links no espaço disponível no desktop */
+  margin: 0 auto; 
   padding: 0;
 }
 
@@ -83,8 +82,6 @@
   transform: scale(1.05);
 }
 
-/* --- RESPONSIVIDADE --- */
-
 .menu-toggle {
   display: none;
   flex-direction: column;
@@ -111,20 +108,20 @@
   .nav-container {
     position: fixed;
     top: 0;
-    right: -100%; /* Escondido fora da tela */
+    right: -100%; 
     width: 280px;
     height: 100vh;
-    background: #9e74d0; /* Cor base do seu tema */
+    background: #9e74d0; 
     flex-direction: column;
     justify-content: center;
-    gap: 50px; /* Espaço entre a lista e o perfil no mobile */
+    gap: 50px; 
     margin-left: 0;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
   }
 
   .nav-container.active {
-    right: 0; /* Desliza para dentro */
+    right: 0;
   }
 
   .nav-links {
@@ -134,7 +131,6 @@
     gap: 30px;
   }
 
-  /* Animação do X no botão */
   .menu-toggle.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
   .menu-toggle.active span:nth-child(2) { opacity: 0; }
   .menu-toggle.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
