@@ -1,0 +1,56 @@
+<div class="login-wrapper">
+  <div class="login-card">
+
+    <div class="login-side">
+      <div class="login-logo" routerLink="/home">RPGDex</div>
+      <div class="login-side__content">
+        <h1 class="login-side__title">Bem-vindo de Volta!</h1>
+        <p class="login-side__text">
+          Acesse sua conta para continuar suas campanhas e gerenciar seus personagens.
+        </p>
+      </div>
+      <div class="login-side__actions desktop-only">
+        <span class="login-side__small">Ainda não tem conta?</span>
+        <button class="btn-side" routerLink="/cadastro">CADASTRAR</button>
+      </div>
+    </div>
+
+    <div class="login-main">
+      <div class="login-header">
+        <h2 class="login-main__title">Entrar</h2>
+        <p class="login-main__sub">Entre com suas credenciais.</p>
+      </div>
+
+      <form class="login-form">
+        <div class="input-group">
+          <i class="fa fa-envelope icon-field"></i> 
+          <input type="email" placeholder="Email" name="email">
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-lock icon-field"></i> 
+          <input type="password" placeholder="Senha" name="password">
+        </div>
+
+        <div class="form-options">
+          <a href="#" class="forgot-link">Esqueceu a senha?</a>
+        </div>
+
+        <button type="submit" class="btn-login">ENTRAR</button>
+      </form>
+
+      <div class="login-separator">
+        <span>ou entre com</span>
+      </div>
+
+      <div class="social-logins">
+        <button class="social-btn"><i class="fa-brands fa-google"></i></button>
+        <button class="social-btn"><i class="fa-brands fa-discord"></i></button>
+        <button class="social-btn"><i class="fa-brands fa-apple"></i></button>
+      </div>
+
+      <p class="login-footer mobile-only">Novo por aqui? <a routerLink="/cadastro">Crie uma conta</a></p>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+<div class="register-wrapper">
+  <div class="register-card">
+
+    <div class="register-side">
+      <div class="register-logo" routerLink="/home">RPGDex</div>
+      <div class="register-side__content">
+        <h1 class="register-side__title">Crie sua Conta</h1>
+        <p class="register-side__text">
+          Prepare sua jornada! Organize suas mesas, personagens e história em um só lugar.
+        </p>
+      </div>
+      <div class="register-side__actions desktop-only">
+        <span class="register-side__small">Já é membro?</span>
+        <button class="btn-side" routerLink="/login">ENTRAR</button>
+      </div>
+    </div>
+
+    <div class="register-main">
+      <div class="register-header">
+        <h2 class="register-main__title">Cadastro</h2>
+        <p class="register-main__sub">Preencha os dados abaixo.</p>
+      </div>
+
+      <form class="register-form">
+        <div class="input-group">
+          <i class="fa fa-user icon-field"></i> <input type="text" placeholder="Nome de Usuário" name="userName">
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-envelope icon-field"></i> <input type="email" placeholder="Email" name="email">
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-lock icon-field"></i> <input type="password" placeholder="Senha" name="password">
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-lock icon-field"></i> <input type="password" placeholder="Confirmar Senha">
+        </div>
+
+        <div class="form-options">
+          <label class="checkbox-container">
+            <input type="checkbox" id="terms" name="terms">
+            <span class="checkmark"></span>
+            Eu aceito os <a href="#" class="terms-link">Termos de Uso</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-register">CADASTRAR</button>
+      </form>
+
+      <div class="register-separator">
+        <span>ou cadastre-se com</span>
+      </div>
+
+      <div class="social-logins">
+        <button class="social-btn"><i class="fa-brands fa-google"></i></button>
+        <button class="social-btn"><i class="fa-brands fa-discord"></i></button>
+        <button class="social-btn"><i class="fa-brands fa-apple"></i></button>
+      </div>
+
+      <p class="register-footer mobile-only">Já é membro? <a routerLink="/login">Entrar</a></p>
+
+    </div>
+  </div>
+</div>
