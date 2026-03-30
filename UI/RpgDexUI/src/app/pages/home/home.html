@@ -1,0 +1,91 @@
+<section class="hero" [style.background]="activeTheme().bg">
+  <div class="hero__grid" [style.background-image]="gridStyle()"></div>
+
+  <div class="hero__content">
+    <span
+      class="hero__tag"
+      [style.background]="activeTheme().tagBg"
+      [style.color]="activeTheme().tagC"
+    >
+      {{ activeTheme().tag }}
+    </span>
+
+    <p class="hero__phrase" [style.color]="activeTheme().phraseC">
+      {{ activeTheme().phrase }}
+    </p>
+
+    <h1
+      class="hero__title"
+      [style.font-family]="activeTheme().font"
+      [style.color]="activeTheme().titleC"
+    >
+      RPGDex
+    </h1>
+
+    <p class="hero__sub" [style.color]="activeTheme().subC">
+      A plataforma definitiva para organizar suas mesas, gerenciar fichas e mestrar todas suas
+      sessões.
+    </p>
+
+    <div class="hero__actions">
+      <button
+        class="hero__cta"
+        [style.background]="activeTheme().ctaBg"
+        [style.color]="activeTheme().ctaC"
+        routerLink="/cadastro"
+      >
+        Começar Agora
+      </button>
+    </div>
+  </div>
+
+  <div class="theme-selector">
+    <button
+      *ngFor="let theme of themes; let i = index"
+      (click)="selectTheme(i)"
+      [class.active]="i === current()"
+      class="dot"
+      [title]="theme.tag"
+    ></button>
+  </div>
+</section>
+
+<section class="features">
+  <div class="container">
+    <h2 class="features__title">Tudo que sua mesa precisa</h2>
+
+    <div class="features__grid">
+      <div class="feat-card">
+        <div class="feat-card__icon">🎲</div>
+        <h3 class="feat-card__title">Campanhas</h3>
+        <p class="feat-card__text">
+          Organize suas histórias, NPCs e sessões em um só lugar de forma intuitiva.
+        </p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card__icon">📜</div>
+        <h3 class="feat-card__title">Biblioteca</h3>
+        <p class="feat-card__text">Acesse itens, magias e monstros, salvando tudo que precisar.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-card__icon">🛡️</div>
+        <h3 class="feat-card__title">Fichas</h3>
+        <p class="feat-card__text">
+          Gerencie seus personagens com total controle e personalização.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="cta-band__bg" [style.background]="activeTheme().band"></div>
+  <div class="container cta-band__content">
+    <h2 class="cta-band__title">Pronto para rolar os dados?</h2>
+    <button class="btn-white" routerLink="/cadastro">
+      Criar Conta Grátis
+    </button>
+  </div>
+</section>

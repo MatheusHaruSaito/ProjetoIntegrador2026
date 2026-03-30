@@ -1,0 +1,137 @@
+.main-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8%;
+  height: 80px;
+  background: linear-gradient(90deg, #9e74d0 0%, #80e2ff 100%);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(158, 116, 208, 0.3);
+}
+
+.logo {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: white;
+  cursor: pointer;
+  letter-spacing: -1px;
+  transition: transform 0.3s ease;
+  z-index: 1100;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  margin-left: 50px; 
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 40px;
+  margin: 0 auto; 
+  padding: 0;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  opacity: 0.85;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  opacity: 1;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+.nav-links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+}
+
+.user-profile {
+  width: 45px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.user-profile:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.05);
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+.menu-toggle span {
+  width: 30px;
+  height: 3px;
+  background-color: white;
+  border-radius: 3px;
+  transition: 0.3s;
+}
+
+@media (max-width: 900px) {
+  .menu-toggle {
+    display: flex;
+  }
+
+  .nav-container {
+    position: fixed;
+    top: 0;
+    right: -100%; 
+    width: 280px;
+    height: 100vh;
+    background: #9e74d0; 
+    flex-direction: column;
+    justify-content: center;
+    gap: 50px; 
+    margin-left: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .nav-container.active {
+    right: 0;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    gap: 30px;
+  }
+
+  .menu-toggle.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+  .menu-toggle.active span:nth-child(2) { opacity: 0; }
+  .menu-toggle.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+}

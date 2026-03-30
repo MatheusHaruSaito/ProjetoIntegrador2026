@@ -1,1 +1,53 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --rpg-purple: #9E74D0;
+  --rpg-cyan: #80E2FF;
+  --rpg-bg: #fdfbf7;      
+  --rpg-text-dark: #3C3489; 
+  --rpg-text-body: #555555;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--rpg-bg);
+  color: var(--rpg-text-body);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  color: var(--rpg-text-dark);
+}
+
+main {
+  min-height: calc(100vh - 80px); 
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.btn-primary {
+  background: var(--rpg-purple);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Exo 2', sans-serif;
+  transition: filter 0.2s, transform 0.2s;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
