@@ -2,5 +2,4 @@
 
 GET {{RpgDex.WebApi_HostAddress}}/CharacterController/
 Accept: application/json
-
 ###

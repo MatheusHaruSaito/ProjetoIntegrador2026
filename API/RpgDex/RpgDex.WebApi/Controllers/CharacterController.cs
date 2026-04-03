@@ -28,9 +28,57 @@ namespace RpgDex.WebApi.Controllers
             }
         }
         [HttpGet]
-        public async Task<IEnumerable<CharacterResponse>> GetAll()
+        public async Task<ActionResult<IEnumerable<CharacterResponse>>> GetAll()
         {
-            return await _characterSevice.GetAll();
+            try
+            {
+                return Ok(await _characterSevice.GetAllAsync());
+
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new {message = ex.Message});
+            }
+        }
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<CharacterResponse>> GetById(Guid Id)
+        { 
+            try
+            {
+                return Ok(await _characterSevice.GetByIdAsync(Id));
+
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+        [HttpDelete("{Id}")]
+        public async Task<ActionResult<string>> Delete(Guid Id)
+        {
+            try
+            {
+                await _characterSevice.DeleteAsync(Id);
+                return Ok($"Personagem de Id: {Id} Deletado!!");
+
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+        [HttpPut]
+        public async Task<ActionResult> Update(UpdateCharacterRequest request)
+        {
+            try
+            {
+                await _characterSevice.UpdateAsync(request);
+                return Ok($"{request.Name} Foi Alterado com Sucesso!!");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
     }
 }

@@ -29,7 +29,7 @@ namespace RpgDex.Aplication.Services
             character.UserId = request.UserId;
 
             // coloca o personagem no banco
-            var response = await _character.Post(character);
+            var response = await _character.InsertAsync(character);
 
             //Adiciona o Personagem A lista do Usuario
             var data = await _userRepository.PushCharacterAsync(request.UserId, response.Id);
@@ -38,11 +38,50 @@ namespace RpgDex.Aplication.Services
             return response.Adapt<CharacterResponse>();
         }
 
-        public async Task<IEnumerable<CharacterResponse>> GetAll()
+        public async Task<bool> DeleteAsync(Guid Id)
         {
-            var characters =  await _character.GetAll();
+            //Verifica se o Personagem Existe
+            var characterFound = await _character.GetByIdAsync(Id) ?? throw new Exception("Personagem não encontrado");
+
+            //Verifica se o Personagem foi deletado
+            bool deleted = await _character.DeleteAsync(Id);
+            if (!deleted) throw new Exception("Falha ao deletar usuario");
+
+            //Verifica se o Personagem foi deletado do Usuario
+            bool deletedFromUser = await _userRepository.PullCharacterAsync(characterFound.UserId, Id);
+            if (!deletedFromUser)
+            {
+                throw new Exception("Falha ao remover personagem do usuario");
+            }
+            return true;
+        }
+
+        public async Task<IEnumerable<CharacterResponse>> GetAllAsync()
+        {
+            //Retorna Todos os Perosnagens
+            var characters =  await _character.GetAllAsync();
+            if (characters is null) throw new Exception("Falha ao obter Personagens");
             var response = characters.Adapt<List<CharacterResponse>>();
             return  response;
+        }
+
+        public async Task<CharacterResponse> GetByIdAsync(Guid Id)
+        {
+            //Retorna Um dos Perosnagens
+            var data = await _character.GetByIdAsync(Id) ?? throw new Exception($"Usuario de Id: {Id} Não Encontrado!!");
+            var response = data.Adapt<CharacterResponse>();
+            return response;
+        }
+
+        public async Task<bool> UpdateAsync(UpdateCharacterRequest request)
+        {
+            //Atualiza um personagem
+            var updateCharacter = request.Adapt<Character>();
+            var response = await _character.UpdateAsync(updateCharacter);
+
+            if (!response) throw new Exception("Não foi possivel atualizar o personagem");
+
+            return true;
         }
     }
 }
