@@ -1,0 +1,55 @@
+@hostname = localhost
+@port = 32768
+@Controller = Character
+@baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
+
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "Name": "Gandalf",
+  "Description": "Istar (Mago) e Portador de Narya",
+  "Attributes": [
+    { "Name": "Inteligência", "Value": "20" },
+    { "Name": "Sabedoria", "Value": "19" }
+  ],
+  "UserId": "4c8a941a-47cb-4009-8692-5c7f9a08a692",
+  "Skills": [
+    { "Name": "Arcanismo", "Value": 10 },
+    { "Name": "História", "Value": 8 }
+  ]
+}
+
+### Listar Personagens
+GET {{baseUrl}}
+Accept: application/json
+
+### GetById
+
+GET {{baseUrl}}/f53a860b-393b-4daf-b46d-3bd7ebdd3c24
+Accept: application/json
+
+### Put
+
+PUT {{baseUrl}}
+Content-Type: application/json
+
+{
+  "id": "2e79bb57-d92e-453e-a142-c690479bf364",
+  "iconPath": "/images/icons/king.png",
+  "name": "Aragornteg (Rei Elessar)",
+  "description": "Coroado Rei de Gondor e Arnor.",
+  "attributes": [
+    { "name": "Força", "value": "20" },
+    { "name": "Carisma", "value": "19" }
+  ],
+  "skills": [
+    { "name": "Liderança", "value": 10 },
+    { "name": "Percepção", "value": 15 }
+  ]
+}
+
+### Delete
+
+DELETE {{baseUrl}}/f53a860b-393b-4daf-b46d-3bd7ebdd3c24
+Accept: application/json

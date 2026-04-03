@@ -1,0 +1,24 @@
+@hostname = localhost
+@port = 32768
+@Controller = Auth
+@baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
+
+
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "userName": "Gandalf_O_Cinzento",
+  "email": "gandalf@rpgdex.com",
+  "password": "SenhaMagica777!"
+}
+
+###
+GET {{baseUrl}}
+Content-Type: application/json
+
+{
+  "email": "gandalf@rpgdex.com",
+  "password": "SenhaMagica777 !"
+}
+
