@@ -24,3 +24,16 @@ C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\R
 C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\refint\RpgDex.Domain.dll
 C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\RpgDex.Domain.pdb
 C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\ref\RpgDex.Domain.dll
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\bin\Debug\net10.0\RpgDex.Domain.deps.json
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\bin\Debug\net10.0\RpgDex.Domain.dll
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\bin\Debug\net10.0\RpgDex.Domain.pdb
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\RpgDex.Domain.csproj.AssemblyReference.cache
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\RpgDex.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\RpgDex.Domain.AssemblyInfoInputs.cache
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\RpgDex.Domain.AssemblyInfo.cs
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\RpgDex.Domain.csproj.CoreCompileInputs.cache
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\RpgDex.Domain.sourcelink.json
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\RpgDex.Domain.dll
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\refint\RpgDex.Domain.dll
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\RpgDex.Domain.pdb
+C:\Projetos\PI2026-2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Domain\obj\Debug\net10.0\ref\RpgDex.Domain.dll

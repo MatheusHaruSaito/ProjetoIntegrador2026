@@ -259,6 +259,32 @@
     display: none;
 }
 
+.error-text {
+  color: #ff4d4d;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  margin-top: -15px; 
+  margin-left: 10px;
+}
+
+.api-error {
+  color: #fff;
+  background-color: #ff6b6b;
+  padding: 10px;
+  border-radius: 8px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.btn-login:disabled {
+  background: #c8b1e4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 @media (max-width: 768px) {
     .desktop-only {
         display: none;

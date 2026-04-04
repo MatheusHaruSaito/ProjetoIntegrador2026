@@ -21,22 +21,35 @@
         <p class="login-main__sub">Entre com suas credenciais.</p>
       </div>
 
-      <form class="login-form">
+      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        
         <div class="input-group">
           <i class="fa fa-envelope icon-field"></i> 
-          <input type="email" placeholder="Email" name="email">
+          <input type="email" placeholder="Email" formControlName="email">
         </div>
+        <small class="error-text" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          Insira um email válido.
+        </small>
 
         <div class="input-group">
           <i class="fa fa-lock icon-field"></i> 
-          <input type="password" placeholder="Senha" name="password">
+          <input type="password" placeholder="Senha" formControlName="password">
         </div>
+        <small class="error-text" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          A senha é obrigatória.
+        </small>
 
         <div class="form-options">
           <a href="#" class="forgot-link">Esqueceu a senha?</a>
         </div>
 
-        <button type="submit" class="btn-login">ENTRAR</button>
+        <div class="api-error" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <button type="submit" class="btn-login" [disabled]="isLoading">
+          {{ isLoading ? 'ENTRANDO...' : 'ENTRAR' }}
+        </button>
       </form>
 
       <div class="login-separator">
