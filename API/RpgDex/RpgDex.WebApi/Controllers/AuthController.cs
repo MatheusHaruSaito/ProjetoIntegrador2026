@@ -18,7 +18,7 @@ namespace RpgDex.WebApi.Controllers
         {
                 return _authSerice.RegisterUser(user);
         }
-        [HttpGet]
+        [HttpPost("Login")]
         public async Task<string> LogIn(AuthUserDTO user)
         {
             return await _authSerice.LogIn(user);

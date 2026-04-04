@@ -22,6 +22,8 @@
     "@angular/ssr": "^21.2.1",
     "@fortawesome/fontawesome-free": "^7.2.0",
     "express": "^5.1.0",
+    "jwt-decode": "^4.0.0",
+    "ngx-cookie-service": "^21.3.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

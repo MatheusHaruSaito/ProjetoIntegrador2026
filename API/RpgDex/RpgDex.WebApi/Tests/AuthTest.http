@@ -8,17 +8,17 @@ POST {{baseUrl}}
 Content-Type: application/json
 
 {
-  "userName": "Gandalf_O_Cinzento",
-  "email": "gandalf@rpgdex.com",
+  "userName": "Gandalf3_O_Cinzento",
+  "email": "gandalf3@rpgdex.com",
   "password": "SenhaMagica777!"
 }
 
 ###
-GET {{baseUrl}}
+POST {{baseUrl}}/Login
 Content-Type: application/json
 
 {
-  "email": "gandalf@rpgdex.com",
-  "password": "SenhaMagica777 !"
+  "email": "gandalf3@rpgdex.com",
+  "password": "SenhaMagica777!"
 }
 
