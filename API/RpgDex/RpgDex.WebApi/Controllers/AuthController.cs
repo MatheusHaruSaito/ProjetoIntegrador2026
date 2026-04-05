@@ -16,12 +16,15 @@ namespace RpgDex.WebApi.Controllers
         [HttpPost]
         public Task<bool> Register(CreateUserDTO user)
         {
+
                 return _authSerice.RegisterUser(user);
         }
         [HttpPost("Login")]
-        public async Task<string> LogIn(AuthUserDTO user)
+        public async Task<ActionResult<string>> LogIn(AuthUserDTO user)
         {
-            return await _authSerice.LogIn(user);
+
+            var Token = await _authSerice.LogIn(user);
+            return Ok(new { Token });
         }
     }
 }

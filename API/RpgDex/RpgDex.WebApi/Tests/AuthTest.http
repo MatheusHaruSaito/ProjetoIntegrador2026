@@ -3,7 +3,6 @@
 @Controller = Auth
 @baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
 
-
 POST {{baseUrl}}
 Content-Type: application/json
 

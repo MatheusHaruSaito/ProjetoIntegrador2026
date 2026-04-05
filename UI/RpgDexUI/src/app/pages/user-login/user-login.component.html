@@ -21,15 +21,15 @@
         <p class="login-main__sub">Entre com suas credenciais.</p>
       </div>
 
-      <form class="login-form">
+      <form class="login-form" (ngSubmit)="Login()">
         <div class="input-group">
           <i class="fa fa-envelope icon-field"></i> 
-          <input type="email" placeholder="Email" name="email">
+          <input type="email" placeholder="Email" name="email" [(ngModel)]="authUserForm.email">
         </div>
 
         <div class="input-group">
           <i class="fa fa-lock icon-field"></i> 
-          <input type="password" placeholder="Senha" name="password">
+          <input type="password" placeholder="Senha" name="password" [(ngModel)]="authUserForm.password">
         </div>
 
         <div class="form-options">

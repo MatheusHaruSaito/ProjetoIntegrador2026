@@ -1,4 +1,4 @@
-interface jwtPayload {
+export interface jwtPayload {
   sub: string;
   unique_name: string;
   email: string;
