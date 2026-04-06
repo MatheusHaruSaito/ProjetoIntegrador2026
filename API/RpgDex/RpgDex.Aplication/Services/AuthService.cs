@@ -12,11 +12,14 @@ namespace RpgDex.Aplication.Services
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        
+        private readonly RoleManager<ApplicationRole> _rolemanager;
         private readonly ITokenService _tokenService;
-        public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService)
+        public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService,RoleManager<ApplicationRole> rolemanager)
         {
             _userManager = userManager;
             _tokenService = tokenService;
+            _rolemanager = rolemanager;
         }
         public async Task<string> LogIn(AuthUserDTO authUser)
         {

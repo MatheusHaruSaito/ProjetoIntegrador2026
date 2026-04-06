@@ -45,7 +45,7 @@ builder.Services.AddCors(options => {
     });
 });
 
-builder.Services.AddIdentity<ApplicationUser, MongoIdentityRole>(options =>
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequiredLength = 8;
     options.Password.RequireDigit = true;
@@ -55,11 +55,12 @@ builder.Services.AddIdentity<ApplicationUser, MongoIdentityRole>(options =>
 
     options.User.RequireUniqueEmail = true;
 })
-    .AddMongoDbStores<ApplicationUser, MongoIdentityRole, Guid>
+    .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>
     (
         builder.Configuration.GetConnectionString("MongoDbConnection"),
         builder.Configuration["ConnectionStrings:DatabaseName"]
-    ). AddDefaultTokenProviders();
+    ). AddDefaultTokenProviders()
+    .AddRoles<ApplicationRole>();
 
 var jwtKey = builder.Configuration["Jwt:Key"] 
     ?? throw new InvalidOperationException("Jwt Not Found");

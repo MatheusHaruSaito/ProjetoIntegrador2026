@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\0221432511017\\Desktop\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|c:\\users\\0221432511017\\desktop\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.aplication\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|solutionrelative:rpgdex.aplication\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\0221432511017\\Desktop\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "RpgDex.Aplication\\Services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\0221432511017\\Desktop\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Services\\AuthService.cs",
+              "RelativeToolTip": "RpgDex.Aplication\\Services\\AuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-06T12:48:00.652Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
