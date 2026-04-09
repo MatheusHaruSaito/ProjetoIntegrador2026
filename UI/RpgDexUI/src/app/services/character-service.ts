@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Character } from '../../models/character';
 import { Observable } from 'rxjs';
 import { UpdateCharacter } from '../../models/updateCharacter';
+import { ApiResponse } from '../../models/apiResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -17,19 +18,19 @@ private readonly controller= "Character"
     
   }
 
-  public Post(character: Character): Observable<Character>{
-    return this.http.post<Character>(this.env,character)
+  public Post(character: Character): Observable<ApiResponse<Character>>{
+    return this.http.post<ApiResponse<Character>>(this.env,character)
   }
-  public GetAll(): Observable<Character>{
-    return this.http.get<Character>(this.env)
+  public GetAll(): Observable<ApiResponse<Character>>{
+    return this.http.get<ApiResponse<Character>>(this.env)
   }
-  public GetById(Id: String): Observable<Character>{
-    return this.http.get<Character>(`${this.env}/${Id}`)
+  public GetById(Id: String): Observable<ApiResponse<Character>>{
+    return this.http.get<ApiResponse<Character>>(`${this.env}/${Id}`)
   }
-  public Delete(Id: String): Observable<Character>{
-    return this.http.delete<Character>(`${this.env}/${Id}`)
+  public Delete(Id: String): Observable<ApiResponse<Character>>{
+    return this.http.delete<ApiResponse<Character>>(`${this.env}/${Id}`)
   }
-  public Update(character: UpdateCharacter): Observable<Character>{
-    return this.http.put<Character>(this.env,character)
+  public Update(character: UpdateCharacter): Observable<ApiResponse<Character>>{
+    return this.http.put<ApiResponse<Character>>(this.env,character)
   }
 }

@@ -1,6 +1,6 @@
 @hostname = localhost
-@port = 32768
-### 32768
+@port = 32772
+### 32772
 
 @Controller = Character
 @baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}

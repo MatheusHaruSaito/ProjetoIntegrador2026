@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using RpgDex.Aplication.Common;
 using RpgDex.Aplication.Dto;
 using RpgDex.Aplication.Interfaces;
 
@@ -18,67 +20,100 @@ namespace RpgDex.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<CharacterResponse>> CreateCharacter(CreateCharacterRequest request)
         {
-            try
+
+            var result = await _characterSevice.Create(request);
+            if (result == null)
             {
-                return await _characterSevice.Create(request);
+                return BadRequest(new{success = result.IsFailure,
+                                      message = result.Error,
+                                      data = result.Value});
             }
-            catch (Exception ex)
-            {
-                return NotFound(new {message = ex.Message});
-            }
+
+
+            return Ok(new {success= result.IsSuccess,
+                           data = result.Value});
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CharacterResponse>>> GetAll()
         {
-            try
-            {
-                return Ok(await _characterSevice.GetAllAsync());
+            var result = await _characterSevice.GetAllAsync();
 
-            }
-            catch (Exception ex)
+            if(result is null)
             {
-                return NotFound(new {message = ex.Message});
+                return NotFound(new{ success = result.IsFailure,
+                    message = result.Error,
+                    data = result.Value
+                });
             }
+            return Ok(new
+            {
+                success = result.IsSuccess,
+                data = result.Value
+            });
+
         }
         [HttpGet("{Id}")]
         public async Task<ActionResult<CharacterResponse>> GetById(Guid Id)
         { 
-            try
-            {
-                return Ok(await _characterSevice.GetByIdAsync(Id));
 
-            }
-            catch (Exception ex)
+             var result = await _characterSevice.GetByIdAsync(Id);
+
+            if (result is null)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(new
+                {
+                    success = result.IsFailure,
+                    message = result.Error,
+                    data = result.Value
+                });
             }
+            return Ok(new
+            {
+                success = result.IsSuccess,
+                data = result.Value
+            });
         }
         [HttpDelete("{Id}")]
-        public async Task<ActionResult<string>> Delete(Guid Id)
+        public async Task<ActionResult<CharacterResponse>> Delete(Guid Id)
         {
-            try
-            {
-                await _characterSevice.DeleteAsync(Id);
-                return Ok($"Personagem de Id: {Id} Deletado!!");
 
-            }
-            catch (Exception ex)
+            var result = await _characterSevice.DeleteAsync(Id);
+
+            if (result is null)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(new
+                {
+                    success = result.IsFailure,
+                    message = result.Error,
+                    data = result.Value
+                });
             }
+            return Ok(new
+            {
+                success = result.IsSuccess,
+                data = result.Value
+            });
         }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateCharacterRequest request)
         {
-            try
+
+            var result = await _characterSevice.UpdateAsync(request);
+            if (result is null)
             {
-                await _characterSevice.UpdateAsync(request);
-                return Ok($"{request.Name} Foi Alterado com Sucesso!!");
+                return NotFound(new
+                {
+                    success = result.IsFailure,
+                    message = result.Error,
+                    data = result.Value
+                });
             }
-            catch (Exception ex)
+            return Ok(new
             {
-                return NotFound(new { message = ex.Message });
-            }
+                success = result.IsSuccess,
+                data = result.Value
+            });
         }
+            
     }
 }

@@ -1,4 +1,5 @@
-﻿using RpgDex.Aplication.Dto;
+﻿using RpgDex.Aplication.Common;
+using RpgDex.Aplication.Dto;
 using RpgDex.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,10 @@ namespace RpgDex.Aplication.Interfaces
 {
     public interface ICharacterSevice
     {
-        Task<CharacterResponse> Create(CreateCharacterRequest request);
-        Task<IEnumerable<CharacterResponse>> GetAllAsync();
-        Task<CharacterResponse> GetByIdAsync(Guid Id);
-        Task<bool> UpdateAsync(UpdateCharacterRequest request);
-        Task<bool> DeleteAsync(Guid Id);
+        Task<Result<CharacterResponse>> Create(CreateCharacterRequest request);
+        Task<Result<IEnumerable<CharacterResponse>>> GetAllAsync();
+        Task<Result<CharacterResponse>> GetByIdAsync(Guid Id);
+        Task<Result<bool>> UpdateAsync(UpdateCharacterRequest request);
+        Task<Result<CharacterResponse>> DeleteAsync(Guid Id);
     }
 }

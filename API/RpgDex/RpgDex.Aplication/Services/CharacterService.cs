@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Identity;
+using RpgDex.Aplication.Common;
 using RpgDex.Aplication.Dto;
 using RpgDex.Aplication.Interfaces;
 using RpgDex.Domain.Entities;
@@ -7,6 +8,7 @@ using RpgDex.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 
 namespace RpgDex.Aplication.Services
 {
@@ -20,7 +22,7 @@ namespace RpgDex.Aplication.Services
             _character = character;
             _userRepository = userRepository;
         }
-        public async Task<CharacterResponse> Create(CreateCharacterRequest request)
+        public async Task<Result<CharacterResponse>> Create(CreateCharacterRequest request)
         {
 
             //Converte a requisição em um objeto Character
@@ -33,55 +35,60 @@ namespace RpgDex.Aplication.Services
 
             //Adiciona o Personagem A lista do Usuario
             var data = await _userRepository.PushCharacterAsync(request.UserId, response.Id);
-            if (!data) throw new Exception("Falha ao adicinar personagem ao usuario");
+            if (!data) return Result<CharacterResponse>.Failure("Falha ao Adicionar personagem ao usuario");
 
-            return response.Adapt<CharacterResponse>();
+            return Result<CharacterResponse>.Success(response.Adapt<CharacterResponse>());
         }
 
-        public async Task<bool> DeleteAsync(Guid Id)
+        public async Task<Result<CharacterResponse>> DeleteAsync(Guid Id)
         {
             //Verifica se o Personagem Existe
-            var characterFound = await _character.GetByIdAsync(Id) ?? throw new Exception("Personagem não encontrado");
+            var characterFound = await _character.GetByIdAsync(Id);
+            if(characterFound is null) return Result<CharacterResponse>.Failure("Falha ao achar personagem");
 
             //Verifica se o Personagem foi deletado
             bool deleted = await _character.DeleteAsync(Id);
-            if (!deleted) throw new Exception("Falha ao deletar usuario");
+            if (!deleted) return Result<CharacterResponse>.Failure("Falha ao deletar personagem");
 
             //Verifica se o Personagem foi deletado do Usuario
             bool deletedFromUser = await _userRepository.PullCharacterAsync(characterFound.UserId, Id);
             if (!deletedFromUser)
             {
-                throw new Exception("Falha ao remover personagem do usuario");
+                return Result<CharacterResponse>.Failure("Falha ao deletar personagem do usuario");
             }
-            return true;
+            return Result<CharacterResponse>.Success(characterFound.Adapt<CharacterResponse>());
         }
 
-        public async Task<IEnumerable<CharacterResponse>> GetAllAsync()
+        public async Task<Result<IEnumerable<CharacterResponse>>> GetAllAsync()
         {
             //Retorna Todos os Perosnagens
             var characters =  await _character.GetAllAsync();
-            if (characters is null) throw new Exception("Falha ao obter Personagens");
+            if (characters is null) return Result<IEnumerable<CharacterResponse>>.Failure("Falha ao Obter personagem");
+
             var response = characters.Adapt<List<CharacterResponse>>();
-            return  response;
+            return  Result<IEnumerable<CharacterResponse>>.Success(response);
         }
 
-        public async Task<CharacterResponse> GetByIdAsync(Guid Id)
+        public async Task<Result<CharacterResponse>> GetByIdAsync(Guid Id)
         {
             //Retorna Um dos Perosnagens
-            var data = await _character.GetByIdAsync(Id) ?? throw new Exception($"Usuario de Id: {Id} Não Encontrado!!");
+            var data = await _character.GetByIdAsync(Id);
+            if(data is null)
+            {
+                return Result<CharacterResponse>.Failure($"Usuario de Id: {Id} Não Encontrado!!");
+            }
             var response = data.Adapt<CharacterResponse>();
-            return response;
+            return Result<CharacterResponse>.Success(response);
         }
 
-        public async Task<bool> UpdateAsync(UpdateCharacterRequest request)
+        public async Task<Result<bool>> UpdateAsync(UpdateCharacterRequest request)
         {
             //Atualiza um personagem
             var updateCharacter = request.Adapt<Character>();
             var response = await _character.UpdateAsync(updateCharacter);
 
-            if (!response) throw new Exception("Não foi possivel atualizar o personagem");
-
-            return true;
+            if (!response) return Result<bool>.Failure("Não foi possivel atualizar o personagem");
+            return Result<bool>.Success(response);
         }
     }
 }
