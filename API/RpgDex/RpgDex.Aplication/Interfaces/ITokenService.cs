@@ -8,6 +8,6 @@ namespace RpgDex.Aplication.Interfaces
 {
     public  interface ITokenService
     {
-        string GenerateToken(ApplicationUser authUser);
+        Task<string> GenerateToken(ApplicationUser authUser);
     }
 }

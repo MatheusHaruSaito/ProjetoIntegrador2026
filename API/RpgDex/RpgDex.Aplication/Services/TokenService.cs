@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RpgDex.Aplication.Dto;
 using RpgDex.Aplication.Interfaces;
@@ -14,12 +15,13 @@ namespace RpgDex.Aplication.Services
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _config;
-
-        public TokenService(IConfiguration config)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public TokenService(IConfiguration config, UserManager<ApplicationUser> userManager)
         {
             _config = config;
+            _userManager = userManager;
         }
-        public string GenerateToken(ApplicationUser authUser)
+        public async Task<string> GenerateToken(ApplicationUser authUser)
         {
             var claims = new List<Claim>
             {
@@ -29,9 +31,10 @@ namespace RpgDex.Aplication.Services
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            foreach(var role in authUser.Roles)
+            var userRoles = await _userManager.GetRolesAsync(authUser);
+            foreach (var role in userRoles)
             {
-                claims.Add( new Claim(ClaimTypes.Role, role.ToString()));
+                claims.Add( new Claim(ClaimTypes.Role, role));
             }
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

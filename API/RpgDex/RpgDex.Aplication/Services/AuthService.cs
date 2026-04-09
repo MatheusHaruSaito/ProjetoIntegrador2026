@@ -24,12 +24,12 @@ namespace RpgDex.Aplication.Services
         public async Task<string> LogIn(AuthUserDTO authUser)
         {
             var user = await _userManager.FindByEmailAsync(authUser.Email);
-            if (user is null) return null;
+            if (user is null) throw new Exception("User Not Found");
 
             var validUser = await _userManager.CheckPasswordAsync(user, authUser.Password);
-            if (!validUser) return null;
+            if (!validUser) throw new Exception("Wrong Credentials");
 
-            return _tokenService.GenerateToken(user);
+            return await _tokenService.GenerateToken(user);
         }
 
         public async Task<bool> RegisterUser(CreateUserDTO authUser) {

@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '../../services/auth-service';
 import { FormsModule } from '@angular/forms';
-import { loginUser } from '../../../models/loginUser';
-import { authUser } from '../../../models/authUser';
+import { LoginUser } from '../../../models/loginUser';
+import { AuthUser } from '../../../models/authUser';
 
 @Component({
   selector: 'app-user-login',
@@ -12,7 +12,7 @@ import { authUser } from '../../../models/authUser';
   styleUrl: './user-login.component.css'
 })
 export class UserLoginComponent {
-  authUserForm: loginUser={
+  authUserForm: LoginUser={
     email: '',
     password: '',
   }

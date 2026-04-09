@@ -1,4 +1,4 @@
-export interface jwtPayload {
+export interface JwtPayload {
   sub: string;
   unique_name: string;
   email: string;
@@ -6,4 +6,5 @@ export interface jwtPayload {
   exp: number;
   iss: string;
   aud: string;
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"?: string | string[];
 }

@@ -1,33 +1,39 @@
 {
   "format": 1,
   "restore": {
-    "/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/RpgDex.Aplication.csproj": {}
+    "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\RpgDex.Aplication.csproj": {}
   },
   "projects": {
-    "/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/RpgDex.Aplication.csproj": {
+    "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\RpgDex.Aplication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/RpgDex.Aplication.csproj",
+        "projectUniqueName": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\RpgDex.Aplication.csproj",
         "projectName": "RpgDex.Aplication",
-        "projectPath": "/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/RpgDex.Aplication.csproj",
-        "packagesPath": "/root/.nuget/packages/",
-        "outputPath": "/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/",
+        "projectPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\RpgDex.Aplication.csproj",
+        "packagesPath": "C:\\Users\\Gener\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/root/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Gener\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Domain/RpgDex.Domain.csproj": {
-                "projectPath": "/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Domain/RpgDex.Domain.csproj"
+              "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj": {
+                "projectPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj"
               }
             }
           }
@@ -77,7 +83,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -355,22 +361,28 @@
         }
       }
     },
-    "/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Domain/RpgDex.Domain.csproj": {
+    "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Domain/RpgDex.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj",
         "projectName": "RpgDex.Domain",
-        "projectPath": "/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Domain/RpgDex.Domain.csproj",
-        "packagesPath": "/root/.nuget/packages/",
-        "outputPath": "/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Domain/obj/",
+        "projectPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj",
+        "packagesPath": "C:\\Users\\Gener\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/root/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Gener\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -416,7 +428,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
