@@ -8,38 +8,46 @@ import { jwtDecode } from 'jwt-decode';
 import { Observable, tap } from 'rxjs';
 import { loginUser } from '../../models/loginUser';
 import { jwtPayload } from '../../models/jwtPayload';
+
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthService { // Verifique se o nome é AuthService
     private readonly env = `${environment.RpxDexApi}/Auth`
     private readonly JWT_Token = "JWTString";
-  constructor(private http: HttpClient, private cookieService: CookieService) {
-    }
+    
+    constructor(private http: HttpClient, private cookieService: CookieService) {}
 
-    public Register(authUser: registerUser): Observable<String>{
-      return this.http.post<String>(this.env,authUser);
+    public Register(authUser: registerUser): Observable<any>{
+      return this.http.post<any>(this.env, authUser);
     }
     
     public Login(user: loginUser): Observable<{token: string}>{
        return this.http.post<{token: string}>(`${this.env}/Login`, user).pipe(
         tap(jwtToken => {
-            let token = jwtToken.token;
-            this.cookieService.set(this.JWT_Token,token)
+            this.cookieService.set(this.JWT_Token, jwtToken.token);
         })
-       )
+       );
     }
 
-    public GetLoggedUser() : authUser
-    {
-      const jwtToken =this.cookieService.get(this.JWT_Token);
+    public GetLoggedUser(): authUser {
+      const jwtToken = this.cookieService.get(this.JWT_Token);
       var decodedToken = jwtDecode<jwtPayload>(jwtToken);
-      const user : authUser ={
+      return {
         id: decodedToken.sub,
         username: decodedToken.unique_name,
         email: decodedToken.email,
-        roles: ["Default"] //Ainda não implementado
+        roles: ["Default"]
       };
-      return user;
+    }
+
+    // Método essencial para a Navbar
+    public isLoggedIn(): boolean {
+      return this.cookieService.check(this.JWT_Token);
+    }
+
+    // Método para o botão de sair
+    public Logout(): void {
+      this.cookieService.delete(this.JWT_Token, '/');
     }
 }
