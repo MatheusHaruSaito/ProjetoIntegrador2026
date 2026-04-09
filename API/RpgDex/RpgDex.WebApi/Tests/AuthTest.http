@@ -1,5 +1,6 @@
 @hostname = localhost
 @port = 32768
+### 32768
 @Controller = Auth
 @baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
 
@@ -17,7 +18,7 @@ POST {{baseUrl}}/Login
 Content-Type: application/json
 
 {
-  "email": "gandalf3@rpgdex.com",
+  "email": "gandalf@rpgdex.com",
   "password": "SenhaMagica777!"
 }
 

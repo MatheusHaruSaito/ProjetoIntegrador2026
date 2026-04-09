@@ -1,6 +1,6 @@
-export interface authUser{
-    id: String
-    username: String
-    email: String
-    roles: String[]
+export interface AuthUser{
+    id: string
+    username: string
+    email: string
+    roles: string | string[];
 }

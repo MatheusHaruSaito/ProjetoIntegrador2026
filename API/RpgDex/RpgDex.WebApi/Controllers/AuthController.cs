@@ -22,9 +22,15 @@ namespace RpgDex.WebApi.Controllers
         [HttpPost("Login")]
         public async Task<ActionResult<string>> LogIn(AuthUserDTO user)
         {
+            try
+            {
+                var Token = await _authSerice.LogIn(user);
+                return Ok(new { Token });
+            }catch(Exception ex)
+            {
+                return NotFound(new {Token= ex.Message});
+            }
 
-            var Token = await _authSerice.LogIn(user);
-            return Ok(new { Token });
         }
     }
 }

@@ -1,8 +1,11 @@
 @hostname = localhost
 @port = 32768
+### 32768
+
 @Controller = Character
 @baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
 
+### Ta adicionando mesmo com usuario invalido
 POST {{baseUrl}}
 Content-Type: application/json
 
@@ -13,7 +16,7 @@ Content-Type: application/json
     { "Name": "Inteligência", "Value": "20" },
     { "Name": "Sabedoria", "Value": "19" }
   ],
-  "UserId": "4c8a941a-47cb-4009-8692-5c7f9a08a692",
+  "UserId": "13f0a0e0-91e7-495b-bdae-15fbc58e52e6",
   "Skills": [
     { "Name": "Arcanismo", "Value": 10 },
     { "Name": "História", "Value": 8 }

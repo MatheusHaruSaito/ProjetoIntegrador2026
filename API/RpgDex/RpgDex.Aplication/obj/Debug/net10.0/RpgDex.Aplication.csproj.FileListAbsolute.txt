@@ -1,32 +1,64 @@
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Aplication.deps.json
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Aplication.dll
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Aplication.pdb
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Domain.dll
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Domain.pdb
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.csproj.AssemblyReference.cache
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.AssemblyInfoInputs.cache
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.AssemblyInfo.cs
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.csproj.CoreCompileInputs.cache
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.sourcelink.json
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.A.53E3AEE0.Up2Date
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.dll
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\refint\RpgDex.Aplication.dll
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.pdb
-C:\Users\Gener\OneDrive\Área de Trabalho\PI\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\ref\RpgDex.Aplication.dll
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Aplication.deps.json
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Aplication.dll
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Aplication.pdb
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Domain.dll
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Domain.pdb
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.csproj.AssemblyReference.cache
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.AssemblyInfoInputs.cache
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.AssemblyInfo.cs
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.csproj.CoreCompileInputs.cache
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.sourcelink.json
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.A.53E3AEE0.Up2Date
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.dll
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\refint\RpgDex.Aplication.dll
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.pdb
-C:\Users\Gener\OneDrive\Área de Trabalho\PI2\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\ref\RpgDex.Aplication.dll
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Aplication.deps.json
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Aplication.dll
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Aplication.pdb
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Domain.dll
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Domain.pdb
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.csproj.AssemblyReference.cache
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.AssemblyInfoInputs.cache
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.AssemblyInfo.cs
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.csproj.CoreCompileInputs.cache
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.sourcelink.json
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.A.53E3AEE0.Up2Date
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.dll
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/refint/RpgDex.Aplication.dll
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.pdb
+C:/Users/Gener/OneDrive/Área de Trabalho/PI/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/ref/RpgDex.Aplication.dll
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Aplication.deps.json
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Aplication.dll
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Aplication.pdb
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Domain.dll
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Domain.pdb
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.csproj.AssemblyReference.cache
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.AssemblyInfoInputs.cache
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.AssemblyInfo.cs
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.csproj.CoreCompileInputs.cache
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.sourcelink.json
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.A.53E3AEE0.Up2Date
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.dll
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/refint/RpgDex.Aplication.dll
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.pdb
+C:/Users/Gener/OneDrive/Área de Trabalho/PI2/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/ref/RpgDex.Aplication.dll
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Aplication.deps.json
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Aplication.dll
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Aplication.pdb
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Domain.dll
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/bin/Debug/net10.0/RpgDex.Domain.pdb
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.csproj.AssemblyReference.cache
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.AssemblyInfoInputs.cache
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.AssemblyInfo.cs
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.csproj.CoreCompileInputs.cache
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.sourcelink.json
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.A.53E3AEE0.Up2Date
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.dll
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/refint/RpgDex.Aplication.dll
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/RpgDex.Aplication.pdb
+/workspaces/ProjetoIntegrador2026/API/RpgDex/RpgDex.Aplication/obj/Debug/net10.0/ref/RpgDex.Aplication.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Aplication.deps.json
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Aplication.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Aplication.pdb
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Domain.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\bin\Debug\net10.0\RpgDex.Domain.pdb
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.csproj.AssemblyReference.cache
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.AssemblyInfoInputs.cache
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.AssemblyInfo.cs
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.csproj.CoreCompileInputs.cache
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.sourcelink.json
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.A.53E3AEE0.Up2Date
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\refint\RpgDex.Aplication.dll
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\RpgDex.Aplication.pdb
+C:\Users\Gener\OneDrive\Área de Trabalho\PI\ProjetoIntegrador2026\API\RpgDex\RpgDex.Aplication\obj\Debug\net10.0\ref\RpgDex.Aplication.dll
