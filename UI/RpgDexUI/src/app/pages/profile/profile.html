@@ -1,0 +1,62 @@
+<div class="profile-container">
+  <header class="profile-header">
+    <div class="user-main-info">
+      <div class="avatar-wrapper">
+        <div class="avatar-placeholder">
+          {{ user?.username?.substring(0, 2)?.toUpperCase() || '??' }}
+        </div>
+      </div>
+
+      <div class="user-text">
+        <h1 class="username">{{ user?.username || 'Viajante' }}</h1>
+        <p class="email">{{ user?.email }}</p>
+        <span class="badge">Aventureiro</span>
+      </div>
+    </div>
+
+    <div class="profile-controls">
+      <div class="main-btns">
+        <button class="btn-edit" (click)="editProfile()">
+          <i class="fa-solid fa-pen"></i> Editar Perfil
+        </button>
+        <button class="btn-logout" (click)="logout()">Sair</button>
+      </div>
+
+      <div class="tool-btns">
+        <button
+          class="icon-btn"
+          (click)="toggleTheme()"
+          [title]="isDarkMode ? 'Modo Claro' : 'Modo Escuro'"
+        >
+          <i class="fa-solid" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
+        </button>
+        <button class="icon-btn" title="Configurações">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <hr class="divider" />
+
+  <section class="campaigns-section">
+    <h2 class="section-title">Minhas Campanhas</h2>
+
+    <div class="campaigns-grid">
+      <div class="campaign-card add-card">
+        <i class="fa-solid fa-plus"></i>
+        <span>Nova Campanha</span>
+      </div>
+
+      <div class="campaign-card" *ngFor="let camp of campaigns">
+        <div class="card-image-placeholder">
+          <i class="fa-solid fa-map-location-dot"></i>
+        </div>
+        <div class="card-info">
+          <span class="camp-name">{{ camp.name }}</span>
+          <span class="camp-role">{{ camp.role }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

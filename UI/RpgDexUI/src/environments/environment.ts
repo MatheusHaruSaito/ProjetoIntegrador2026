@@ -1,5 +1,5 @@
 const hostname = "localhost";
-const port = 32768;
+const port = 80;
 export const environment = {
     RpxDexApi: `http://${{hostname}}:${{port}}/api`,
 };

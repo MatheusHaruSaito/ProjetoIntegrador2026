@@ -15,8 +15,8 @@ export class AuthService {
     private readonly controller= "Auth"
     private readonly env = `${environment.RpxDexApi}/${this.controller}`
     private readonly JWT_Token = "JWTString";
-  constructor(private http: HttpClient, private cookieService: CookieService) {
-    }
+    
+    constructor(private http: HttpClient, private cookieService: CookieService) {}
 
     public Register(authUser: RegisterUser): Observable<String>{
       return this.http.post<String>(this.env,authUser);
@@ -25,10 +25,9 @@ export class AuthService {
     public Login(user: LoginUser): Observable<{token: string}>{
        return this.http.post<{token: string}>(`${this.env}/Login`, user).pipe(
         tap(jwtToken => {
-            let token = jwtToken.token;
-            this.cookieService.set(this.JWT_Token,token)
+            this.cookieService.set(this.JWT_Token, jwtToken.token);
         })
-       )
+       );
     }
 
     public GetLoggedUser() : AuthUser
@@ -42,5 +41,15 @@ export class AuthService {
         roles: decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ??[]
       };
       return user;
+    }
+
+    // Método essencial para a Navbar
+    public isLoggedIn(): boolean {
+      return this.cookieService.check(this.JWT_Token);
+    }
+
+    // Método para o botão de sair
+    public Logout(): void {
+      this.cookieService.delete(this.JWT_Token, '/');
     }
 }
