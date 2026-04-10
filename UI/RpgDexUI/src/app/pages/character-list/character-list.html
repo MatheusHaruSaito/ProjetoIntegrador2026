@@ -1,0 +1,20 @@
+
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Description</th>
+    </tr>
+    @for (chracter of characterList; track chracter.id) {
+        <tr>
+            <td>{{ chracter.id }}</td>
+            <td>{{ chracter.name }}</td>
+            <td>{{ chracter.description }}</td>
+
+        </tr>
+    } @empty {
+            <tr>
+                <td colspan="3">Nenhum personagem encontrado.</td>
+            </tr>
+        }
+</table>

@@ -19,7 +19,7 @@ namespace RpgDex.Aplication.Common
         }
 
         public static Result<T> Success(T Value) => new Result<T>(true, Value, null);
-        public static Result<T> Failure(string Error) => new Result<T>(true, default, Error);
+        public static Result<T> Failure(string Error) => new Result<T>(false, default, Error);
 
 
     }

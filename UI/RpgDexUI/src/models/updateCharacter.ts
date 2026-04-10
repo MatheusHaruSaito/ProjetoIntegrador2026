@@ -1,7 +1,7 @@
 import { Attributes } from "./attributes"
 import { Skills } from "./skills"
 
-export interface Character{
+export interface UpdateCharacter{
     id : string
     iconPath : string
     name : string
