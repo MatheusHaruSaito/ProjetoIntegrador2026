@@ -1,0 +1,186 @@
+/* --- CONTAINER PRINCIPAL --- */
+.campaigns-wrapper {
+  min-height: calc(100vh - 80px); 
+  background-color: #fdfbf7;
+  background-image:
+      repeating-linear-gradient(0deg, rgba(158, 116, 208, 0.1) 0, rgba(158, 116, 208, 0.1) 1px, transparent 1px, transparent 40px),
+      repeating-linear-gradient(90deg, rgba(158, 116, 208, 0.1) 0, rgba(158, 116, 208, 0.1) 1px, transparent 1px, transparent 40px);
+  padding: 60px 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* --- TÍTULO --- */
+.campaigns-title {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 2.2rem;
+  color: #555;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 50px;
+  text-decoration: underline;
+  text-underline-offset: 8px;
+  text-decoration-color: #aaa;
+}
+
+/* --- GRID E CARDS --- */
+.campaigns-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+
+.camp-card {
+  width: 220px;
+  height: 220px;
+  border-radius: 24px;
+  border: 3px solid #9E74D0;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(158, 116, 208, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.camp-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(158, 116, 208, 0.3);
+}
+
+.camp-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camp-card__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(158, 116, 208, 0.85);
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.camp-card:hover .camp-card__overlay {
+  transform: translateY(0); 
+}
+
+/* --- BOTÃO ADICIONAR --- */
+.add-card {
+  width: 220px;
+  height: 220px;
+  border-radius: 24px;
+  border: 3px solid #c8b1e4;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-card:hover {
+  border-color: #9E74D0;
+  background: rgba(158, 116, 208, 0.05);
+  transform: scale(1.02);
+}
+
+.add-card__icon {
+  font-size: 5rem;
+  color: #c8b1e4;
+  font-family: 'Nunito', sans-serif;
+  transition: color 0.3s ease;
+}
+
+.add-card:hover .add-card__icon {
+  color: #9E74D0;
+}
+
+/* --- MODAL --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 450px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.modal-title {
+  font-family: 'Exo 2', sans-serif;
+  color: #3C3489;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.modal-sub {
+  font-family: 'Nunito', sans-serif;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.input-group input {
+  width: 100%;
+  font-family: 'Nunito', sans-serif;
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #9e74d0;
+}
+
+.btn-create {
+  font-family: 'Exo 2', sans-serif;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  background: #9E74D0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  text-transform: uppercase;
+}

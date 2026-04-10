@@ -1,0 +1,36 @@
+<div class="campaigns-wrapper">
+  
+  <div class="container">
+    <h1 class="campaigns-title">Suas CAMPANHAS</h1>
+
+    <div class="campaigns-grid">
+      
+      <div class="camp-card" *ngFor="let camp of myCampaigns">
+        <img [src]="camp.imageUrl" [alt]="camp.name" class="camp-card__img">
+        <div class="camp-card__overlay">
+          <span>{{ camp.name }}</span>
+        </div>
+      </div>
+
+      <button class="add-card" (click)="toggleModal()">
+        <span class="add-card__icon">+</span>
+      </button>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-overlay" *ngIf="isModalOpen" (click)="toggleModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="toggleModal()">×</button>
+    <h2 class="modal-title">Nova Campanha</h2>
+    <p class="modal-sub">Defina o nome e a capa da sua nova aventura.</p>
+    
+    <div class="input-group">
+      <input type="text" placeholder="Nome da Campanha">
+    </div>
+    
+    <button class="btn-create" (click)="toggleModal()">CRIAR</button>
+  </div>
+</div>
