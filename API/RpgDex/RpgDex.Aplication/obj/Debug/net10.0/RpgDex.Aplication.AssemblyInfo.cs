@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RpgDex.Aplication")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0e26587c0bfbe7aa285d4630199517dfb2b78af3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5470dc0dbe0056f622efdb9c8f9c0ace4ee19d19")]
 [assembly: System.Reflection.AssemblyProductAttribute("RpgDex.Aplication")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RpgDex.Aplication")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
