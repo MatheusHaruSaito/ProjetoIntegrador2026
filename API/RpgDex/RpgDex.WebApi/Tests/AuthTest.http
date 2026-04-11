@@ -1,5 +1,5 @@
 @hostname = localhost
-@port = 32768
+@port = 32770
 @Controller = Auth
 @baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
 
@@ -40,7 +40,7 @@ Content-Type: application/json
 }
 
 ### Listar Personagens
-GET http://localhost:32768/api/Character
+GET http://localhost:32770/api/Character
 Accept: application/json
 
 ### GetById

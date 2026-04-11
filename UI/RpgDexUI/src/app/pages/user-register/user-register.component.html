@@ -24,6 +24,16 @@
       <form class="register-form" (ngSubmit)="Register()">
 
         <div class="input-group">
+          
+        <i class="fa fa-envelope icon-field"></i>
+          <input
+            type="userName"
+            placeholder="User Name"
+            name="userName"
+            [(ngModel)]="registerForm.userName"
+            required>
+        </div>
+        <div class="input-group">
           <i class="fa fa-envelope icon-field"></i>
           <input
             type="email"

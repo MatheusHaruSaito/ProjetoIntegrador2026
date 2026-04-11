@@ -18,8 +18,8 @@ export class AuthService {
     
     constructor(private http: HttpClient, private cookieService: CookieService) {}
 
-    public Register(authUser: RegisterUser): Observable<String>{
-      return this.http.post<String>(this.env,authUser);
+    public Register(authUser: RegisterUser): Observable<boolean>{
+      return this.http.post<boolean>(this.env,authUser);
     }
     
     public Login(user: LoginUser): Observable<{token: string}>{
@@ -36,7 +36,7 @@ export class AuthService {
       var decodedToken = jwtDecode<JwtPayload>(jwtToken);
       const user : AuthUser ={
         id: decodedToken.sub,
-        username: decodedToken.unique_name,
+        userName: decodedToken.unique_name,
         email: decodedToken.email,
         roles: decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ??[]
       };

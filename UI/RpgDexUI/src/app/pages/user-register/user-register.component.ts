@@ -18,6 +18,7 @@ export class UserRegisterComponent {
 
   registerForm: RegisterUser = {
     email: '',
+    userName:'',
     password: ''
   };
 
@@ -63,7 +64,10 @@ export class UserRegisterComponent {
     this.isLoading = true;
 
     this.authService.Register(this.registerForm).subscribe({
-      next: () => {
+      next: r => {
+        console.log(r);
+
+        console.log(this.registerForm);
         this.isLoading = false;
         this.successMessage = 'Cadastro realizado com sucesso! Redirecionando...';
         setTimeout(() => this.router.navigate(['/login']), 2000);

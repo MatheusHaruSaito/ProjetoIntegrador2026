@@ -3,12 +3,12 @@
     <div class="user-main-info">
       <div class="avatar-wrapper">
         <div class="avatar-placeholder">
-          {{ user?.username?.substring(0, 2)?.toUpperCase() || '??' }}
+          {{ user?.userName?.substring(0, 2)?.toUpperCase() || '??' }}
         </div>
       </div>
 
       <div class="user-text">
-        <h1 class="username">{{ user?.username || 'Viajante' }}</h1>
+        <h1 class="username">{{ user?.userName || 'Viajante' }}</h1>
         <p class="email">{{ user?.email }}</p>
         <span class="badge">Aventureiro</span>
       </div>
