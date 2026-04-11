@@ -17,6 +17,7 @@ export class UserRegisterComponent {
   private router = inject(Router);
 
   registerForm: RegisterUser = {
+    userName: '',
     email: '',
     password: ''
   };
@@ -36,17 +37,31 @@ export class UserRegisterComponent {
     return this.confirmPassword.length > 0 && this.registerForm.password !== this.confirmPassword;
   }
 
+  get passwordStrengthError(): string {
+    const p = this.registerForm.password;
+    if (p.length === 0) return '';
+    if (!/[A-Z]/.test(p)) return 'A senha deve conter pelo menos uma letra maiúscula.';
+    if (!/[a-z]/.test(p)) return 'A senha deve conter pelo menos uma letra minúscula.';
+    if (!/[0-9]/.test(p)) return 'A senha deve conter pelo menos um número.';
+    return '';
+  }
+
   Register() {
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (!this.registerForm.email || !this.registerForm.password || !this.confirmPassword) {
+    if (!this.registerForm.userName || !this.registerForm.email || !this.registerForm.password || !this.confirmPassword) {
       this.errorMessage = 'Preencha todos os campos.';
       return;
     }
 
     if (this.registerForm.password.length < 8) {
       this.errorMessage = 'A senha deve ter pelo menos 8 caracteres.';
+      return;
+    }
+
+    if (this.passwordStrengthError) {
+      this.errorMessage = this.passwordStrengthError;
       return;
     }
 
@@ -70,10 +85,12 @@ export class UserRegisterComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        if (err.status === 409) {
+        const errors = err.error?.errors;
+        if (errors) {
+          const messages = Object.values(errors).flat() as string[];
+          this.errorMessage = messages[0] ?? 'Dados inválidos. Verifique as informações.';
+        } else if (err.status === 409 || err.error?.code === 'DuplicateEmail') {
           this.errorMessage = 'Este e-mail já está cadastrado.';
-        } else if (err.status === 400) {
-          this.errorMessage = 'Dados inválidos. Verifique as informações e tente novamente.';
         } else {
           this.errorMessage = 'Ocorreu um erro ao criar a conta. Tente novamente.';
         }

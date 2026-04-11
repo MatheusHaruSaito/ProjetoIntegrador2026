@@ -24,6 +24,16 @@
       <form class="register-form" (ngSubmit)="Register()">
 
         <div class="input-group">
+          <i class="fa fa-user icon-field"></i>
+          <input
+            type="text"
+            placeholder="Nome de usuário"
+            name="userName"
+            [(ngModel)]="registerForm.userName"
+            required>
+        </div>
+
+        <div class="input-group">
           <i class="fa fa-envelope icon-field"></i>
           <input
             type="email"
@@ -43,6 +53,7 @@
             required>
         </div>
         <span class="field-hint" *ngIf="passwordTooShort">A senha deve ter pelo menos 8 caracteres.</span>
+        <span class="field-hint" *ngIf="!passwordTooShort && passwordStrengthError">{{ passwordStrengthError }}</span>
 
         <div class="input-group">
           <i class="fa fa-lock icon-field"></i>

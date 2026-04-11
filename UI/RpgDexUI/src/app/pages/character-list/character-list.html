@@ -2,10 +2,10 @@
 
   <div class="cl-header">
     <div>
-      <h1 class="cl-title">Meus <span>Personagens</span></h1>
+      <h1 class="cl-title"><span>Meus Personagens</span></h1>
       <p class="cl-subtitle">Gerencie todas as fichas da sua coleção.</p>
     </div>
-    <button class="btn-primary" routerLink="/personagens/novo">
+    <button class="btn-primary" (click)="OpenModal()">
       <i class="fa fa-plus"></i> Novo Personagem
     </button>
   </div>
@@ -23,15 +23,13 @@
       <tbody>
         @for (character of characterList; track character.id) {
           <tr>
-            <td><span class="char-id">#{{ character.id }}</span></td>
+            <td><span class="char-id">#{{ character.id.substring(0,4) }}</span></td>
             <td><span class="char-name">{{ character.name }}</span></td>
             <td><span class="char-desc">{{ character.description }}</span></td>
             <td>
               <div class="action-btns">
-                <button class="btn-icon" title="Editar">
-                  <i class="fa fa-pen"></i>
-                </button>
-                <button class="btn-icon danger" title="Excluir">
+                <button class="btn-icon" title="Editar"><i class="fa fa-pen"></i></button>
+                <button class="btn-icon danger" title="Excluir" (click)="DeleteCharacter(character.id)">
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
@@ -40,9 +38,14 @@
         } @empty {
           <tr class="empty-row">
             <td colspan="4">
-              <div class="empty-icon">🧙</div>
-              <p class="empty-text">Nenhum personagem encontrado.</p>
-              <p class="empty-sub">Crie seu primeiro personagem para começar.</p>
+              <div class="empty-content">
+                <div class="empty-icon"><i class="fa fa-scroll"></i></div>
+                <p class="empty-text">Nenhum personagem encontrado.</p>
+                <p class="empty-sub">Crie seu primeiro personagem para começar a aventura.</p>
+                <button class="btn-primary btn-sm" (click)="OpenModal()">
+                  <i class="fa fa-plus"></i> Criar Personagem
+                </button>
+              </div>
             </td>
           </tr>
         }
@@ -51,3 +54,74 @@
   </div>
 
 </div>
+
+<!-- Modal -->
+@if (showModal) {
+  <div class="modal-backdrop" (click)="CloseModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <h2 class="modal-title">Novo <span>Personagem</span></h2>
+        <button class="btn-icon modal-close" (click)="CloseModal()">
+          <i class="fa fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="input-group">
+          <label class="input-label">Nome <span class="required">*</span></label>
+          <div class="input-field-wrapper">
+            <i class="fa fa-user icon-field"></i>
+            <input
+              type="text"
+              placeholder="Ex: Kael, o Errante"
+              [(ngModel)]="newCharacter.name"
+              name="charName"
+              maxlength="60">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Descrição</label>
+          <textarea
+            class="input-textarea"
+            placeholder="Uma breve descrição do personagem, sua origem ou aparência..."
+            [(ngModel)]="newCharacter.description"
+            name="charDesc"
+            rows="3"
+            maxlength="300">
+          </textarea>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">URL do Ícone</label>
+          <div class="input-field-wrapper">
+            <i class="fa fa-image icon-field"></i>
+            <input
+              type="text"
+              placeholder="https://..."
+              [(ngModel)]="newCharacter.iconPath"
+              name="charIcon">
+          </div>
+        </div>
+
+        <div class="feedback-message error-message" *ngIf="errorMessage">
+          <i class="fa fa-circle-exclamation"></i> {{ errorMessage }}
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="CloseModal()" [disabled]="isLoading">
+          Cancelar
+        </button>
+        <button class="btn-primary" (click)="CreateCharacter()" [disabled]="isLoading">
+          <span *ngIf="!isLoading"><i class="fa fa-plus"></i> Criar</span>
+          <span *ngIf="isLoading"><i class="fa fa-spinner fa-spin"></i> Criando...</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
@@ -17,6 +17,7 @@ export class ProfileComponent implements OnInit {
   private authService = inject(AuthService);
   private characterService = inject(CharacterService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   user: AuthUser | null = null;
   isDarkMode = false;
@@ -39,6 +40,7 @@ export class ProfileComponent implements OnInit {
     try {
       if (this.authService.isLoggedIn()) {
         this.user = this.authService.GetLoggedUser();
+        this.cdr.detectChanges();
       } else {
         this.router.navigate(['/login']);
       }
@@ -49,11 +51,16 @@ export class ProfileComponent implements OnInit {
   }
 
   private loadCharacterPreview() {
+    const userId = this.authService.GetLoggedUser()?.id;
+
     this.characterService.GetAll().subscribe({
       next: (response) => {
         const all: Character[] = response.data ?? [];
-        this.characterTotal = all.length;
-        this.characterPreview = all.slice(0, 3);
+        // Filtra pelo userId do usuário logado
+        const mine = all.filter(c => c.userId === userId);
+        this.characterTotal = mine.length;
+        this.characterPreview = mine.slice(0, 3);
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Erro ao carregar personagens', err)
     });
