@@ -15,7 +15,6 @@ export interface Campaign {
   styleUrls: ['./campaigns.css']
 })
 export class CampaignsComponent {
-  // Mock Data
   myCampaigns: Campaign[] = [
     { 
       id: 1, 

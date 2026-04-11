@@ -1,0 +1,192 @@
+.cl-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    font-family: 'Nunito', sans-serif;
+}
+
+/* --- HEADER --- */
+.cl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.cl-title {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: var(--rpg-text-dark);
+}
+
+.cl-title span {
+    color: var(--rpg-purple);
+}
+
+.cl-subtitle {
+    font-size: 0.95rem;
+    color: #777;
+    margin-top: 4px;
+}
+
+/* --- TABELA --- */
+.cl-table-wrapper {
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(60, 52, 137, 0.08);
+    border: 1px solid #f0ebf7;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Nunito', sans-serif;
+}
+
+thead {
+    background: linear-gradient(135deg, #9e74d0 0%, #80e2ff 100%);
+}
+
+thead th {
+    padding: 16px 24px;
+    text-align: left;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #fff;
+}
+
+thead th:last-child {
+    text-align: right;
+}
+
+tbody tr {
+    border-bottom: 1px solid #f5f0fa;
+    transition: background 0.2s;
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background-color: #fdfbff;
+}
+
+tbody td {
+    padding: 16px 24px;
+    color: #444;
+    font-size: 0.95rem;
+    vertical-align: middle;
+}
+
+tbody td:last-child {
+    text-align: right;
+}
+
+/* --- CÉLULAS --- */
+.char-id {
+    display: inline-block;
+    background: #f0ebf7;
+    color: var(--rpg-purple);
+    font-weight: 800;
+    font-size: 0.78rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: 'Exo 2', sans-serif;
+}
+
+.char-name {
+    font-weight: 700;
+    color: var(--rpg-text-dark);
+    font-size: 1rem;
+}
+
+.char-desc {
+    color: #777;
+    max-width: 360px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --- BOTÕES DE AÇÃO --- */
+.action-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    color: #999;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-icon:hover {
+    background: #f0ebf7;
+    color: var(--rpg-purple);
+}
+
+.btn-icon.danger:hover {
+    background: #fdecea;
+    color: #c0392b;
+}
+
+/* --- ESTADO VAZIO --- */
+.empty-row td {
+    text-align: center;
+    padding: 60px 24px;
+}
+
+.empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+}
+
+.empty-text {
+    font-size: 1rem;
+    color: #bbb;
+}
+
+.empty-sub {
+    font-size: 0.85rem;
+    color: #ccc;
+    margin-top: 4px;
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 768px) {
+    .cl-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cl-title {
+        font-size: 1.5rem;
+    }
+
+    .char-desc {
+        max-width: 180px;
+    }
+
+    thead th:nth-child(3),
+    tbody td:nth-child(3) {
+        display: none;
+    }
+}

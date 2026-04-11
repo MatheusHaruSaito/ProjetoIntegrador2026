@@ -10,10 +10,18 @@
   <div class="nav-container" [class.active]="isMenuOpen">
     <ul class="nav-links">
       <li><a routerLink="/home" routerLinkActive="active" (click)="closeMenu()">Início</a></li>
-      <li><a routerLink="/campaign" routerLinkActive="active" (click)="closeMenu()">Jogar</a></li>
-      <li><a routerLink="/biblioteca" routerLinkActive="active" (click)="closeMenu()">Biblioteca</a></li>
+      
+      <ng-container *ngIf="authService.isLoggedIn()">
+        <li><a routerLink="/campanhas" routerLinkActive="active" (click)="closeMenu()">Jogar</a></li>
+        <li><a routerLink="/biblioteca" routerLinkActive="active" (click)="closeMenu()">Biblioteca</a></li>
+      </ng-container>
     </ul>
 
-    <div class="user-profile" routerLink="/perfil" (click)="closeMenu()"></div>
+    <div class="user-profile" routerLink="/perfil" (click)="closeMenu()" *ngIf="authService.isLoggedIn()"></div>
+
+    <div class="auth-buttons" *ngIf="!authService.isLoggedIn()">
+      <button class="btn-login-nav" routerLink="/login" (click)="closeMenu()">Entrar</button>
+      <button class="btn-register-nav" routerLink="/cadastro" (click)="closeMenu()">Cadastrar</button>
+    </div>
   </div>
 </nav>

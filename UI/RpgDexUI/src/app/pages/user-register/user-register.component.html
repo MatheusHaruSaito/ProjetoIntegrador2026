@@ -4,62 +4,89 @@
     <div class="register-side">
       <div class="register-logo" routerLink="/home">RPGDex</div>
       <div class="register-side__content">
-        <h1 class="register-side__title">Crie sua Conta</h1>
+        <h1 class="register-side__title">Junte-se à Aventura!</h1>
         <p class="register-side__text">
-          Prepare sua jornada! Organize suas mesas, personagens e história em um só lugar.
+          Crie sua conta para começar a organizar suas campanhas e fichas de personagens em um só lugar.
         </p>
       </div>
       <div class="register-side__actions desktop-only">
-        <span class="register-side__small">Já é membro?</span>
+        <span class="register-side__small">Já possui uma conta?</span>
         <button class="btn-side" routerLink="/login">ENTRAR</button>
       </div>
     </div>
 
     <div class="register-main">
       <div class="register-header">
-        <h2 class="register-main__title">Cadastro</h2>
-        <p class="register-main__sub">Preencha os dados abaixo.</p>
+        <h2 class="register-main__title">Cadastrar</h2>
+        <p class="register-main__sub">Crie suas credenciais de acesso.</p>
       </div>
 
-      <form class="register-form">
+      <form class="register-form" (ngSubmit)="Register()">
+
         <div class="input-group">
-          <i class="fa fa-user icon-field"></i> <input type="text" placeholder="Nome de Usuário" name="userName">
+          <i class="fa fa-envelope icon-field"></i>
+          <input
+            type="email"
+            placeholder="Email"
+            name="email"
+            [(ngModel)]="registerForm.email"
+            required>
         </div>
 
         <div class="input-group">
-          <i class="fa fa-envelope icon-field"></i> <input type="email" placeholder="Email" name="email">
+          <i class="fa fa-lock icon-field"></i>
+          <input
+            type="password"
+            placeholder="Senha"
+            name="password"
+            [(ngModel)]="registerForm.password"
+            required>
         </div>
+        <span class="field-hint" *ngIf="passwordTooShort">A senha deve ter pelo menos 8 caracteres.</span>
 
         <div class="input-group">
-          <i class="fa fa-lock icon-field"></i> <input type="password" placeholder="Senha" name="password">
+          <i class="fa fa-lock icon-field"></i>
+          <input
+            type="password"
+            placeholder="Confirmar Senha"
+            name="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            required>
         </div>
-
-        <div class="input-group">
-          <i class="fa fa-lock icon-field"></i> <input type="password" placeholder="Confirmar Senha">
-        </div>
+        <span class="field-hint" *ngIf="passwordsMismatch">As senhas não coincidem.</span>
 
         <div class="form-options">
           <label class="checkbox-container">
-            <input type="checkbox" id="terms" name="terms">
-            <span class="checkmark"></span>
-            Eu aceito os <a href="#" class="terms-link">Termos de Uso</a>
+            <input type="checkbox" id="terms" name="terms" [(ngModel)]="termsAccepted">
+            <span class="terms-text" style="margin-left: 8px;">Eu aceito os <a href="#" class="forgot-link">Termos de Uso</a></span>
           </label>
         </div>
 
-        <button type="submit" class="btn-register">CADASTRAR</button>
+        <div class="feedback-message error-message" *ngIf="errorMessage">
+          <i class="fa fa-circle-exclamation"></i> {{ errorMessage }}
+        </div>
+
+        <div class="feedback-message success-message" *ngIf="successMessage">
+          <i class="fa fa-circle-check"></i> {{ successMessage }}
+        </div>
+
+        <button type="submit" class="btn-register" [disabled]="isLoading">
+          <span *ngIf="!isLoading">CADASTRAR</span>
+          <span *ngIf="isLoading"><i class="fa fa-spinner fa-spin"></i> Aguarde...</span>
+        </button>
       </form>
 
       <div class="register-separator">
         <span>ou cadastre-se com</span>
       </div>
 
-      <div class="social-logins">
+      <div class="social-registers">
         <button class="social-btn"><i class="fa-brands fa-google"></i></button>
         <button class="social-btn"><i class="fa-brands fa-discord"></i></button>
         <button class="social-btn"><i class="fa-brands fa-apple"></i></button>
       </div>
 
-      <p class="register-footer mobile-only">Já é membro? <a routerLink="/login">Entrar</a></p>
+      <p class="register-footer mobile-only">Já tem conta? <a routerLink="/login">Entrar</a></p>
 
     </div>
   </div>

@@ -59,4 +59,43 @@
       </div>
     </div>
   </section>
+
+  <hr class="divider" />
+
+  <section class="characters-section">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Meus Personagens</h2>
+        <span class="section-count" *ngIf="characterTotal > 0">
+          {{ characterTotal }} {{ characterTotal === 1 ? 'personagem' : 'personagens' }}
+        </span>
+      </div>
+      <a routerLink="/personagens" class="section-link" *ngIf="characterTotal > 0">
+        Ver todos <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="campaigns-grid">
+
+      <div class="campaign-card add-card" routerLink="/personagens">
+        <i class="fa-solid fa-plus"></i>
+        <span>Novo Personagem</span>
+      </div>
+
+      <div
+        class="campaign-card character-card"
+        *ngFor="let char of characterPreview"
+        routerLink="/personagens"
+      >
+        <div class="card-image-placeholder character-avatar">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="card-info">
+          <span class="camp-name">{{ char.name }}</span>
+          <span class="char-desc-preview">{{ char.description }}</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
 </div>

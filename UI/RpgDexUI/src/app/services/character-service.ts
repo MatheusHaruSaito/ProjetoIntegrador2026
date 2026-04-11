@@ -10,27 +10,28 @@ import { ApiResponse } from '../../models/apiResponse';
   providedIn: 'root',
 })
 export class CharacterService {
-private readonly controller= "Character"
-  private readonly env = `${environment.RpxDexApi}/${this.controller}`
+  private readonly controller = 'Character';
+  private readonly env = `${environment.RpxDexApi}/${this.controller}`;
 
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) {
-    
+  public Post(character: Character): Observable<ApiResponse<Character>> {
+    return this.http.post<ApiResponse<Character>>(this.env, character);
   }
 
-  public Post(character: Character): Observable<ApiResponse<Character>>{
-    return this.http.post<ApiResponse<Character>>(this.env,character)
+  public GetAll(): Observable<ApiResponse<Character[]>> {
+    return this.http.get<ApiResponse<Character[]>>(this.env);
   }
-  public GetAll(): Observable<ApiResponse<Character>>{
-    return this.http.get<ApiResponse<Character>>(this.env)
+
+  public GetById(Id: String): Observable<ApiResponse<Character>> {
+    return this.http.get<ApiResponse<Character>>(`${this.env}/${Id}`);
   }
-  public GetById(Id: String): Observable<ApiResponse<Character>>{
-    return this.http.get<ApiResponse<Character>>(`${this.env}/${Id}`)
+
+  public Delete(Id: String): Observable<ApiResponse<Character>> {
+    return this.http.delete<ApiResponse<Character>>(`${this.env}/${Id}`);
   }
-  public Delete(Id: String): Observable<ApiResponse<Character>>{
-    return this.http.delete<ApiResponse<Character>>(`${this.env}/${Id}`)
-  }
-  public Update(character: UpdateCharacter): Observable<ApiResponse<Character>>{
-    return this.http.put<ApiResponse<Character>>(this.env,character)
+
+  public Update(character: UpdateCharacter): Observable<ApiResponse<Character>> {
+    return this.http.put<ApiResponse<Character>>(this.env, character);
   }
 }

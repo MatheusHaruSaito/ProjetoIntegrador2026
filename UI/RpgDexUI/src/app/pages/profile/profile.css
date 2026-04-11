@@ -106,12 +106,47 @@
   border-top: 1px solid #eee;
 }
 
-/* --- GRID DE CAMPANHAS --- */
-.section-title {
+/* --- CABEÇALHO DAS SEÇÕES --- */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 25px;
-  color: #333;
 }
 
+.section-title {
+  color: #333;
+  margin-bottom: 0;
+}
+
+.section-count {
+  font-size: 0.85rem;
+  color: #9e74d0;
+  font-weight: 700;
+  margin-top: 4px;
+  display: block;
+}
+
+.section-link {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #9e74d0;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s, gap 0.2s;
+  white-space: nowrap;
+  margin-top: 4px;
+}
+
+.section-link:hover {
+  color: #3c3489;
+  gap: 10px;
+}
+
+/* --- GRID DE CAMPANHAS E PERSONAGENS --- */
 .campaigns-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -142,10 +177,17 @@
   color: #ddd;
 }
 
+/* Ícone do personagem com cor diferenciada */
+.character-avatar {
+  background: linear-gradient(135deg, #f0ebf7, #e8f8ff);
+  color: #9e74d0;
+}
+
 .card-info {
   padding: 15px;
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
 .camp-name {
@@ -157,6 +199,14 @@
   color: #9e74d0;
 }
 
+.char-desc-preview {
+  font-size: 0.82rem;
+  color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .add-card {
   border: 2px dashed #ccc;
   display: flex;
@@ -165,6 +215,7 @@
   justify-content: center;
   color: #aaa;
   gap: 10px;
+  min-height: 160px;
 }
 
 .add-card:hover {

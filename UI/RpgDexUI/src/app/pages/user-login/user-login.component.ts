@@ -2,36 +2,35 @@ import { Component, inject } from '@angular/core';
 import { AuthService } from '../../services/auth-service';
 import { FormsModule } from '@angular/forms';
 import { LoginUser } from '../../../models/loginUser';
-import { AuthUser } from '../../../models/authUser';
+import { Router, RouterModule } from '@angular/router'; 
 
 @Component({
   selector: 'app-user-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterModule],
   templateUrl: './user-login.component.html',
   styleUrl: './user-login.component.css'
 })
 export class UserLoginComponent {
-  authUserForm: LoginUser={
+  authUserForm: LoginUser = {
     email: '',
     password: '',
   }
   
   authService = inject(AuthService);
-  constructor() {
-  }
+  private router = inject(Router); 
 
-  Login(){
-
+  Login() {
     this.authService.Login(this.authUserForm).subscribe({
-      next: stringa=>{
-          console.log(stringa);
+      next: (res) => {
+        this.router.navigate(['/home']).then(() => {
+          window.location.reload(); 
+        });
       },
-      error: err=>{
-        console.log(err)
+      error: (err) => {
+        console.error("Erro no login", err);
+        alert("Falha ao entrar. Verifique seu email e senha."); 
       }
-    })
-
-    console.log(this.authService.GetLoggedUser())
+    });
   }
 }

@@ -1,22 +1,29 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
-import { authUser } from '../../../models/authUser';
+import { CharacterService } from '../../services/character-service';
+import { AuthUser } from '../../../models/authUser';
+import { Character } from '../../../models/character';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './profile.html',
   styleUrl: './profile.css'
 })
 export class ProfileComponent implements OnInit {
   private authService = inject(AuthService);
-  
-  user: authUser | null = null;
+  private characterService = inject(CharacterService);
+  private router = inject(Router);
+
+  user: AuthUser | null = null;
   isDarkMode = false;
 
-  // Mock de campanhas para o grid
+  characterPreview: Character[] = [];
+  characterTotal = 0;
+
   campaigns = [
     { id: 1, name: 'Crônicas de Arton', role: 'Mestre' },
     { id: 2, name: 'O Chamado de Cthulhu', role: 'Jogador' },
@@ -24,16 +31,36 @@ export class ProfileComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.loadUser();
+    this.loadCharacterPreview();
+  }
+
+  private loadUser() {
     try {
-      this.user = this.authService.GetLoggedUser();
+      if (this.authService.isLoggedIn()) {
+        this.user = this.authService.GetLoggedUser();
+      } else {
+        this.router.navigate(['/login']);
+      }
     } catch (err) {
-      console.error("Erro ao carregar usuário do Token", err);
+      console.error('Erro ao carregar usuário do Token', err);
+      this.logout();
     }
+  }
+
+  private loadCharacterPreview() {
+    this.characterService.GetAll().subscribe({
+      next: (response) => {
+        const all: Character[] = response.data ?? [];
+        this.characterTotal = all.length;
+        this.characterPreview = all.slice(0, 3);
+      },
+      error: (err) => console.error('Erro ao carregar personagens', err)
+    });
   }
 
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
-    // Lógica para aplicar classe no body futuramente
     document.body.classList.toggle('dark-theme');
   }
 
@@ -42,7 +69,7 @@ export class ProfileComponent implements OnInit {
   }
 
   logout() {
-    // Aqui você chamaria o método de limpar cookie do seu AuthService
-    console.log("Logout acionado");
+    this.authService.Logout();
+    this.router.navigate(['/login']);
   }
 }

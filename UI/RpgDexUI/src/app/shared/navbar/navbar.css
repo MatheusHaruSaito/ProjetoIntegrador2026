@@ -100,6 +100,54 @@
   transition: 0.3s;
 }
 
+.auth-buttons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.btn-login-nav {
+  background: transparent;
+  border: none;
+  color: white;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-login-nav:hover {
+  text-decoration: underline;
+}
+
+.btn-register-nav {
+  background: white;
+  color: #9e74d0;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.btn-register-nav:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 900px) {
+  .auth-buttons {
+    flex-direction: column;
+    margin-top: 20px;
+    width: 100%;
+  }
+}
+
 @media (max-width: 900px) {
   .menu-toggle {
     display: flex;
