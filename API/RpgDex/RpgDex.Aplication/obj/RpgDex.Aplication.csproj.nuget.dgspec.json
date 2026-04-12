@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI2\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\RpgDex.Aplication.csproj": {}
+    "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\RpgDex.Aplication.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI2\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\RpgDex.Aplication.csproj": {
+    "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\RpgDex.Aplication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI2\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\RpgDex.Aplication.csproj",
+        "projectUniqueName": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\RpgDex.Aplication.csproj",
         "projectName": "RpgDex.Aplication",
-        "projectPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI2\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\RpgDex.Aplication.csproj",
+        "projectPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\RpgDex.Aplication.csproj",
         "packagesPath": "C:\\Users\\Gener\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI2\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\obj\\",
+        "outputPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -32,8 +32,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI2\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj": {
-                "projectPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI2\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj"
+              "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj": {
+                "projectPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj"
               }
             }
           }
@@ -361,14 +361,14 @@
         }
       }
     },
-    "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI2\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj": {
+    "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI2\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj",
         "projectName": "RpgDex.Domain",
-        "projectPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI2\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj",
+        "projectPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\RpgDex.Domain.csproj",
         "packagesPath": "C:\\Users\\Gener\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI2\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\obj\\",
+        "outputPath": "C:\\Users\\Gener\\OneDrive\\Área de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

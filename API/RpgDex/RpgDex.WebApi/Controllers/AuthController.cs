@@ -16,19 +16,33 @@ namespace RpgDex.WebApi.Controllers
         [HttpPost]
         public Task<bool> Register(CreateUserDTO user)
         {
-
-                return _authSerice.RegisterUser(user);
+            return _authSerice.RegisterUser(user);
         }
         [HttpPost("Login")]
-        public async Task<ActionResult<string>> LogIn(AuthUserDTO user)
+        public async Task<ActionResult<RefreshTokenModel>> LogIn(AuthUserDTO user)
         {
             try
             {
-                var Token = await _authSerice.LogIn(user);
-                return Ok(new { Token });
+                var result = await _authSerice.LogIn(user);
+                return Ok(new { AccessToken = result.AccessToken,
+                                RefreshToken = result.RefreshToken});
             }catch(Exception ex)
             {
                 return NotFound(new {Token= ex.Message});
+            }
+
+        }
+        [HttpPost("RefreshToken")]
+        public async Task<ActionResult<RefreshTokenModel>> RefreshToken(RefreshTokenModel refreshToken)
+        {
+            try
+            {
+                var Token = await _authSerice.RefreshTokenAsync(refreshToken);
+                return Ok(new { Token });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { Token = ex.Message });
             }
 
         }

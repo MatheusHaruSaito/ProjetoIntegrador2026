@@ -26,5 +26,7 @@ namespace RpgDex.Infrastructure.Data
             _database.GetCollection<ApplicationRole>("applicationRoles");
         public IMongoCollection<Character> Character =>
             _database.GetCollection<Character>("Characters");
+        public IMongoCollection<RefreshToken> RefreshTokens =>
+            _database.GetCollection<RefreshToken>("RefreshTokens");
     }
 }

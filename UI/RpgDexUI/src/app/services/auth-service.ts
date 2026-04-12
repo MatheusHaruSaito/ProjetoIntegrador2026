@@ -8,6 +8,7 @@ import { jwtDecode } from 'jwt-decode';
 import { Observable, tap } from 'rxjs';
 import { LoginUser } from '../../models/loginUser';
 import { JwtPayload } from '../../models/jwtPayload';
+import { tokenModel } from '../../models/tokenMode';
 @Injectable({
   providedIn: 'root',
 })
@@ -15,6 +16,8 @@ export class AuthService {
     private readonly controller= "Auth"
     private readonly env = `${environment.RpxDexApi}/${this.controller}`
     private readonly JWT_Token = "JWTString";
+    private readonly REFRESH_Token = "REFRESHTOKEN";
+
     
     constructor(private http: HttpClient, private cookieService: CookieService) {}
 
@@ -22,14 +25,22 @@ export class AuthService {
       return this.http.post<boolean>(this.env,authUser);
     }
     
-    public Login(user: LoginUser): Observable<{token: string}>{
-       return this.http.post<{token: string}>(`${this.env}/Login`, user).pipe(
-        tap(jwtToken => {
-            this.cookieService.set(this.JWT_Token, jwtToken.token);
+    public Login(user: LoginUser): Observable<tokenModel>{
+       return this.http.post<tokenModel>(`${this.env}/Login`, user).pipe(
+        tap(token => {
+            this.cookieService.set(this.JWT_Token, token.accessToken);
+            this.cookieService.set(this.REFRESH_Token,token.refreshToken);
         })
        );
     }
-
+  public RefreshToken(token: tokenModel): Observable<tokenModel>{
+       return this.http.post<tokenModel>(`${this.env}/RefreshToken`, token).pipe(
+        tap(newToken => {
+            this.cookieService.set(this.JWT_Token, newToken.accessToken);
+            this.cookieService.set(this.REFRESH_Token,newToken.refreshToken);
+        })
+       );
+    }
     public GetLoggedUser() : AuthUser
     {
       const jwtToken =this.cookieService.get(this.JWT_Token);

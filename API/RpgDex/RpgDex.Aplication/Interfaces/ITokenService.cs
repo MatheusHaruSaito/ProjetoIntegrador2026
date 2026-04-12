@@ -6,8 +6,16 @@ using System.Text;
 
 namespace RpgDex.Aplication.Interfaces
 {
-    public  interface ITokenService
+    public interface ITokenService
     {
-        Task<string> GenerateToken(ApplicationUser authUser);
+        Task<string> GenerateTokenAsync(ApplicationUser authUser);
+        string GenerateRefreshToken();
+        Task<RefreshToken> GetRefreshTokenByToken(string Token);
+        Task<RefreshToken> GetRefreshTokenByUserId(Guid userId);
+        Task<bool> StoreRefreshTokenAsync(RefreshTokenModel refreshTokenModel, Guid userId);
+        Task<bool> RovokeTokenFromUserId(Guid userId);
+
+
+
     }
 }

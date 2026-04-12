@@ -1,8 +1,8 @@
 @hostname = localhost
-@port = 32772
+@port = 32768
 ### 32772
 
-@Controller = Character
+@Controller = Auth
 @baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
 
 ### Ta adicionando mesmo com usuario invalido
@@ -21,6 +21,24 @@ Content-Type: application/json
     { "Name": "Arcanismo", "Value": 10 },
     { "Name": "História", "Value": 8 }
   ]
+}
+###
+
+POST {{baseUrl}}/Login
+Content-Type: application/json
+
+{
+  "email": "gandalf@rpgdex.com",
+  "password": "SenhaMagica777!"
+}
+###
+
+POST {{baseUrl}}/RefreshToken
+Content-Type: application/json
+
+{
+  "AccessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxM2YwYTBlMC05MWU3LTQ5NWItYmRhZS0xNWZiYzU4ZTUyZTYiLCJ1bmlxdWVfbmFtZSI6IkdhbmRhbGZfT19DaW56ZW50byIsImVtYWlsIjoiZ2FuZGFsZkBycGdkZXguY29tIiwianRpIjoiZGYwOGIxYzktNWFiZi00MDBjLTlhMDAtNGMyNzVkZDYzYTcyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiRGVmYXVsdCIsImV4cCI6MTc3NTk5OTczMCwiaXNzIjoiUnBnRGV4LkF1dGhTZXJ2ZXIiLCJhdWQiOiJScGdEZXguV2ViQVBJIn0.MQgh3Qk2-AeiuxFQuHrcSnClCUZSbW4vnGe0sBX1XJE",
+  "RefreshToken": "WrMByfIfpEdiu7trbMrFqmudSHVzHU/TOjh6l+LCb7dQ9Ii+egWhXrw1UQpTd76ExGkjlr0ieOT/UYCfkZYTJA== "
 }
 
 ### Listar Personagens
