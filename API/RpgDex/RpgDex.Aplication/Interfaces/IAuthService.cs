@@ -1,4 +1,5 @@
-﻿using RpgDex.Aplication.Dto;
+﻿using RpgDex.Aplication.Common;
+using RpgDex.Aplication.Dto;
 using RpgDex.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ namespace RpgDex.Aplication.Interfaces
 {
     public interface IAuthService
     {
-        Task<bool> RegisterUser(CreateUserDTO authUser);
-        Task<RefreshTokenModel> LogIn(AuthUserDTO authUser);
-        Task<RefreshTokenModel> RefreshTokenAsync(RefreshTokenModel refreshToken);
+        Task<Result<bool>> RegisterUser(CreateUserDTO authUser);
+        Task<Result<RefreshTokenModel>> LogIn(AuthUserDTO authUser);
+        Task<Result<RefreshTokenModel>> RefreshTokenAsync(RefreshTokenModel refreshToken);
 
     }
 }

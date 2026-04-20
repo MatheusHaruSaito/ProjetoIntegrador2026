@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using RpgDex.Aplication.Common;
 using RpgDex.Aplication.Dto;
 using RpgDex.Aplication.Interfaces;
 namespace RpgDex.WebApi.Controllers
@@ -14,37 +16,65 @@ namespace RpgDex.WebApi.Controllers
             _authSerice = authSerice;
         }
         [HttpPost]
-        public Task<bool> Register(CreateUserDTO user)
+        public async Task<ActionResult<bool>> Register(CreateUserDTO user)
         {
-            return _authSerice.RegisterUser(user);
+            var result = await _authSerice.RegisterUser(user);
+            if (result.IsFailure)
+            {
+                return NotFound(new
+                {
+                    success = result.IsSuccess,
+                    message = result.Error,
+                    data = result.Value
+                });
+            }
+            return Ok(new
+            {
+                success= result.IsSuccess,
+                data = result.Value,
+            });
         }
         [HttpPost("Login")]
         public async Task<ActionResult<RefreshTokenModel>> LogIn(AuthUserDTO user)
         {
-            try
+            var result = await _authSerice.LogIn(user);
+
+            if (result.IsFailure)
             {
-                var result = await _authSerice.LogIn(user);
-                return Ok(new { AccessToken = result.AccessToken,
-                                RefreshToken = result.RefreshToken});
-            }catch(Exception ex)
-            {
-                return NotFound(new {Token= ex.Message});
+                return NotFound(new
+                {
+                    success = result.IsSuccess,
+                    message = result.Error,
+                    data = result.Value
+                });
             }
+            return Ok(new
+            {
+                success = result.IsSuccess,
+                data = result.Value,
+            });
 
         }
         [HttpPost("RefreshToken")]
         public async Task<ActionResult<RefreshTokenModel>> RefreshToken(RefreshTokenModel refreshToken)
         {
-            try
-            {
-                var Token = await _authSerice.RefreshTokenAsync(refreshToken);
-                return Ok(new { Token });
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { Token = ex.Message });
-            }
 
-        }
+                var result = await _authSerice.RefreshTokenAsync(refreshToken);
+                if (result.IsFailure)
+                {
+                    return NotFound(new
+                    {
+                        success = result.IsSuccess,
+                        message = result.Error,
+                        data = result.Value
+                    });
+                }
+                return Ok(new
+                {
+                    success = result.IsSuccess,
+                    data = result.Value,
+                });
+
+            }
     }
 }

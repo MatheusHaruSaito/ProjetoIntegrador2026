@@ -7,16 +7,32 @@
       "RelativeMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|solutionrelative:rpgdex.webapi\\tests\\charactertest.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.aplication\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|solutionrelative:rpgdex.aplication\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.aplication\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|solutionrelative:rpgdex.aplication\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|solutionrelative:rpgdex.webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.webapi\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|solutionrelative:rpgdex.webapi\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.aplication\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|solutionrelative:rpgdex.aplication\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.webapi\\controllers\\charactercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|solutionrelative:rpgdex.webapi\\controllers\\charactercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BBA48DD6-6FD7-74F6-85A8-077A2E3AB611}|RpgDex.Infrastructure\\RpgDex.Infrastructure.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.infrastructure\\repositories\\characterrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BBA48DD6-6FD7-74F6-85A8-077A2E3AB611}|RpgDex.Infrastructure\\RpgDex.Infrastructure.csproj|solutionrelative:rpgdex.infrastructure\\repositories\\characterrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.aplication\\common\\result.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|solutionrelative:rpgdex.aplication\\common\\result.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BBA48DD6-6FD7-74F6-85A8-077A2E3AB611}|RpgDex.Infrastructure\\RpgDex.Infrastructure.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.infrastructure\\repositories\\tokenrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BBA48DD6-6FD7-74F6-85A8-077A2E3AB611}|RpgDex.Infrastructure\\RpgDex.Infrastructure.csproj|solutionrelative:rpgdex.infrastructure\\repositories\\tokenrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.aplication\\interfaces\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -27,6 +43,10 @@
       "RelativeMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|solutionrelative:rpgdex.aplication\\services\\characterservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.aplication\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|solutionrelative:rpgdex.aplication\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{BBA48DD6-6FD7-74F6-85A8-077A2E3AB611}|RpgDex.Infrastructure\\RpgDex.Infrastructure.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.infrastructure\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BBA48DD6-6FD7-74F6-85A8-077A2E3AB611}|RpgDex.Infrastructure\\RpgDex.Infrastructure.csproj|solutionrelative:rpgdex.infrastructure\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -35,16 +55,8 @@
       "RelativeMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|solutionrelative:rpgdex.aplication\\interfaces\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BBA48DD6-6FD7-74F6-85A8-077A2E3AB611}|RpgDex.Infrastructure\\RpgDex.Infrastructure.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.infrastructure\\repositories\\tokenrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BBA48DD6-6FD7-74F6-85A8-077A2E3AB611}|RpgDex.Infrastructure\\RpgDex.Infrastructure.csproj|solutionrelative:rpgdex.infrastructure\\repositories\\tokenrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C84A7EE8-6F54-2AFD-EB7C-1392919E0AA5}|RpgDex.Domain\\RpgDex.Domain.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.domain\\interfaces\\itokenrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C84A7EE8-6F54-2AFD-EB7C-1392919E0AA5}|RpgDex.Domain\\RpgDex.Domain.csproj|solutionrelative:rpgdex.domain\\interfaces\\itokenrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|solutionrelative:rpgdex.webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BBA48DD6-6FD7-74F6-85A8-077A2E3AB611}|RpgDex.Infrastructure\\RpgDex.Infrastructure.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.infrastructure\\data\\mongodbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -59,16 +71,8 @@
       "RelativeMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|solutionrelative:rpgdex.aplication\\dto\\updatecharacterrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.webapi\\controllers\\charactercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|solutionrelative:rpgdex.webapi\\controllers\\charactercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C84A7EE8-6F54-2AFD-EB7C-1392919E0AA5}|RpgDex.Domain\\RpgDex.Domain.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.domain\\interfaces\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C84A7EE8-6F54-2AFD-EB7C-1392919E0AA5}|RpgDex.Domain\\RpgDex.Domain.csproj|solutionrelative:rpgdex.domain\\interfaces\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BBA48DD6-6FD7-74F6-85A8-077A2E3AB611}|RpgDex.Infrastructure\\RpgDex.Infrastructure.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.infrastructure\\repositories\\characterrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BBA48DD6-6FD7-74F6-85A8-077A2E3AB611}|RpgDex.Infrastructure\\RpgDex.Infrastructure.csproj|solutionrelative:rpgdex.infrastructure\\repositories\\characterrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C84A7EE8-6F54-2AFD-EB7C-1392919E0AA5}|RpgDex.Domain\\RpgDex.Domain.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.domain\\entities\\refreshtoken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -81,10 +85,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.webapi\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{4CD81823-330A-0F31-B717-19BE9B3EF7DB}|RpgDex.WebApi\\RpgDex.WebApi.csproj|solutionrelative:rpgdex.webapi\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.aplication\\common\\result.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|solutionrelative:rpgdex.aplication\\common\\result.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{71B35A57-CD9F-CE3C-3AC5-6FEAE5BDD0D6}|RpgDex.Aplication\\RpgDex.Aplication.csproj|c:\\users\\gener\\onedrive\\\u00E1rea de trabalho\\pi\\projetointegrador2026\\api\\rpgdex\\rpgdex.aplication\\interfaces\\icharactersevice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -134,7 +134,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 10,
               "Title": "TokenService.cs",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Services\\TokenService.cs",
               "RelativeDocumentMoniker": "RpgDex.Aplication\\Services\\TokenService.cs",
@@ -143,8 +143,7 @@
               "ViewState": "AgIAAA8AAAAAAAAAAAAAADYAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-04T14:21:43.053Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -154,7 +153,7 @@
               "RelativeDocumentMoniker": "RpgDex.WebApi\\Tests\\CharacterTest.http",
               "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.WebApi\\Tests\\CharacterTest.http",
               "RelativeToolTip": "RpgDex.WebApi\\Tests\\CharacterTest.http",
-              "ViewState": "AgIAABEAAAAAAAAAAAAAwCQAAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAwAQAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
               "WhenOpened": "2026-04-05T13:57:55.325Z",
               "IsPinned": true,
@@ -162,13 +161,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.WebApi\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "RpgDex.WebApi\\Controllers\\AuthController.cs",
               "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.WebApi\\Controllers\\AuthController.cs",
               "RelativeToolTip": "RpgDex.WebApi\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAQwBMAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADgAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-04T14:15:21.903Z",
               "IsPinned": true,
@@ -176,13 +175,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "AuthService.cs",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Services\\AuthService.cs",
               "RelativeDocumentMoniker": "RpgDex.Aplication\\Services\\AuthService.cs",
               "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Services\\AuthService.cs",
               "RelativeToolTip": "RpgDex.Aplication\\Services\\AuthService.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAEwB0AAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAnwBAAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-11T13:13:19.489Z",
               "IsPinned": true,
@@ -190,72 +189,46 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "UserRepository.cs",
-              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Infrastructure\\Repositories\\UserRepository.cs",
-              "RelativeDocumentMoniker": "RpgDex.Infrastructure\\Repositories\\UserRepository.cs",
-              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Infrastructure\\Repositories\\UserRepository.cs",
-              "RelativeToolTip": "RpgDex.Infrastructure\\Repositories\\UserRepository.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABQAAABRAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-11T13:05:20.394Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "ITokenRepository.cs",
-              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\Interfaces\\ITokenRepository.cs",
-              "RelativeDocumentMoniker": "RpgDex.Domain\\Interfaces\\ITokenRepository.cs",
-              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\Interfaces\\ITokenRepository.cs",
-              "RelativeToolTip": "RpgDex.Domain\\Interfaces\\ITokenRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAwAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-11T13:00:07.025Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ITokenService.cs",
-              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Interfaces\\ITokenService.cs",
-              "RelativeDocumentMoniker": "RpgDex.Aplication\\Interfaces\\ITokenService.cs",
-              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Interfaces\\ITokenService.cs",
-              "RelativeToolTip": "RpgDex.Aplication\\Interfaces\\ITokenService.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAwA8AAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-09T18:26:16.893Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "CharacterService.cs",
-              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Services\\CharacterService.cs",
-              "RelativeDocumentMoniker": "RpgDex.Aplication\\Services\\CharacterService.cs",
-              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Services\\CharacterService.cs",
-              "RelativeToolTip": "RpgDex.Aplication\\Services\\CharacterService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAE0AAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-11T16:47:25.362Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 8,
               "Title": "IAuthService.cs",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Interfaces\\IAuthService.cs",
               "RelativeDocumentMoniker": "RpgDex.Aplication\\Interfaces\\IAuthService.cs",
               "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Interfaces\\IAuthService.cs",
               "RelativeToolTip": "RpgDex.Aplication\\Interfaces\\IAuthService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAsAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwBEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-11T13:13:17.13Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 4,
+              "Title": "CharacterController.cs",
+              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.WebApi\\Controllers\\CharacterController.cs",
+              "RelativeDocumentMoniker": "RpgDex.WebApi\\Controllers\\CharacterController.cs",
+              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.WebApi\\Controllers\\CharacterController.cs",
+              "RelativeToolTip": "RpgDex.WebApi\\Controllers\\CharacterController.cs",
+              "ViewState": "AgIAAFYAAAAAAAAAAAAQwGcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-09T20:47:58.525Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CharacterRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Infrastructure\\Repositories\\CharacterRepository.cs",
+              "RelativeDocumentMoniker": "RpgDex.Infrastructure\\Repositories\\CharacterRepository.cs",
+              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Infrastructure\\Repositories\\CharacterRepository.cs",
+              "RelativeToolTip": "RpgDex.Infrastructure\\Repositories\\CharacterRepository.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T13:05:24.504Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "TokenRepository.cs",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Infrastructure\\Repositories\\TokenRepository.cs",
               "RelativeDocumentMoniker": "RpgDex.Infrastructure\\Repositories\\TokenRepository.cs",
@@ -268,20 +241,82 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 6,
+              "Title": "Result.cs",
+              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Common\\Result.cs",
+              "RelativeDocumentMoniker": "RpgDex.Aplication\\Common\\Result.cs",
+              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Common\\Result.cs",
+              "RelativeToolTip": "RpgDex.Aplication\\Common\\Result.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-09T19:44:47.651Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.WebApi\\Program.cs",
               "RelativeDocumentMoniker": "RpgDex.WebApi\\Program.cs",
               "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.WebApi\\Program.cs",
               "RelativeToolTip": "RpgDex.WebApi\\Program.cs",
-              "ViewState": "AgIAADoAAAAAAAAAAAAAAEAAAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAhwDEAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-11T13:29:44.248Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CharacterService.cs",
+              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Services\\CharacterService.cs",
+              "RelativeDocumentMoniker": "RpgDex.Aplication\\Services\\CharacterService.cs",
+              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Services\\CharacterService.cs",
+              "RelativeToolTip": "RpgDex.Aplication\\Services\\CharacterService.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAQwE0AAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-11T16:47:25.362Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ITokenService.cs",
+              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Interfaces\\ITokenService.cs",
+              "RelativeDocumentMoniker": "RpgDex.Aplication\\Interfaces\\ITokenService.cs",
+              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Interfaces\\ITokenService.cs",
+              "RelativeToolTip": "RpgDex.Aplication\\Interfaces\\ITokenService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAwA8AAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-09T18:26:16.893Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ITokenRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\Interfaces\\ITokenRepository.cs",
+              "RelativeDocumentMoniker": "RpgDex.Domain\\Interfaces\\ITokenRepository.cs",
+              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\Interfaces\\ITokenRepository.cs",
+              "RelativeToolTip": "RpgDex.Domain\\Interfaces\\ITokenRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAwAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T13:00:07.025Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 11,
+              "Title": "UserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Infrastructure\\Repositories\\UserRepository.cs",
+              "RelativeDocumentMoniker": "RpgDex.Infrastructure\\Repositories\\UserRepository.cs",
+              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Infrastructure\\Repositories\\UserRepository.cs",
+              "RelativeToolTip": "RpgDex.Infrastructure\\Repositories\\UserRepository.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABQAAABRAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-11T13:05:20.394Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "MongoDbContext.cs",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Infrastructure\\Data\\MongoDbContext.cs",
               "RelativeDocumentMoniker": "RpgDex.Infrastructure\\Data\\MongoDbContext.cs",
@@ -293,7 +328,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 15,
               "Title": "RefreshTokenModel.cs",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Dto\\RefreshTokenModel.cs",
               "RelativeDocumentMoniker": "RpgDex.Aplication\\Dto\\RefreshTokenModel.cs",
@@ -305,19 +340,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "CharacterController.cs",
-              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.WebApi\\Controllers\\CharacterController.cs",
-              "RelativeDocumentMoniker": "RpgDex.WebApi\\Controllers\\CharacterController.cs",
-              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.WebApi\\Controllers\\CharacterController.cs",
-              "RelativeToolTip": "RpgDex.WebApi\\Controllers\\CharacterController.cs",
-              "ViewState": "AgIAAGEAAAAAAAAAAAA5wD0AAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-09T20:47:58.525Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 16,
               "Title": "UpdateCharacterRequest.cs",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Dto\\UpdateCharacterRequest.cs",
               "RelativeDocumentMoniker": "RpgDex.Aplication\\Dto\\UpdateCharacterRequest.cs",
@@ -329,7 +352,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "IUserRepository.cs",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\Interfaces\\IUserRepository.cs",
               "RelativeDocumentMoniker": "RpgDex.Domain\\Interfaces\\IUserRepository.cs",
@@ -341,19 +364,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "CharacterRepository.cs",
-              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Infrastructure\\Repositories\\CharacterRepository.cs",
-              "RelativeDocumentMoniker": "RpgDex.Infrastructure\\Repositories\\CharacterRepository.cs",
-              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Infrastructure\\Repositories\\CharacterRepository.cs",
-              "RelativeToolTip": "RpgDex.Infrastructure\\Repositories\\CharacterRepository.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAAA9wAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-11T13:05:24.504Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "RefreshToken.cs",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Domain\\Entities\\RefreshToken.cs",
               "RelativeDocumentMoniker": "RpgDex.Domain\\Entities\\RefreshToken.cs",
@@ -365,7 +376,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.WebApi\\appsettings.json",
               "RelativeDocumentMoniker": "RpgDex.WebApi\\appsettings.json",
@@ -377,7 +388,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "Dockerfile",
               "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.WebApi\\Dockerfile",
               "RelativeDocumentMoniker": "RpgDex.WebApi\\Dockerfile",
@@ -386,18 +397,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2026-03-11T13:26:15.803Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "Result.cs",
-              "DocumentMoniker": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Common\\Result.cs",
-              "RelativeDocumentMoniker": "RpgDex.Aplication\\Common\\Result.cs",
-              "ToolTip": "C:\\Users\\Gener\\OneDrive\\\u00C1rea de Trabalho\\PI\\ProjetoIntegrador2026\\API\\RpgDex\\RpgDex.Aplication\\Common\\Result.cs",
-              "RelativeToolTip": "RpgDex.Aplication\\Common\\Result.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-09T19:44:47.651Z"
             },
             {
               "$type": "Document",
