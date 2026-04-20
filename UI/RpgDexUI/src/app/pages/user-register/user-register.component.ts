@@ -19,7 +19,6 @@ export class UserRegisterComponent {
   registerForm: RegisterUser = {
     userName: '',
     email: '',
-    userName:'',
     password: ''
   };
 

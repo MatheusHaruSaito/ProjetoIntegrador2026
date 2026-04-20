@@ -24,7 +24,7 @@ namespace RpgDex.WebApi.Controllers
             var result = await _characterSevice.Create(request);
             if (result.IsFailure)
             {
-                return BadRequest(new{success = result.IsFailure,
+                return BadRequest(new{success = result.IsSuccess,
                                       message = result.Error,
                                       data = result.Value});
             }
@@ -40,7 +40,7 @@ namespace RpgDex.WebApi.Controllers
 
             if(result.IsFailure)
             {
-                return NotFound(new{ success = result.IsFailure,
+                return NotFound(new{ success = result.IsSuccess,
                     message = result.Error,
                     data = result.Value
                 });
@@ -62,7 +62,7 @@ namespace RpgDex.WebApi.Controllers
             {
                 return NotFound(new
                 {
-                    success = result.IsFailure,
+                    success = result.IsSuccess,
                     message = result.Error,
                     data = result.Value
                 });
@@ -83,7 +83,7 @@ namespace RpgDex.WebApi.Controllers
             {
                 return NotFound(new
                 {
-                    success = result.IsFailure,
+                    success = result.IsSuccess,
                     message = result.Error,
                     data = result.Value
                 });
@@ -103,7 +103,7 @@ namespace RpgDex.WebApi.Controllers
             {
                 return NotFound(new
                 {
-                    success = result.IsFailure,
+                    success = result.IsSuccess,
                     message = result.Error,
                     data = result.Value
                 });

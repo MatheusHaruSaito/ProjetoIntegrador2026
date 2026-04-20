@@ -31,7 +31,7 @@ builder.Services.AddScoped<ICharacterSevice,CharacterService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService,TokenService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-
+builder.Services.AddScoped<ITokenRepository,TokenRepository>();
 
 MappingConfig.Configure();
 
@@ -75,7 +75,7 @@ builder.Services.AddAuthentication(option =>
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidateActor = true,
+            ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
