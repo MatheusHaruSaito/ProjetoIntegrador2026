@@ -40,22 +40,22 @@ namespace RpgDex.Aplication.Services
             return Result<CharacterResponse>.Success(response.Adapt<CharacterResponse>());
         }
 
-        public async Task<Result<CharacterResponse>> DeleteAsync(Guid Id)
+        public async Task<Result<CharacterResponse>> SetActiveState(Guid Id, bool ActiveState)
         {
             //Verifica se o Personagem Existe
             var characterFound = await _character.GetByIdAsync(Id);
             if(characterFound is null) return Result<CharacterResponse>.Failure("Falha ao achar personagem");
 
             //Verifica se o Personagem foi deletado
-            bool deleted = await _character.DeleteAsync(Id);
-            if (!deleted) return Result<CharacterResponse>.Failure("Falha ao deletar personagem");
+            bool modified = await _character.SetActiveState(Id,ActiveState);
+            if (!modified) return Result<CharacterResponse>.Failure("Falha ao desativar personagem");
 
             //Verifica se o Personagem foi deletado do Usuario
-            bool deletedFromUser = await _userRepository.PullCharacterAsync(characterFound.UserId, Id);
-            if (!deletedFromUser)
-            {
-                return Result<CharacterResponse>.Failure("Falha ao deletar personagem do usuario");
-            }
+            //bool deletedFromUser = await _userRepository.PullCharacterAsync(characterFound.UserId, Id);
+            //if (!deletedFromUser)
+            //{
+            //    return Result<CharacterResponse>.Failure("Falha ao desativar personagem do usuario");
+            //}
             return Result<CharacterResponse>.Success(characterFound.Adapt<CharacterResponse>());
         }
 

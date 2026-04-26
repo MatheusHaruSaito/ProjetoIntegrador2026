@@ -11,7 +11,9 @@ namespace RpgDex.Domain.Interfaces
         Task<IEnumerable<Character>> GetAllAsync();
         Task<Character> GetByIdAsync(Guid Id);
         Task<bool> UpdateAsync(Character NewCharacter);
-        Task<bool> DeleteAsync(Guid Id);
+        Task<bool> SetActiveState(Guid Id,bool ActiveState);
+
+
     }
 
 }

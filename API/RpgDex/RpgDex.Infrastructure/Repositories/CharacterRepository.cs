@@ -29,7 +29,7 @@ namespace RpgDex.Infrastructure.Services
 
         public async Task<IEnumerable<Character>> GetAllAsync()
         {
-            return await _entitie.Find(_ => true).ToListAsync();
+            return await _entitie.Find(c => c.IsActive == true).ToListAsync();
         }
 
         public async Task<Character> GetByIdAsync(Guid Id)
@@ -40,21 +40,24 @@ namespace RpgDex.Infrastructure.Services
         public async Task<bool> UpdateAsync(Character NewCharacter)
         {
             var filter = Builders<Character>.Filter.Eq(c => c.Id, NewCharacter.Id);
-            var updateUser = Builders<Character>.Update
-                .Set(u => u.IconPath, NewCharacter.IconPath)
-                .Set(u => u.Name, NewCharacter.Name)
-                .Set(u => u.Description, NewCharacter.Description)
-                .Set(u => u.Attributes, NewCharacter.Attributes)
-                .Set(u => u.Skills, NewCharacter.Skills);
-            var result = await _entitie.UpdateOneAsync(filter, updateUser);
+            var updateCharacter = Builders<Character>.Update
+                .Set(c => c.IconPath, NewCharacter.IconPath)
+                .Set(c => c.Name, NewCharacter.Name)
+                .Set(c => c.Description, NewCharacter.Description)
+                .Set(c => c.Attributes, NewCharacter.Attributes)
+                .Set(c => c.Skills, NewCharacter.Skills);
+            var result = await _entitie.UpdateOneAsync(filter, updateCharacter);
             return result.ModifiedCount > 0;
         }
 
-        public async Task<bool> DeleteAsync(Guid Id)
+        public async Task<bool> SetActiveState(Guid Id, bool ActiveState)
         {
             var filter = Builders<Character>.Filter.Eq(c => c.Id, Id);
-            var result = await _entitie.DeleteOneAsync(filter);
-            return result.DeletedCount > 0;
+            var updateCharacter = Builders<Character>.Update
+                .Set(c => c.IsActive, ActiveState);
+
+            var result = await _entitie.UpdateOneAsync(filter, updateCharacter);
+            return result.ModifiedCount > 0;
         }
     }
 }

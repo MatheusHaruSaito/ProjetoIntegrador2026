@@ -73,11 +73,11 @@ namespace RpgDex.WebApi.Controllers
                 data = result.Value
             });
         }
-        [HttpDelete("{Id}")]
-        public async Task<ActionResult<CharacterResponse>> Delete(Guid Id)
+        [HttpPut("SetActiveState/{Id}")]
+        public async Task<ActionResult<CharacterResponse>> SetActiveState(Guid Id,bool state)
         {
 
-            var result = await _characterSevice.DeleteAsync(Id);
+            var result = await _characterSevice.SetActiveState(Id, state);
 
             if (result.IsFailure)
             {

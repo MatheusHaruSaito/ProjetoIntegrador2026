@@ -2,7 +2,7 @@
 @port = 32768
 ### 32772
 
-@Controller = Auth
+@Controller = Character
 @baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
 
 ### Ta adicionando mesmo com usuario invalido
@@ -72,5 +72,9 @@ Content-Type: application/json
 
 ### Delete
 
-DELETE {{baseUrl}}/f53a860b-393b-4daf-b46d-3bd7ebdd3c24
-Accept: application/json
+PUT {{baseUrl}}/SetActiveState/d1407d99-3c56-42c2-b513-0309467346d7
+Content-Type: application/Json
+{
+
+  "State": true
+}
