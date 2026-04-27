@@ -13,6 +13,6 @@ namespace RpgDex.Aplication.Interfaces
         Task<Result<IEnumerable<CharacterResponse>>> GetAllAsync();
         Task<Result<CharacterResponse>> GetByIdAsync(Guid Id);
         Task<Result<bool>> UpdateAsync(UpdateCharacterRequest request);
-        Task<Result<CharacterResponse>> DeleteAsync(Guid Id);
+        Task<Result<CharacterResponse>> SetActiveState(Guid Id,bool ActiveState);
     }
 }

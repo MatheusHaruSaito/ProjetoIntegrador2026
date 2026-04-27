@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RpgDex.WebApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a4e180b9f67a123950337693922458e8c066c269")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a9200d9834bda50210d2df2bd7e5f471dec88d5b")]
 [assembly: System.Reflection.AssemblyProductAttribute("RpgDex.WebApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RpgDex.WebApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

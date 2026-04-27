@@ -16,6 +16,7 @@ namespace RpgDex.Domain.Entities
         public string IconPath { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public bool IsActive { get; set; } = true;
         public List<ValueObjects.Attribute> Attributes { get; set; } = new List<ValueObjects.Attribute>();
         public List<Skill> Skills { get; set; } = new List<Skill>();
 
