@@ -54,12 +54,10 @@ export class AuthService {
       return user;
     }
 
-    // Método essencial para a Navbar
     public isLoggedIn(): boolean {
       return this.cookieService.check(this.JWT_Token);
     }
 
-    // Método para o botão de sair
     public Logout(): void {
       this.cookieService.delete(this.JWT_Token, '/');
     }

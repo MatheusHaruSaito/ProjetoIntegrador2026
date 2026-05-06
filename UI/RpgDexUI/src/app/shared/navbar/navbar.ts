@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth-service'; // Caminho corrigido para o seu arquivo
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,7 +13,6 @@ import { AuthService } from '../../services/auth-service'; // Caminho corrigido 
 export class NavbarComponent {
   isMenuOpen = false;
 
-  // Injetando o serviço que agora o Angular vai encontrar
   constructor(public authService: AuthService) {}
 
   toggleMenu() {

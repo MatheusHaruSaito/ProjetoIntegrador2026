@@ -1,22 +1,16 @@
 .footer {
   background-color: #1a1a2e;
-  color: #ffffff;
-  padding: 40px 0 0 0; 
-  border-top: 1px solid rgba(158, 116, 208, 0.1);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+  color: white;
+  padding: 40px 0 0 0;
+  border-top: 1px solid var(--rpg-purple-15);
 }
 
 .footer__grid {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 30px; 
-  padding-bottom: 30px; 
+  gap: 30px;
+  padding-bottom: 30px;
 }
 
 .footer__brand {
@@ -28,7 +22,7 @@
   font-family: 'Nunito', sans-serif;
   font-weight: 900;
   font-size: 1.8rem;
-  color: #80E2FF;
+  color: var(--rpg-cyan);
   letter-spacing: -1px;
   margin-bottom: 10px;
 }
@@ -51,7 +45,7 @@
   font-weight: 800;
   font-size: 0.9rem;
   text-transform: uppercase;
-  color: #BA9FE7;
+  color: var(--rpg-purple-soft);
   margin-bottom: 15px;
   letter-spacing: 1px;
 }
@@ -67,23 +61,23 @@
 
 .footer__list a {
   font-family: 'Nunito', sans-serif;
-  color: #fff;
+  color: white;
   text-decoration: none;
   opacity: 0.5;
   transition: all 0.3s ease;
   font-size: 0.9rem;
-  display: inline-block; 
+  display: inline-block;
 }
 
 .footer__list a:hover {
   opacity: 1;
-  color: #80E2FF;
-  transform: translateX(5px); 
+  color: var(--rpg-cyan);
+  transform: translateX(5px);
 }
 
 .footer__bottom {
   background-color: rgba(0, 0, 0, 0.2);
-  padding: 15px 0; 
+  padding: 15px 0;
   text-align: center;
   font-size: 0.8rem;
   font-family: 'Nunito', sans-serif;

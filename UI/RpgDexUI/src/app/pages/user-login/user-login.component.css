@@ -3,10 +3,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #fdfbf7;
+    background-color: var(--rpg-bg);
     background-image:
-        repeating-linear-gradient(0deg, rgba(158, 116, 208, 0.15) 0, rgba(158, 116, 208, 0.15) 1px, transparent 1px, transparent 40px),
-        repeating-linear-gradient(90deg, rgba(158, 116, 208, 0.15) 0, rgba(158, 116, 208, 0.15) 1px, transparent 1px, transparent 40px);
+        repeating-linear-gradient(0deg, var(--rpg-purple-15) 0, var(--rpg-purple-15) 1px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(90deg, var(--rpg-purple-15) 0, var(--rpg-purple-15) 1px, transparent 1px, transparent 40px);
     padding: 40px 20px;
 }
 
@@ -14,16 +14,16 @@
     display: flex;
     width: 100%;
     max-width: 1000px;
-    background-color: #ffffff;
+    background-color: var(--rpg-surface);
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 15px 40px rgba(60, 52, 137, 0.15);
+    box-shadow: var(--rpg-shadow-lg);
 }
 
 .login-side {
     flex: 1;
-    background: linear-gradient(135deg, #9e74d0 0%, #80e2ff 100%);
-    color: #fff;
+    background: var(--rpg-gradient);
+    color: white;
     padding: 60px;
     display: flex;
     flex-direction: column;
@@ -35,7 +35,7 @@
     font-family: 'Nunito', sans-serif;
     font-weight: 900;
     font-size: 2.5rem;
-    color: #fff;
+    color: white;
     cursor: pointer;
     letter-spacing: -1px;
 }
@@ -81,7 +81,7 @@
     padding: 12px 40px;
     font-size: 1rem;
     font-weight: 800;
-    color: #fff;
+    color: white;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, 0.8);
     border-radius: 8px;
@@ -98,20 +98,20 @@
 .login-main {
     flex: 1;
     padding: 60px;
-    background-color: #ffffff;
+    background-color: var(--rpg-surface);
 }
 
 .login-main__title {
     font-family: 'Exo 2', sans-serif;
     font-weight: 800;
     font-size: 2rem;
-    color: #3C3489;
+    color: var(--rpg-text-dark);
     margin-bottom: 10px;
 }
 
 .login-main__sub {
     font-family: 'Nunito', sans-serif;
-    color: #555;
+    color: var(--rpg-text-body);
     font-size: 1rem;
     margin-bottom: 40px;
 }
@@ -131,7 +131,7 @@
     left: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #aaa;
+    color: var(--rpg-text-faint);
     font-size: 1.1rem;
 }
 
@@ -139,18 +139,18 @@
     width: 100%;
     font-family: 'Nunito', sans-serif;
     padding: 15px 15px 15px 45px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--rpg-border);
     border-radius: 10px;
     font-size: 1rem;
-    color: #333;
-    transition: border-color 0.3s;
-    background-color: #fafafa;
+    color: var(--rpg-text-strong);
+    transition: border-color 0.3s, background-color 0.3s;
+    background-color: var(--rpg-surface-2);
 }
 
 .input-group input:focus {
     outline: none;
-    border-color: #9e74d0;
-    background-color: #fff;
+    border-color: var(--rpg-purple);
+    background-color: var(--rpg-surface);
 }
 
 .form-options {
@@ -160,7 +160,7 @@
 
 .forgot-link {
     font-family: 'Nunito', sans-serif;
-    color: #9e74d0;
+    color: var(--rpg-purple);
     font-size: 0.9rem;
     text-decoration: none;
     font-weight: 600;
@@ -171,32 +171,32 @@
     padding: 18px 40px;
     font-size: 1.1rem;
     font-weight: 800;
-    color: #fff;
-    background: #9E74D0;
+    color: white;
+    background: var(--rpg-purple);
     border: none;
     border-radius: 8px;
     cursor: pointer;
     text-transform: uppercase;
-    box-shadow: 0 8px 20px rgba(158, 116, 208, 0.3);
+    box-shadow: var(--rpg-shadow-btn);
     transition: all 0.3s ease;
 }
 
 .btn-login:hover {
     transform: translateY(-3px);
     filter: brightness(1.1);
-    box-shadow: 0 12px 25px rgba(158, 116, 208, 0.4);
+    box-shadow: var(--rpg-shadow-btn-hov);
 }
 
 .login-separator {
     text-align: center;
     margin: 30px 0;
     font-family: 'Nunito', sans-serif;
-    color: #aaa;
+    color: var(--rpg-text-faint);
     position: relative;
 }
 
 .login-separator span {
-    background: #fff;
+    background: var(--rpg-surface);
     padding: 0 10px;
     position: relative;
     z-index: 1;
@@ -210,7 +210,7 @@
     left: 0;
     width: 100%;
     height: 1px;
-    background: #eee;
+    background: var(--rpg-border-light);
 }
 
 .social-logins {
@@ -223,50 +223,40 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: #fdfbf7;
-    border: 2px solid #eee;
+    background: var(--rpg-bg);
+    border: 2px solid var(--rpg-border-light);
     cursor: pointer;
     transition: 0.3s;
-    color: #555;
+    color: var(--rpg-text-body);
     font-size: 1.2rem;
 }
 
 .social-btn:hover {
-    border-color: #9e74d0;
-    background: #fff;
+    border-color: var(--rpg-purple);
+    background: var(--rpg-surface);
     transform: scale(1.05);
-    color: #9e74d0;
+    color: var(--rpg-purple);
 }
 
 .login-footer {
     text-align: center;
     margin-top: 30px;
     font-family: 'Nunito', sans-serif;
-    color: #666;
+    color: var(--rpg-text-muted);
 }
 
 .login-footer a {
-    color: #9e74d0;
+    color: var(--rpg-purple);
     font-weight: 700;
     text-decoration: none;
 }
 
-.desktop-only {
-    display: block;
-}
-
-.mobile-only {
-    display: none;
-}
+.desktop-only { display: block; }
+.mobile-only  { display: none;  }
 
 @media (max-width: 768px) {
-    .desktop-only {
-        display: none;
-    }
-
-    .mobile-only {
-        display: block;
-    }
+    .desktop-only { display: none;  }
+    .mobile-only  { display: block; }
 
     .login-card {
         flex-direction: column;
@@ -278,25 +268,19 @@
         border-radius: 15px 15px 0 0;
     }
 
-    .login-side__title {
-        font-size: 1.8rem;
-    }
+    .login-side__title { font-size: 1.8rem; }
 
-    .login-main {
-        padding: 40px 25px;
-    }
+    .login-main { padding: 40px 25px; }
 
     .login-main__title {
         font-size: 1.8rem;
-        text-align: center; 
+        text-align: center;
     }
 
     .login-main__sub {
-        text-align: center; 
+        text-align: center;
         margin-bottom: 30px;
     }
-    
-    .form-options {
-        text-align: center;
-    }
+
+    .form-options { text-align: center; }
 }

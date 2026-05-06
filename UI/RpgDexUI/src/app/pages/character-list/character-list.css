@@ -28,17 +28,17 @@
 
 .cl-subtitle {
     font-size: 0.95rem;
-    color: #777;
+    color: var(--rpg-text-muted);
     margin-top: 4px;
 }
 
 /* --- TABELA --- */
 .cl-table-wrapper {
-    background: #ffffff;
+    background: var(--rpg-surface);
     border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(60, 52, 137, 0.08);
-    border: 1px solid #f0ebf7;
+    box-shadow: var(--rpg-shadow-md);
+    border: 1px solid var(--rpg-border-purple);
 }
 
 table {
@@ -48,7 +48,7 @@ table {
 }
 
 thead {
-    background: linear-gradient(135deg, #9e74d0 0%, #80e2ff 100%);
+    background: var(--rpg-gradient);
 }
 
 thead th {
@@ -59,7 +59,7 @@ thead th {
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color: #fff;
+    color: white;
 }
 
 thead th:last-child {
@@ -67,7 +67,7 @@ thead th:last-child {
 }
 
 tbody tr {
-    border-bottom: 1px solid #f5f0fa;
+    border-bottom: 1px solid var(--rpg-border-row);
     transition: background 0.2s;
 }
 
@@ -76,12 +76,12 @@ tbody tr:last-child {
 }
 
 tbody tr:hover {
-    background-color: #fdfbff;
+    background-color: var(--rpg-surface-tint);
 }
 
 tbody td {
     padding: 16px 24px;
-    color: #444;
+    color: var(--rpg-text-body);
     font-size: 0.95rem;
     vertical-align: middle;
 }
@@ -93,7 +93,7 @@ tbody td:last-child {
 /* --- CÉLULAS --- */
 .char-id {
     display: inline-block;
-    background: #f0ebf7;
+    background: var(--rpg-purple-tint);
     color: var(--rpg-purple);
     font-weight: 800;
     font-size: 0.78rem;
@@ -109,7 +109,7 @@ tbody td:last-child {
 }
 
 .char-desc {
-    color: #777;
+    color: var(--rpg-text-muted);
     max-width: 360px;
     white-space: nowrap;
     overflow: hidden;
@@ -134,18 +134,18 @@ tbody td:last-child {
     align-items: center;
     justify-content: center;
     font-size: 0.95rem;
-    color: #999;
+    color: var(--rpg-text-faint);
     transition: background 0.2s, color 0.2s;
 }
 
 .btn-icon:hover {
-    background: #f0ebf7;
+    background: var(--rpg-purple-tint);
     color: var(--rpg-purple);
 }
 
 .btn-icon.danger:hover {
-    background: #fdecea;
-    color: #c0392b;
+    background: var(--rpg-error-bg);
+    color: var(--rpg-error);
 }
 
 /* --- ESTADO VAZIO --- */
@@ -166,7 +166,7 @@ tbody td:last-child {
 .empty-icon {
     width: 64px;
     height: 64px;
-    background: #f0ebf7;
+    background: var(--rpg-purple-tint);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -179,14 +179,14 @@ tbody td:last-child {
 
 .empty-text {
     font-size: 1rem;
-    color: #999;
+    color: var(--rpg-text-faint);
     font-weight: 700;
     margin: 0;
 }
 
 .empty-sub {
     font-size: 0.85rem;
-    color: #bbb;
+    color: var(--rpg-border);
     margin: 0;
 }
 
@@ -202,17 +202,17 @@ tbody td:last-child {
     padding: 12px 28px;
     font-size: 0.95rem;
     font-weight: 700;
-    color: #888;
-    background: #f5f5f5;
-    border: 2px solid #e8e8e8;
+    color: var(--rpg-text-faint);
+    background: var(--rpg-border-light);
+    border: 2px solid var(--rpg-border);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .btn-secondary:hover:not(:disabled) {
-    background: #ececec;
-    color: #555;
+    background: var(--rpg-border);
+    color: var(--rpg-text-body);
 }
 
 .btn-secondary:disabled {
@@ -235,12 +235,17 @@ tbody td:last-child {
 }
 
 @keyframes backdropIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-card {
-    background: #fff;
+    background: var(--rpg-surface);
     border-radius: 20px;
     width: 100%;
     max-width: 480px;
@@ -250,8 +255,15 @@ tbody td:last-child {
 }
 
 @keyframes modalIn {
-    from { opacity: 0; transform: translateY(24px) scale(0.97); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .modal-header {
@@ -273,12 +285,12 @@ tbody td:last-child {
 }
 
 .modal-close {
-    color: #bbb;
+    color: var(--rpg-border);
     font-size: 1.1rem;
 }
 
 .modal-close:hover {
-    background: #f0ebf7;
+    background: var(--rpg-purple-tint);
     color: var(--rpg-purple);
 }
 
@@ -294,7 +306,7 @@ tbody td:last-child {
     justify-content: flex-end;
     gap: 10px;
     padding: 16px 28px 24px;
-    border-top: 1px solid #f5f0fa;
+    border-top: 1px solid var(--rpg-border-row);
 }
 
 /* --- INPUTS DO MODAL --- */
@@ -310,11 +322,11 @@ tbody td:last-child {
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #666;
+    color: var(--rpg-text-muted);
 }
 
 .required {
-    color: #e05c5c;
+    color: var(--rpg-error-text);
 }
 
 .input-field-wrapper {
@@ -326,7 +338,7 @@ tbody td:last-child {
     left: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: #bbb;
+    color: var(--rpg-border);
     font-size: 0.95rem;
     pointer-events: none;
 }
@@ -335,11 +347,11 @@ tbody td:last-child {
     width: 100%;
     font-family: 'Nunito', sans-serif;
     padding: 12px 14px 12px 40px;
-    border: 2px solid #e8e0f0;
+    border: 2px solid var(--rpg-border-input);
     border-radius: 10px;
     font-size: 0.95rem;
-    color: #333;
-    background: #fdfbff;
+    color: var(--rpg-text-strong);
+    background: var(--rpg-surface-tint);
     transition: border-color 0.2s, background 0.2s;
     box-sizing: border-box;
 }
@@ -347,18 +359,18 @@ tbody td:last-child {
 .input-field-wrapper input:focus {
     outline: none;
     border-color: var(--rpg-purple);
-    background: #fff;
+    background: var(--rpg-surface);
 }
 
 .input-textarea {
     width: 100%;
     font-family: 'Nunito', sans-serif;
     padding: 12px 14px;
-    border: 2px solid #e8e0f0;
+    border: 2px solid var(--rpg-border-input);
     border-radius: 10px;
     font-size: 0.95rem;
-    color: #333;
-    background: #fdfbff;
+    color: var(--rpg-text-strong);
+    background: var(--rpg-surface-tint);
     resize: vertical;
     min-height: 80px;
     transition: border-color 0.2s, background 0.2s;
@@ -368,7 +380,7 @@ tbody td:last-child {
 .input-textarea:focus {
     outline: none;
     border-color: var(--rpg-purple);
-    background: #fff;
+    background: var(--rpg-surface);
 }
 
 /* --- FEEDBACK --- */
@@ -384,9 +396,9 @@ tbody td:last-child {
 }
 
 .error-message {
-    color: #c0392b;
-    background-color: #fdecea;
-    border: 1px solid #f5c6c6;
+    color: var(--rpg-error);
+    background-color: var(--rpg-error-bg);
+    border: 1px solid var(--rpg-error-border);
 }
 
 /* --- RESPONSIVIDADE --- */

@@ -1,11 +1,107 @@
 :root {
-  --rpg-purple: #9E74D0;
-  --rpg-cyan: #80E2FF;
-  --rpg-bg: #fdfbf7;      
-  --rpg-text-dark: #3C3489; 
-  --rpg-text-body: #555555;
+  /* ── Brand ──────────────────────────────────────────── */
+  --rpg-purple:         #9E74D0;
+  --rpg-purple-dark:    #8a5bc9;
+  --rpg-purple-soft:    #c8b1e4;
+  --rpg-cyan:           #80E2FF;
+
+  /* ── Gradientes ─────────────────────────────────────── */
+  --rpg-gradient:       linear-gradient(135deg, #9e74d0 0%, #80e2ff 100%);
+  --rpg-gradient-nav:   linear-gradient(90deg,  #9e74d0 0%, #80e2ff 100%);
+
+  /* ── Backgrounds ─────────────────────────────────────── */
+  --rpg-bg:             #fdfbf7;
+  --rpg-surface:        #ffffff;
+  --rpg-surface-2:      #fafafa;
+  --rpg-surface-tint:   #fdfbff;
+  --rpg-purple-tint:    #f0ebf7;
+
+  /* ── Texto ───────────────────────────────────────────── */
+  --rpg-text-dark:      #3C3489;
+  --rpg-text-body:      #555555;
+  --rpg-text-strong:    #333333;
+  --rpg-text-muted:     #777777;
+  --rpg-text-faint:     #aaaaaa;
+
+  /* ── Bordas ──────────────────────────────────────────── */
+  --rpg-border:         #e0e0e0;
+  --rpg-border-light:   #eeeeee;
+  --rpg-border-purple:  #f0ebf7;
+  --rpg-border-input:   #e8e0f0;
+  --rpg-border-row:     #f5f0fa;
+
+  /* ── Sombras ─────────────────────────────────────────── */
+  --rpg-shadow-nav:     0 4px 20px rgba(158, 116, 208, 0.3);
+  --rpg-shadow-md:      0 10px 40px rgba(60, 52, 137, 0.08);
+  --rpg-shadow-lg:      0 15px 40px rgba(60, 52, 137, 0.15);
+  --rpg-shadow-card:    0 8px 20px rgba(158, 116, 208, 0.15);
+  --rpg-shadow-btn:     0 8px 20px rgba(158, 116, 208, 0.3);
+  --rpg-shadow-btn-hov: 0 12px 25px rgba(158, 116, 208, 0.4);
+
+  /* ── Roxo com transparência ──────────────────────────── */
+  --rpg-purple-05:      rgba(158, 116, 208, 0.05);
+  --rpg-purple-08:      rgba(158, 116, 208, 0.08);
+  --rpg-purple-10:      rgba(158, 116, 208, 0.1);
+  --rpg-purple-15:      rgba(158, 116, 208, 0.15);
+  --rpg-purple-30:      rgba(158, 116, 208, 0.3);
+  --rpg-purple-85:      rgba(158, 116, 208, 0.85);
+
+  /* ── Feedback ────────────────────────────────────────── */
+  --rpg-error:          #c0392b;
+  --rpg-error-text:     #e05c5c;
+  --rpg-error-bg:       #fdecea;
+  --rpg-error-border:   #f5c6c6;
+  --rpg-success:        #1e7e45;
+  --rpg-success-bg:     #eafaf1;
+  --rpg-success-border: #b2dfcc;
 }
 
+/* ============================================================
+   DARK THEME — sobrescreve apenas as variáveis semânticas.
+   As cores de brand (--rpg-purple, --rpg-cyan, gradientes)
+   permanecem iguais para manter a identidade visual.
+   ============================================================ */
+body.dark-theme {
+  --rpg-bg:             #13131f;
+  --rpg-surface:        #1e1e30;
+  --rpg-surface-2:      #252540;
+  --rpg-surface-tint:   #252540;
+  --rpg-purple-tint:    #2d2250;
+
+  --rpg-text-dark:      #c9b8f0;
+  --rpg-text-body:      #a0a0c0;
+  --rpg-text-strong:    #d8d8f0;
+  --rpg-text-muted:     #7878a0;
+  --rpg-text-faint:     #555578;
+
+  --rpg-border:         #3a3a5c;
+  --rpg-border-light:   #2e2e4e;
+  --rpg-border-purple:  #332850;
+  --rpg-border-input:   #3a3560;
+  --rpg-border-row:     #2a2a45;
+
+  --rpg-shadow-nav:     0 4px 20px rgba(0, 0, 0, 0.5);
+  --rpg-shadow-md:      0 10px 40px rgba(0, 0, 0, 0.3);
+  --rpg-shadow-lg:      0 15px 40px rgba(0, 0, 0, 0.5);
+  --rpg-shadow-card:    0 8px 20px rgba(0, 0, 0, 0.4);
+  --rpg-shadow-btn:     0 8px 20px rgba(0, 0, 0, 0.4);
+  --rpg-shadow-btn-hov: 0 12px 25px rgba(0, 0, 0, 0.5);
+
+  --rpg-purple-05:      rgba(158, 116, 208, 0.08);
+  --rpg-purple-08:      rgba(158, 116, 208, 0.12);
+  --rpg-purple-10:      rgba(158, 116, 208, 0.15);
+  --rpg-purple-15:      rgba(158, 116, 208, 0.2);
+  --rpg-purple-30:      rgba(158, 116, 208, 0.35);
+
+  --rpg-error-bg:       #3a1a1a;
+  --rpg-error-border:   #7a2a2a;
+  --rpg-success-bg:     #0f2a1a;
+  --rpg-success-border: #1a5a30;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
 * {
   margin: 0;
   padding: 0;
@@ -19,6 +115,7 @@ body {
   min-height: 100vh;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4 {
@@ -26,7 +123,7 @@ h1, h2, h3, h4 {
 }
 
 main {
-  min-height: calc(100vh - 80px); 
+  min-height: calc(100vh - 80px);
 }
 
 .container {
