@@ -18,6 +18,8 @@ namespace RpgDex.Infrastructure.Repositories
             _mongoDbContext = mongoDbContext;
             _users = mongoDbContext.Users;
         }
+
+
         public async Task<bool> PushCharacterAsync(Guid userId, Guid characterId)
         {
             var filter = Builders<ApplicationUser>.Filter.Eq(u => u.Id, userId);
@@ -37,6 +39,11 @@ namespace RpgDex.Infrastructure.Repositories
             var result = await _users.UpdateOneAsync(filter, update);
 
             return result.ModifiedCount > 0;
+        }
+
+        public Task<ApplicationUser> GetByIdAsync(Guid userId)
+        {
+            return _users.Find(u => u.Id == userId).FirstOrDefaultAsync();
         }
     }
 }

@@ -9,6 +9,8 @@ namespace RpgDex.Domain.Interfaces
     {
         Task<bool> PushCharacterAsync(Guid UserId, Guid CharacterID);
         Task<bool> PullCharacterAsync(Guid userId, Guid characterId);
+        Task<ApplicationUser> GetByIdAsync(Guid userId);
+
 
     }
 }

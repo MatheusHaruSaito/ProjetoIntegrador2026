@@ -30,6 +30,10 @@ namespace RpgDex.Aplication.Services
             character.Id = Guid.NewGuid();
             character.UserId = request.UserId;
 
+            //Verifica se o Usuario Existe
+            var user = await _userRepository.GetByIdAsync(request.UserId);
+            if (user is null) return Result<CharacterResponse>.Failure("Usuario não encontrado");
+
             // coloca o personagem no banco
             var response = await _character.InsertAsync(character);
 
