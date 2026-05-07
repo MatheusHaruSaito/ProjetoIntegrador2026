@@ -24,7 +24,7 @@ export class UserLoginComponent {
     this.authService.Login(this.authUserForm).subscribe({
       next: (res) => {
         this.router.navigate(['/home']).then(() => {
-          window.location.reload(); 
+          // window.location.reload(); 
         });
       },
       error: (err) => {

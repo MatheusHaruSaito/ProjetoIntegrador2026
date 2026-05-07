@@ -9,6 +9,7 @@ import { Observable, tap } from 'rxjs';
 import { LoginUser } from '../../models/loginUser';
 import { JwtPayload } from '../../models/jwtPayload';
 import { tokenModel } from '../../models/tokenMode';
+import { ApiResponse } from '../../models/apiResponse';
 @Injectable({
   providedIn: 'root',
 })
@@ -25,19 +26,21 @@ export class AuthService {
       return this.http.post<boolean>(this.env,authUser);
     }
     
-    public Login(user: LoginUser): Observable<tokenModel>{
-       return this.http.post<tokenModel>(`${this.env}/Login`, user).pipe(
+    public Login(user: LoginUser): Observable<ApiResponse<tokenModel>>{
+       return this.http.post<ApiResponse<tokenModel>>(`${this.env}/Login`, user).pipe(
         tap(token => {
-            this.cookieService.set(this.JWT_Token, token.accessToken);
-            this.cookieService.set(this.REFRESH_Token,token.refreshToken);
+          console.log('Token recebido:', token);
+            this.cookieService.set(this.JWT_Token, token.data!.accessToken);
+            this.cookieService.set(this.REFRESH_Token,token.data!.refreshToken);
         })
        );
     }
-  public RefreshToken(token: tokenModel): Observable<tokenModel>{
-       return this.http.post<tokenModel>(`${this.env}/RefreshToken`, token).pipe(
+  public RefreshToken(token: tokenModel): Observable<ApiResponse<tokenModel>>{
+       return this.http.post<ApiResponse<tokenModel>>(`${this.env}/RefreshToken`, token).pipe(
         tap(newToken => {
-            this.cookieService.set(this.JWT_Token, newToken.accessToken);
-            this.cookieService.set(this.REFRESH_Token,newToken.refreshToken);
+            this.cookieService.set(this.REFRESH_Token,newToken.data!.refreshToken);
+            this.cookieService.set(this.JWT_Token, newToken.data!.accessToken);
+
         })
        );
     }
@@ -51,6 +54,7 @@ export class AuthService {
         email: decodedToken.email,
         roles: decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ??[]
       };
+      
       return user;
     }
 
