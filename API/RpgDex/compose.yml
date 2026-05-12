@@ -18,3 +18,15 @@
       - JWT__Audience=${JWT_AUDIENCE}
       - Jwt__TokenValidityInMinutes=30
       - Jwt__RefreshTokenValidityInMinutes=60
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
