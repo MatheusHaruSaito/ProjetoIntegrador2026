@@ -8,10 +8,14 @@ EXPOSE 8080
 EXPOSE 8081
 
 
+
 # Esta fase é usada para compilar o projeto de serviço
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["RpgDex.Application/RpgDex.Application.csproj","RpgDex.Application/"]
+COPY ["RpgDex.Domain/RpgDex.Domain.csproj","RpgDex.Domain/"]
+COPY ["RpgDex.Infrastructure/RpgDex.Infrastructure.csproj","RpgDex.Infrastructure/"]
 COPY ["RpgDex.WebApi/RpgDex.WebApi.csproj", "RpgDex.WebApi/"]
 RUN dotnet restore "./RpgDex.WebApi/RpgDex.WebApi.csproj"
 COPY . .

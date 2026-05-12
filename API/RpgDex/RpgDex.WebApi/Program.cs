@@ -1,6 +1,6 @@
-using RpgDex.Aplication.Interfaces;
-using RpgDex.Aplication.Mapping;
-using RpgDex.Aplication.Services;
+using RpgDex.Application.Interfaces;
+using RpgDex.Application.Mapping;
+using RpgDex.Application.Services;
 using RpgDex.Domain.Interfaces;
 using RpgDex.Infrastructure.Data;
 using RpgDex.Infrastructure.Services;

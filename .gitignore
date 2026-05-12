@@ -1,0 +1,13 @@
+**/.vs/ 
+**/.vscode/ 
+**/bin/ 
+**/obj/ 
+**/*.user 
+**/*.dbmdl 
+**/*.jfm
+
+.dockerignore
+**/*.cache
+
+**/.env
+!**/.env.example

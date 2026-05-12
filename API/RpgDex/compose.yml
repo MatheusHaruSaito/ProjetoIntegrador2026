@@ -1,0 +1,20 @@
+﻿services:
+  app:
+    image: mcr.microsoft.com/dotnet/sdk:10.0
+    command: ["dotnet", "watch", "run","--project", "RpgDex.WebApi/RpgDex.WebApi.csproj", "--urls","http://0.0.0.0:8080"]
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app
+    working_dir: /app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - ConnectionStrings__MongoDbConnection=${MONGO_CONNECTION}
+      - ConnectionStrings__MongoDbName=${MONGO_DB_NAME}
+      - ConnectionStrings__MongoDbCollectionName=${MONGO_COLLECTION_NAME}
+      - JWT__Key=${JWT_KEY}
+      - JWT__Issuer=${JWT_ISSUER}
+      - JWT__Audience=${JWT_AUDIENCE}
+      - Jwt__TokenValidityInMinutes=30
+      - Jwt__RefreshTokenValidityInMinutes=60

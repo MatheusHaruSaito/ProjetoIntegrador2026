@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using RpgDex.Aplication.Common;
-using RpgDex.Aplication.Dto;
-using RpgDex.Aplication.Interfaces;
+using RpgDex.Application.Common;
+using RpgDex.Application.Dto;
+using RpgDex.Application.Interfaces;
 
 
 namespace RpgDex.WebApi.Controllers

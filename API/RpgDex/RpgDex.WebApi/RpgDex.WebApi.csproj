@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RpgDex.Aplication\RpgDex.Aplication.csproj" />
+    <ProjectReference Include="..\RpgDex.Application\RpgDex.Application.csproj" />
     <ProjectReference Include="..\RpgDex.Domain\RpgDex.Domain.csproj" />
     <ProjectReference Include="..\RpgDex.Infrastructure\RpgDex.Infrastructure.csproj" />
   </ItemGroup>

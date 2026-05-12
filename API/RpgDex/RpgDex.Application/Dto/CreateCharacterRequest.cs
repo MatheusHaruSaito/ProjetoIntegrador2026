@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace RpgDex.Application.Dto
+{
+    public class CreateCharacterRequest
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public Guid UserId { get; set; }
+        public List<AttributeDTO> Attributes { get; set; }
+        public List<SkillDTO> Skills { get; set; }
+
+    }
+}
