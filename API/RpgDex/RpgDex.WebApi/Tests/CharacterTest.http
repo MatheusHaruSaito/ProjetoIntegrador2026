@@ -1,26 +1,27 @@
 @hostname = localhost
 @port = 8080
-### 32772
 
 @Controller = Character
 @baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
 
-### Ta adicionando mesmo com usuario invalido
+### TA SALVANDO!! SÓ ARRUMAR PRA FAZER RETORNAR O VALOR!!!
 POST {{baseUrl}}
 Content-Type: application/json
 
 {
   "Name": "Gandalf",
   "Description": "Istar (Mago) e Portador de Narya",
-  "Attributes": [
+  "UserId": "10c01246-533b-4969-89cf-6a3509a78c91",
+  "Properties": {
+    "Skills": [
+      { "Name": "Magia", "Value": 10 },
+      { "Name": "Resistência", "Value": 15 }
+    ],
+    "Attributes": [
     { "Name": "Inteligência", "Value": "20" },
     { "Name": "Sabedoria", "Value": "19" }
-  ],
-  "UserId": "3fbf5145-5887-457a-a905-da9e8c1bc6a7",
-  "Skills": [
-    { "Name": "Arcanismo", "Value": 10 },
-    { "Name": "História", "Value": 8 }
   ]
+  }
 }
 ###
 

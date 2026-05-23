@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using RpgDex.Domain.ValueObjects;
+using MongoDB.Bson.Serialization.Attributes; 
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,7 +13,7 @@ namespace RpgDex.Application.Dto
         public string IconPath { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<AttributeDTO> Attributes { get; set; } = new List<AttributeDTO>();
-        public List<Skill> Skills { get; set; } = new List<Skill>();
+        public Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
+
     }
 }
