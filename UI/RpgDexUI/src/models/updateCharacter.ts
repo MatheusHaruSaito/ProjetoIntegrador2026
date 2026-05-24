@@ -6,6 +6,5 @@ export interface UpdateCharacter{
     iconPath : string
     name : string
     description? :string
-    attributes? : Attributes
-    skills? : Skills
+    properties? :any
 }

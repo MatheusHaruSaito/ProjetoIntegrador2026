@@ -11,7 +11,7 @@ Content-Type: application/json
 {
   "Name": "Gandalf",
   "Description": "Istar (Mago) e Portador de Narya",
-  "UserId": "10c01246-533b-4969-89cf-6a3509a78c91",
+  "UserId": "9f03fdad-004c-4aa1-8669-02f264cf6599",
   "Properties": {
     "Skills": [
       { "Name": "Magia", "Value": 10 },
