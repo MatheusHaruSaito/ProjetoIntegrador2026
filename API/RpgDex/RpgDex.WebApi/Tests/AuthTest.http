@@ -17,6 +17,6 @@ POST {{baseUrl}}/Login
 Content-Type: application/json
 
 {
-  "email": "gandalf@rpgdex.com",
+  "email": "gandalf2@rpgdex.com",
   "password": "SenhaMagica777!"
 }

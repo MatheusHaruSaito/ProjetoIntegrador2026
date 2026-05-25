@@ -1,0 +1,15 @@
+@hostname = localhost
+@port = 8080
+### 32772
+
+@Controller = User
+@baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
+
+###
+
+PUT {{baseUrl}}/62d90e54-a3fc-4c34-a4f0-190095443ebc
+content-type: application/json
+
+{
+  "UserName": "Test"
+}
