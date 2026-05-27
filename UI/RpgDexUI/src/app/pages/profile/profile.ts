@@ -45,7 +45,6 @@ export class ProfileComponent implements OnInit {
         this.router.navigate(['/login']);
       }
     } catch (err) {
-      console.error('Erro ao carregar usuário do Token', err);
       this.logout();
     }
   }
@@ -56,13 +55,12 @@ export class ProfileComponent implements OnInit {
     this.characterService.GetAll().subscribe({
       next: (response) => {
         const all: Character[] = response.data ?? [];
-        // Filtra pelo userId do usuário logado
         const mine = all.filter(c => c.userId === userId);
         this.characterTotal = mine.length;
         this.characterPreview = mine.slice(0, 3);
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Erro ao carregar personagens', err)
+      error: () => {}
     });
   }
 
@@ -72,7 +70,7 @@ export class ProfileComponent implements OnInit {
   }
 
   editProfile() {
-    alert('Funcionalidade de edição em breve!');
+    this.router.navigate(['/perfil/editar']);
   }
 
   logout() {

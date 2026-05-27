@@ -30,8 +30,10 @@
             placeholder="Nome de usuário"
             name="userName"
             [(ngModel)]="registerForm.userName"
+            autocomplete="username"
             required>
         </div>
+
         <div class="input-group">
           <i class="fa fa-envelope icon-field"></i>
           <input
@@ -39,6 +41,7 @@
             placeholder="Email"
             name="email"
             [(ngModel)]="registerForm.email"
+            autocomplete="email"
             required>
         </div>
 
@@ -49,7 +52,25 @@
             placeholder="Senha"
             name="password"
             [(ngModel)]="registerForm.password"
+            autocomplete="new-password"
             required>
+          <button
+            type="button"
+            class="password-hint-btn"
+            (click)="togglePasswordHint()"
+            [class.active]="showPasswordHint"
+            aria-label="Dicas de senha">
+            ?
+          </button>
+          <div class="password-hint-box" *ngIf="showPasswordHint">
+            <p class="hint-title"><i class="fa fa-shield-halved"></i> Requisitos de senha</p>
+            <ul class="hint-list">
+              <li><i class="fa fa-check"></i> Mínimo de 8 caracteres</li>
+              <li><i class="fa fa-check"></i> Pelo menos uma letra maiúscula (A–Z)</li>
+              <li><i class="fa fa-check"></i> Pelo menos uma letra minúscula (a–z)</li>
+              <li><i class="fa fa-check"></i> Pelo menos um número (0–9)</li>
+            </ul>
+          </div>
         </div>
         <span class="field-hint" *ngIf="passwordTooShort">A senha deve ter pelo menos 8 caracteres.</span>
         <span class="field-hint" *ngIf="!passwordTooShort && passwordStrengthError">{{ passwordStrengthError }}</span>
@@ -61,6 +82,7 @@
             placeholder="Confirmar Senha"
             name="confirmPassword"
             [(ngModel)]="confirmPassword"
+            autocomplete="new-password"
             required>
         </div>
         <span class="field-hint" *ngIf="passwordsMismatch">As senhas não coincidem.</span>

@@ -5,6 +5,7 @@ import { UserRegisterComponent } from './pages/user-register/user-register.compo
 import { CharacterList } from './pages/character-list/character-list';
 import { CampaignsComponent } from './pages/campaigns/campaigns';
 import { ProfileComponent } from './pages/profile/profile';
+import { EditProfileComponent } from './pages/edit-profile/edit-profile';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -15,6 +16,11 @@ export const routes: Routes = [
   {
     path: 'perfil',
     component: ProfileComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'perfil/editar',
+    component: EditProfileComponent,
     canActivate: [authGuard]
   },
   {

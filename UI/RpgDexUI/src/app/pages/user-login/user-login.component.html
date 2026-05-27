@@ -23,13 +23,35 @@
 
       <form class="login-form" (ngSubmit)="Login()">
         <div class="input-group">
-          <i class="fa fa-envelope icon-field"></i> 
-          <input type="email" placeholder="Email" name="email" [(ngModel)]="authUserForm.email">
+          <i class="fa fa-envelope icon-field"></i>
+          <input type="email" placeholder="Email" name="email" [(ngModel)]="authUserForm.email" autocomplete="username">
         </div>
 
         <div class="input-group">
-          <i class="fa fa-lock icon-field"></i> 
-          <input type="password" placeholder="Senha" name="password" [(ngModel)]="authUserForm.password">
+          <i class="fa fa-lock icon-field"></i>
+          <input
+            type="password"
+            placeholder="Senha"
+            name="password"
+            [(ngModel)]="authUserForm.password"
+            autocomplete="current-password">
+          <button
+            type="button"
+            class="password-hint-btn"
+            (click)="togglePasswordHint()"
+            [class.active]="showPasswordHint"
+            aria-label="Dicas de senha">
+            ?
+          </button>
+          <div class="password-hint-box" *ngIf="showPasswordHint">
+            <p class="hint-title"><i class="fa fa-shield-halved"></i> Requisitos de senha</p>
+            <ul class="hint-list">
+              <li><i class="fa fa-check"></i> Mínimo de 8 caracteres</li>
+              <li><i class="fa fa-check"></i> Pelo menos uma letra maiúscula (A–Z)</li>
+              <li><i class="fa fa-check"></i> Pelo menos uma letra minúscula (a–z)</li>
+              <li><i class="fa fa-check"></i> Pelo menos um número (0–9)</li>
+            </ul>
+          </div>
         </div>
 
         <div class="form-options">

@@ -24,6 +24,7 @@ export class UserRegisterComponent {
 
   confirmPassword = '';
   termsAccepted = false;
+  showPasswordHint = false;
 
   isLoading = false;
   errorMessage = '';
@@ -44,6 +45,10 @@ export class UserRegisterComponent {
     if (!/[a-z]/.test(p)) return 'A senha deve conter pelo menos uma letra minúscula.';
     if (!/[0-9]/.test(p)) return 'A senha deve conter pelo menos um número.';
     return '';
+  }
+
+  togglePasswordHint() {
+    this.showPasswordHint = !this.showPasswordHint;
   }
 
   Register() {
@@ -78,10 +83,7 @@ export class UserRegisterComponent {
     this.isLoading = true;
 
     this.authService.Register(this.registerForm).subscribe({
-      next: r => {
-        console.log(r);
-
-        console.log(this.registerForm);
+      next: () => {
         this.isLoading = false;
         this.successMessage = 'Cadastro realizado com sucesso! Redirecionando...';
         setTimeout(() => this.router.navigate(['/login']), 2000);
@@ -97,7 +99,6 @@ export class UserRegisterComponent {
         } else {
           this.errorMessage = 'Ocorreu um erro ao criar a conta. Tente novamente.';
         }
-        console.error('Erro no cadastro', err);
       }
     });
   }
