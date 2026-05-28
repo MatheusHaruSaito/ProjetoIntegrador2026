@@ -4,7 +4,7 @@
 @Controller = Character
 @baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
 
-### TA SALVANDO!! SÓ ARRUMAR PRA FAZER RETORNAR O VALOR!!!
+###
 POST {{baseUrl}}
 Content-Type: application/json
 
@@ -48,7 +48,7 @@ Accept: application/json
 
 ### GetById
 
-GET {{baseUrl}}/e834f80b-a7bd-4c8d-9906-759dfe8b23a0
+GET {{baseUrl}}/86f98f83-7a09-46dd-a8f2-eeaecd44f7aa
 Accept: application/json
 
 ### Put
@@ -57,7 +57,7 @@ PUT {{baseUrl}}
 Content-Type: application/json
 
 {
-  "id": "2e79bb57-d92e-453e-a142-c690479bf364",
+  "id": "86f98f83-7a09-46dd-a8f2-eeaecd44f7aa",
   "iconPath": "/images/icons/king.png",
   "name": "Aragornteg (Rei Elessar)",
   "description": "Coroado Rei de Gondor e Arnor.",
