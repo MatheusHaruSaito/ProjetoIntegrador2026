@@ -44,8 +44,7 @@ namespace RpgDex.Infrastructure.Services
                 .Set(c => c.IconPath, NewCharacter.IconPath)
                 .Set(c => c.Name, NewCharacter.Name)
                 .Set(c => c.Description, NewCharacter.Description)
-                .Set(c => c.Attributes, NewCharacter.Attributes)
-                .Set(c => c.Skills, NewCharacter.Skills);
+                .Set(c => c.Properties, NewCharacter.Properties);
             var result = await _entitie.UpdateOneAsync(filter, updateCharacter);
             return result.ModifiedCount > 0;
         }

@@ -41,6 +41,7 @@ export class CharacterList implements OnInit {
         // enquanto não existe endpoint GET /Character/user/{userId}
         this.characterList = all.filter(c => c.userId === userId);
         this.cdr.detectChanges();
+        console.log('Personagens carregados:', this.characterList);
       },
       error: (err) => console.error('Erro ao carregar personagens', err)
     });

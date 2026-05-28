@@ -1,8 +1,7 @@
-﻿using RpgDex.Domain.ValueObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Attribute = RpgDex.Domain.ValueObjects.Attribute;
+using System.Text.Json;
 
 namespace RpgDex.Application.Dto
 {
@@ -12,7 +11,7 @@ namespace RpgDex.Application.Dto
         public string IconPath { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<AttributeDTO> Attributes { get; set; }
-        public List<SkillDTO> Skills { get; set; }
+        public Dictionary<string, JsonElement> Properties { get; set; } = new Dictionary<string, JsonElement>();
+
     }
 }

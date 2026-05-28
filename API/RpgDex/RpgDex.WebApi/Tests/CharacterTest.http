@@ -1,6 +1,5 @@
 @hostname = localhost
 @port = 8080
-### 32772
 
 @Controller = Character
 @baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
@@ -12,15 +11,17 @@ Content-Type: application/json
 {
   "Name": "Gandalf",
   "Description": "Istar (Mago) e Portador de Narya",
-  "Attributes": [
+  "UserId": "9f03fdad-004c-4aa1-8669-02f264cf6599",
+  "Properties": {
+    "Skills": [
+      { "Name": "Magia", "Value": 10 },
+      { "Name": "Resistência", "Value": 15 }
+    ],
+    "Attributes": [
     { "Name": "Inteligência", "Value": "20" },
     { "Name": "Sabedoria", "Value": "19" }
-  ],
-  "UserId": "62d90e54-a3fc-4c34-a4f0-190095443ebc",
-  "Skills": [
-    { "Name": "Arcanismo", "Value": 10 },
-    { "Name": "História", "Value": 8 }
   ]
+  }
 }
 ###
 
