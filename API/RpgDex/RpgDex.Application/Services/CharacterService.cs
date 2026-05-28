@@ -16,11 +16,13 @@ namespace RpgDex.Application.Services
     {
         private readonly ICharacterRepository _character;
         private readonly IUserRepository _userRepository;
+        private readonly IFileRepository _fileRepository;
 
-        public CharacterService(ICharacterRepository character, IUserRepository userRepository)
+        public CharacterService(ICharacterRepository character, IUserRepository userRepository, IFileRepository fileRepository)
         {
             _character = character;
             _userRepository = userRepository;
+            _fileRepository = fileRepository;
         }
         public async Task<Result<CharacterResponse>> Create(CreateCharacterRequest request)
         {
@@ -34,6 +36,21 @@ namespace RpgDex.Application.Services
             var user = await _userRepository.GetByIdAsync(request.UserId);
             if (user is null) return Result<CharacterResponse>.Failure("Usuario não encontrado");
 
+            // Salva Imagem
+            
+            if(request.Icon != null && request.Icon.Length > 0)
+            {
+                using(var memoryStream = new MemoryStream())
+                {
+                    await request.Icon.CopyToAsync(memoryStream);
+                    memoryStream.Position = 0;
+
+                    var Extension = Path.GetExtension(request.Icon.FileName);
+                    var fileName = $"{character.Name}_icon{Extension}";
+                    character.IconPath = await _fileRepository.UploadFileAsync(fileName, memoryStream);
+                }
+            }
+            
             // coloca o personagem no banco
             var response = await _character.InsertAsync(character);
 

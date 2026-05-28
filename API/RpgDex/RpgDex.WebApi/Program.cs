@@ -15,12 +15,28 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using RpgDex.Infrastructure.Repositories;
+using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 
 var builder = WebApplication.CreateBuilder(args);
 
 MappingConfig.Configure();
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 // Add services to the container.
+
+builder.Services.AddSingleton<MongoDbContext>();
+
+builder.Services.AddScoped<IMongoDatabase>(sp =>
+{
+    var context = sp.GetRequiredService<MongoDbContext>();
+    return context.GetDatabase();
+});
+
+builder.Services.AddScoped<IGridFSBucket>(sp =>
+{
+    var database = sp.GetRequiredService<IMongoDatabase>();
+    return new GridFSBucket(database);
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -33,6 +49,10 @@ builder.Services.AddScoped<ITokenService,TokenService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenRepository,TokenRepository>();
 builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IFileRepository, FileRepository>();
+builder.Services.AddScoped<IFileService, FileService>();
+
+
 
 
 MappingConfig.Configure();

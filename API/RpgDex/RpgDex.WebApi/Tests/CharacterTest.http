@@ -4,26 +4,8 @@
 @Controller = Character
 @baseUrl = http://{{hostname}}:{{port}}/api/{{Controller}}
 
-###
-POST {{baseUrl}}
-Content-Type: application/json
 
-{
-  "Name": "Gandalf",
-  "Description": "Istar (Mago) e Portador de Narya",
-  "UserId": "9f03fdad-004c-4aa1-8669-02f264cf6599",
-  "Properties": {
-    "Skills": [
-      { "Name": "Magia", "Value": 10 },
-      { "Name": "Resistência", "Value": 15 }
-    ],
-    "Attributes": [
-    { "Name": "Inteligência", "Value": "20" },
-    { "Name": "Sabedoria", "Value": "19" }
-  ]
-  }
-}
-###
+### POST NÃO FUNCIONA AQUI, FAZER PELO POSTMAN
 
 POST {{baseUrl}}/Login
 Content-Type: application/json

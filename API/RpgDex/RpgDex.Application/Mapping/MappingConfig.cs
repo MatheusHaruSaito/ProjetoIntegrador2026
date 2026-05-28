@@ -16,7 +16,6 @@ namespace RpgDex.Application.Mapping
             TypeAdapterConfig<CreateCharacterRequest, Character>
                 .NewConfig()
                 .Ignore(dest => dest.Id)
-                .Map(dest => dest.IconPath, src => "default_icon.png")
                 .Map(dest => dest.Properties, src => ConvertToBsonDocument(src.Properties));
 
             TypeAdapterConfig<Character, CharacterResponse>

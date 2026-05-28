@@ -28,5 +28,7 @@ namespace RpgDex.Infrastructure.Data
             _database.GetCollection<Character>("Characters");
         public IMongoCollection<RefreshToken> RefreshTokens =>
             _database.GetCollection<RefreshToken>("RefreshTokens");
+
+        public IMongoDatabase GetDatabase() => _database;
     }
 }
