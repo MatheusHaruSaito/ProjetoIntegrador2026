@@ -9,6 +9,7 @@ namespace RpgDex.Domain.Entities
     {
         public List<Guid> CharactersId { get; set; }  = new List<Guid>();
         public List<Guid> Tables { get; set; } = new List<Guid>();
+        public string? IconPath { get; set; }
 
     }
 }
