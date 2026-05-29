@@ -1,10 +1,11 @@
 import { Attributes } from "./attributes"
 import { Skills } from "./skills"
 
-export interface UpdateCharacter{
+export interface CreateCharacter{
     id : string
+    userId : string
     icon : File
     name : string
     description? :string
-    properties? :any
+    properties? :Record<string, any>
 }

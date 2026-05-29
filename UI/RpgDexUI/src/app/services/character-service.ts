@@ -5,6 +5,7 @@ import { Character } from '../../models/character';
 import { Observable } from 'rxjs';
 import { UpdateCharacter } from '../../models/updateCharacter';
 import { ApiResponse } from '../../models/apiResponse';
+import { CreateCharacter } from '../../models/Createcharacter';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class CharacterService {
 
   constructor(private http: HttpClient) {}
 
-  public Post(character: Character): Observable<ApiResponse<Character>> {
+  public Post(character: CreateCharacter): Observable<ApiResponse<Character>> {
     return this.http.post<ApiResponse<Character>>(this.env, character);
   }
 
