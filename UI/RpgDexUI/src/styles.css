@@ -61,7 +61,7 @@
    As cores de brand (--rpg-purple, --rpg-cyan, gradientes)
    permanecem iguais para manter a identidade visual.
    ============================================================ */
-body.dark-theme {
+.dark-theme {
   --rpg-bg:             #13131f;
   --rpg-surface:        #1e1e30;
   --rpg-surface-2:      #252540;
