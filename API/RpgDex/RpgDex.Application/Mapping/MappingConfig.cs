@@ -22,6 +22,10 @@ namespace RpgDex.Application.Mapping
                 .NewConfig()
                 .Map(dest => dest.Properties, src => ConvertToDictionary(src.Properties));
 
+            TypeAdapterConfig<UpdateCharacterRequest, Character>
+                .NewConfig()
+                .Map(dest => dest.Properties, src => ConvertToBsonDocument(src.Properties));
+
             if (!BsonClassMap.IsClassMapRegistered(typeof(ApplicationUser)))
             {
                 BsonClassMap.RegisterClassMap<ApplicationUser>(cm =>
