@@ -6,6 +6,8 @@ namespace RpgDex.Infrastructure.Repositories
 {
     public class FileRepository : IFileRepository
     {
+        //SOLUÇÃO TEMPORARIA PARA O USO DO CLOUD FLARE R2, DEPOIS IMPLEMENTAR O USO DO CLOUD FLARE R2 AQUI
+        //Por enquanto os arquivos são salvos no mongo, mas futuramente serão salvos no cloud flare r2
         private readonly IGridFSBucket _gridFSBucket;
         public FileRepository(IGridFSBucket gridFSBucket)
         {
