@@ -56,7 +56,7 @@ export class AuthService {
       //   roles: decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ??[]
       // };
       let userResponse : UserResponse;
-      this.http.get<ApiResponse<UserResponse>>(`${this.env}/${decodedToken.sub}`).subscribe(user => {
+      this.http.get<ApiResponse<UserResponse>>(`${environment.RpxDexApi}/User/${decodedToken.sub}`).subscribe(user => {
       userResponse = user.data!;
       });
       return userResponse!;
