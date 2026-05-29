@@ -5,7 +5,7 @@ import { Character } from '../../models/character';
 import { Observable } from 'rxjs';
 import { UpdateCharacter } from '../../models/updateCharacter';
 import { ApiResponse } from '../../models/apiResponse';
-import { CreateCharacter } from '../../models/Createcharacter';
+import { CreateCharacter } from '../../models/createCharacter';
 
 @Injectable({
   providedIn: 'root',

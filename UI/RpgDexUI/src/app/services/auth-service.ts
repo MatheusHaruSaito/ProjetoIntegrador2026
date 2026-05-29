@@ -10,7 +10,7 @@ import { LoginUser } from '../../models/loginUser';
 import { JwtPayload } from '../../models/jwtPayload';
 import { tokenModel } from '../../models/tokenMode';
 import { ApiResponse } from '../../models/apiResponse';
-import { UserResponse, userResponse } from '../../models/userResponse';
+import { UserResponse } from '../../models/userResponse';
 @Injectable({
   providedIn: 'root',
 })
