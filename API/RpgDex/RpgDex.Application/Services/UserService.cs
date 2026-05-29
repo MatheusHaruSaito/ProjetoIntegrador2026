@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Mapster;
+using Microsoft.AspNetCore.Identity;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
 using RpgDex.Application.Interfaces;
@@ -19,9 +20,20 @@ namespace RpgDex.Application.Services
             _fileService = fileService;
         }
 
-        public async Task<Result<string>> UpdateUserProfileAsync(Guid UserId,UpdateUserProfileDTO updatedUser)
+        public async Task<Result<UserResponse>> GetUserById(Guid Id)
         {
-            var user = await _userManager.FindByIdAsync(UserId.ToString());
+            var user = await _userManager.FindByIdAsync(Id.ToString());
+            if (user is null)
+            {
+                return Result<UserResponse>.Failure("User not found.");
+            }
+            var userResponse = user.Adapt<UserResponse>();
+            return Result<UserResponse>.Success(userResponse);
+        }
+
+        public async Task<Result<string>> UpdateUserProfileAsync(Guid Id,UpdateUserProfileDTO updatedUser)
+        {
+            var user = await _userManager.FindByIdAsync(Id.ToString());
             if(user is null)
             {
                 return Result<string>.Failure("Usuario Invalido");

@@ -10,6 +10,7 @@ import { LoginUser } from '../../models/loginUser';
 import { JwtPayload } from '../../models/jwtPayload';
 import { tokenModel } from '../../models/tokenMode';
 import { ApiResponse } from '../../models/apiResponse';
+import { UserResponse, userResponse } from '../../models/userResponse';
 @Injectable({
   providedIn: 'root',
 })
@@ -44,18 +45,21 @@ export class AuthService {
         })
        );
     }
-    public GetLoggedUser() : AuthUser
+    public GetLoggedUser() : UserResponse
     {
       const jwtToken =this.cookieService.get(this.JWT_Token);
       var decodedToken = jwtDecode<JwtPayload>(jwtToken);
-      const user : AuthUser ={
-        id: decodedToken.sub,
-        userName: decodedToken.unique_name,
-        email: decodedToken.email,
-        roles: decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ??[]
-      };
-      
-      return user;
+      // const user : AuthUser ={
+      //   id: decodedToken.sub,
+      //   userName: decodedToken.unique_name,
+      //   email: decodedToken.email,
+      //   roles: decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ??[]
+      // };
+      let userResponse : UserResponse;
+      this.http.get<ApiResponse<UserResponse>>(`${this.env}/${decodedToken.sub}`).subscribe(user => {
+      userResponse = user.data!;
+      });
+      return userResponse!;
     }
 
     public isLoggedIn(): boolean {

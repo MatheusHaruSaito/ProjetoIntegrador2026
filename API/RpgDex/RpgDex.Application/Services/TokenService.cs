@@ -31,8 +31,6 @@ namespace RpgDex.Application.Services
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, authUser.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.UniqueName, authUser.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, authUser.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

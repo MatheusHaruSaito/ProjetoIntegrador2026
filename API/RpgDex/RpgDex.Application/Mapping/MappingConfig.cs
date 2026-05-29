@@ -13,6 +13,7 @@ namespace RpgDex.Application.Mapping
     {
         public static void Configure()
         {
+            //Mapeamentos para Character podem ser adicionados aqui, se necessário
             TypeAdapterConfig<CreateCharacterRequest, Character>
                 .NewConfig()
                 .Ignore(dest => dest.Id)
@@ -29,6 +30,8 @@ namespace RpgDex.Application.Mapping
                 .NewConfig()
                 .Map(dest => dest.Properties, src => ConvertToBsonDocument(src.Properties));
 
+
+            //Mapeamentos para ApplicationUser podem ser adicionados aqui, se necessário
             if (!BsonClassMap.IsClassMapRegistered(typeof(ApplicationUser)))
             {
                 BsonClassMap.RegisterClassMap<ApplicationUser>(cm =>
@@ -36,12 +39,24 @@ namespace RpgDex.Application.Mapping
                     cm.AutoMap();
                 });
             }
+            
             TypeAdapterConfig<CreateUserDTO, ApplicationUser>
-                    .NewConfig()
-                    .Ignore(dest => dest.PasswordHash)
-                    .Map(dest => dest.UserName, src => src.UserName)
-                    .Map(dest => dest.Email, src => src.Email);
+                 .NewConfig()
+                 .Ignore(dest => dest.PasswordHash)
+                 .Map(dest => dest.UserName, src => src.UserName)
+                 .Map(dest => dest.Email, src => src.Email);
+
+            TypeAdapterConfig<ApplicationUser, UserResponse>
+                 .NewConfig()
+                 .Map(dest => dest.UserName, src => src.UserName)
+                 .Map(dest => dest.Email, src => src.Email)
+                 .Map(dest => dest.IconPath, src => string.IsNullOrEmpty(src.IconPath)
+                 ? null
+                 : $"http://localhost:8080/api/File/{src.IconPath}"); //Tirar isso quando Implementar o uso  do cloudflare r2 / Solução Temporaria para mostrar a imagem
+
+
         }
+
         private static BsonDocument ConvertToBsonDocument(Dictionary<string, JsonElement> source)
         {
             if (source is null || source.Count == 0)
