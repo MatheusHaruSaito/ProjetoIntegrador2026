@@ -7,6 +7,5 @@ export interface Character{
     iconPath : string
     name : string
     description? :string
-    attributes? : Attributes
-    skills? : Skills
+    properties? :Record<string, any>
 }

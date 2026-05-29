@@ -32,14 +32,12 @@ export class CharacterList implements OnInit {
   }
 
   GetAllCharacters() {
-    const userId = this.authService.GetLoggedUser().id;
+    const userId = this.authService.getLoggedUserId();
 
     this.characterService.GetAll().subscribe({
       next: (response) => {
         const all: Character[] = response.data ?? [];
-        // Filtra no frontend pelo userId do usuário logado
-        // enquanto não existe endpoint GET /Character/user/{userId}
-        this.characterList = all.filter(c => c.userId === userId);
+        this.characterList = userId ? all.filter(c => c.userId === userId) : all;
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Erro ao carregar personagens', err)
@@ -65,10 +63,10 @@ export class CharacterList implements OnInit {
       return;
     }
 
-    const loggedUser = this.authService.GetLoggedUser();
+    const userId = this.authService.getLoggedUserId();
 
     const payload = {
-      userId: loggedUser.id,
+      userId: userId,
       name: this.newCharacter.name!.trim(),
       description: this.newCharacter.description ?? '',
       attributes: [],
@@ -78,7 +76,7 @@ export class CharacterList implements OnInit {
     this.isLoading = true;
 
     this.characterService.Post(payload as any).subscribe({
-      next: (response) => {
+      next: () => {
         this.isLoading = false;
         this.CloseModal();
         this.GetAllCharacters();

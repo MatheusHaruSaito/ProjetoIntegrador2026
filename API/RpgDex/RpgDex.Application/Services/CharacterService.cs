@@ -16,11 +16,13 @@ namespace RpgDex.Application.Services
     {
         private readonly ICharacterRepository _character;
         private readonly IUserRepository _userRepository;
+        private readonly IFileService _fileService;
 
-        public CharacterService(ICharacterRepository character, IUserRepository userRepository)
+        public CharacterService(ICharacterRepository character, IUserRepository userRepository, IFileService fileService)
         {
             _character = character;
             _userRepository = userRepository;
+            _fileService = fileService;
         }
         public async Task<Result<CharacterResponse>> Create(CreateCharacterRequest request)
         {
@@ -34,6 +36,17 @@ namespace RpgDex.Application.Services
             var user = await _userRepository.GetByIdAsync(request.UserId);
             if (user is null) return Result<CharacterResponse>.Failure("Usuario não encontrado");
 
+            // Salva Imagem
+            try
+            {
+                character.IconPath = await _fileService.UploadFileAsync(request.Icon, character.Id.ToString());
+            }
+            catch (Exception ex)
+            {
+                return Result<CharacterResponse>.Failure($"Erro ao salvar a imagem: {ex.Message}");
+            }
+            
+            
             // coloca o personagem no banco
             var response = await _character.InsertAsync(character);
 
@@ -87,10 +100,21 @@ namespace RpgDex.Application.Services
 
         public async Task<Result<bool>> UpdateAsync(UpdateCharacterRequest request)
         {
-            //Atualiza um personagem
             var updateCharacter = request.Adapt<Character>();
-            var response = await _character.UpdateAsync(updateCharacter);
 
+            //Aqui Colocar o codigo que altera a foto
+            try
+            {
+                updateCharacter.IconPath = await _fileService.UploadFileAsync(request.Icon, updateCharacter.Id.ToString());
+            }
+            catch (Exception ex)
+            {
+                return Result<bool>.Failure($"Erro ao salvar a imagem: {ex.Message}");
+            }
+
+
+            var response = await _character.UpdateAsync(updateCharacter);
+            //Verifica se o Personagem foi atualizado
             if (!response) return Result<bool>.Failure("Não foi possivel atualizar o personagem");
             return Result<bool>.Success(response);
         }

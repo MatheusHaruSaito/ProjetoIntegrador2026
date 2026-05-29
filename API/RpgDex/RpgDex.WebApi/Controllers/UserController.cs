@@ -18,6 +18,27 @@ namespace RpgDex.WebApi.Controllers
             _userService = userService;
         }
 
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<UserResponse>> GetUserById(Guid Id)
+        {
+            var result = await _userService.GetUserById(Id);
+
+            if (result.IsFailure)
+            {
+                return NotFound(new
+                {
+                    success = result.IsSuccess,
+                    message = result.Error,
+                    data = result.Value
+                });
+            }
+
+            return Ok(new
+            {
+                success = result.IsSuccess,
+                data = result.Value
+            });
+        }
         [HttpPut("{Id}")]
         public async Task<ActionResult<string>> UpdateUserProfile(Guid Id,UpdateUserProfileDTO updateUserProfileDTO)
         {
