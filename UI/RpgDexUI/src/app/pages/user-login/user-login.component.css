@@ -122,6 +122,7 @@
     gap: 20px;
 }
 
+/* --- INPUT GROUP --- */
 .input-group {
     position: relative;
 }
@@ -133,12 +134,14 @@
     transform: translateY(-50%);
     color: var(--rpg-text-faint);
     font-size: 1.1rem;
+    /* prevent icon from sitting on top of hint box */
+    pointer-events: none;
 }
 
 .input-group input {
     width: 100%;
     font-family: 'Nunito', sans-serif;
-    padding: 15px 15px 15px 45px;
+    padding: 15px 48px 15px 45px; /* right padding reserves space for hint btn */
     border: 2px solid var(--rpg-border);
     border-radius: 10px;
     font-size: 1rem;
@@ -153,6 +156,108 @@
     background-color: var(--rpg-surface);
 }
 
+/* --- PASSWORD HINT BUTTON --- */
+.password-hint-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--rpg-border);
+    background: var(--rpg-surface);
+    color: var(--rpg-text-faint);
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.password-hint-btn:hover,
+.password-hint-btn.active {
+    border-color: var(--rpg-purple);
+    background: var(--rpg-purple);
+    color: white;
+}
+
+/* --- PASSWORD HINT BOX --- */
+.password-hint-box {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    z-index: 100;
+    width: 280px;
+    background: var(--rpg-surface);
+    border: 1px solid var(--rpg-border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    box-shadow: var(--rpg-shadow-lg);
+    animation: hintFadeIn 0.18s ease;
+}
+
+.password-hint-box::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    right: 16px;
+    width: 12px;
+    height: 12px;
+    background: var(--rpg-surface);
+    border-left: 1px solid var(--rpg-border);
+    border-top: 1px solid var(--rpg-border);
+    transform: rotate(45deg);
+}
+
+@keyframes hintFadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.hint-title {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 800;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--rpg-purple);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hint-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hint-list li {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    color: var(--rpg-text-body);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hint-list li .fa-check {
+    color: var(--rpg-purple);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* --- FORM OPTIONS & LINKS --- */
 .form-options {
     text-align: right;
     margin: 5px 0;
@@ -166,6 +271,7 @@
     font-weight: 600;
 }
 
+/* --- BUTTONS --- */
 .btn-login {
     font-family: 'Exo 2', sans-serif;
     padding: 18px 40px;
@@ -187,6 +293,7 @@
     box-shadow: var(--rpg-shadow-btn-hov);
 }
 
+/* --- SEPARATOR --- */
 .login-separator {
     text-align: center;
     margin: 30px 0;
@@ -213,6 +320,7 @@
     background: var(--rpg-border-light);
 }
 
+/* --- SOCIAL --- */
 .social-logins {
     display: flex;
     justify-content: center;
@@ -238,6 +346,7 @@
     color: var(--rpg-purple);
 }
 
+/* --- FOOTER --- */
 .login-footer {
     text-align: center;
     margin-top: 30px;
@@ -251,6 +360,7 @@
     text-decoration: none;
 }
 
+/* --- VISIBILITY --- */
 .desktop-only { display: block; }
 .mobile-only  { display: none;  }
 
@@ -269,8 +379,7 @@
     }
 
     .login-side__title { font-size: 1.8rem; }
-
-    .login-main { padding: 40px 25px; }
+    .login-main        { padding: 40px 25px; }
 
     .login-main__title {
         font-size: 1.8rem;
@@ -283,4 +392,14 @@
     }
 
     .form-options { text-align: center; }
+
+    .password-hint-box {
+        right: auto;
+        left: 0;
+    }
+
+    .password-hint-box::before {
+        right: auto;
+        left: 16px;
+    }
 }

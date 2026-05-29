@@ -89,7 +89,7 @@ export class ProfileComponent implements OnInit {
         this.characterPreview = mine.slice(0, 3);
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Erro ao carregar personagens', err)
+      error: () => {}
     });
   }
 
