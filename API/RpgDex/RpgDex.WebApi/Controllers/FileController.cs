@@ -22,13 +22,12 @@ namespace RpgDex.WebApi.Controllers
                 return BadRequest("O ID fornecido é inválido.");
             }
 
-            var fileBytes = await _fileService.DownloadFileAsync(id);
+            var (fileBytes, extension) = await _fileService.DownloadFileAsync(id);
             if (fileBytes == null || fileBytes.Length == 0)
             {
                 return NotFound("Imagem não encontrada.");
             }
-
-            return File(fileBytes, "image/png");
+            return File(fileBytes, extension);
         }
     }
 }
