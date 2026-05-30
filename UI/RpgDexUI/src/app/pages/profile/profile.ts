@@ -89,12 +89,12 @@ export class ProfileComponent implements OnInit {
         this.characterPreview = mine.slice(0, 3);
         this.cdr.detectChanges();
       },
-      error: () => {}
+      error: (err) => console.error('Erro ao carregar personagens', err)
     });
   }
 
-  editProfile(): void {
-    alert('Funcionalidade de edição em breve!');
+  editProfile() {
+    this.router.navigate(['/perfil/editar']);
   }
 
   logout(): void {

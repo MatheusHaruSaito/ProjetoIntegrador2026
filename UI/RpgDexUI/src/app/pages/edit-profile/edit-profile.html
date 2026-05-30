@@ -12,17 +12,16 @@
             <span *ngIf="!avatarPreviewUrl">
               {{ (editForm.userName || currentUser?.userName || '??').substring(0, 2).toUpperCase() }}
             </span>
-            <div class="avatar-overlay" (click)="triggerFileInput()">
+            <div class="avatar-overlay">
               <i class="fa-solid fa-camera"></i>
               <span>Alterar</span>
             </div>
+            <input
+              type="file"
+              accept="image/*"
+              class="file-input-hidden"
+              (change)="onFileSelected($event)">
           </div>
-          <input
-            #fileInput
-            type="file"
-            accept="image/*"
-            class="file-input-hidden"
-            (change)="onFileSelected($event)">
         </div>
 
         <p class="edit-side__name">{{ editForm.userName || currentUser?.userName || 'Aventureiro' }}</p>
@@ -62,107 +61,21 @@
           </div>
         </div>
 
-        <!-- Foto de perfil por URL -->
+        <!-- Foto de perfil por upload -->
         <div class="field-section">
           <label class="field-label">
             <i class="fa fa-image"></i> Foto de perfil
           </label>
-          <div class="avatar-options">
-            <div class="avatar-option-tab" [class.active]="avatarMode === 'url'" (click)="avatarMode = 'url'">
-              <i class="fa fa-link"></i> URL
-            </div>
-            <div class="avatar-option-tab" [class.active]="avatarMode === 'upload'" (click)="avatarMode = 'upload'">
-              <i class="fa fa-upload"></i> Upload
-            </div>
-          </div>
-
-          <div class="input-group" *ngIf="avatarMode === 'url'">
-            <i class="fa fa-link icon-field"></i>
-            <input
-              type="url"
-              placeholder="https://exemplo.com/minha-foto.png"
-              name="avatarUrl"
-              [(ngModel)]="editForm.avatarUrl"
-              (ngModelChange)="onUrlChange($event)"
-              autocomplete="off">
-          </div>
-
-          <div class="upload-zone" *ngIf="avatarMode === 'upload'" (click)="triggerFileInput()">
+          <div class="upload-zone">
             <i class="fa fa-cloud-arrow-up"></i>
             <span>Clique para selecionar uma imagem</span>
-            <small>PNG, JPG ou GIF • Máx. 2MB</small>
+            <small>PNG ou JPG</small>
             <input
-              #fileInput2
               type="file"
               accept="image/*"
               class="file-input-hidden"
               (change)="onFileSelected($event)">
           </div>
-        </div>
-
-        <!-- Divisor -->
-        <div class="form-divider">
-          <span>Segurança</span>
-        </div>
-
-        <!-- Senha atual -->
-        <div class="field-section">
-          <label class="field-label">
-            <i class="fa fa-lock"></i> Senha atual
-            <span class="field-optional">(necessário para alterar senha)</span>
-          </label>
-          <div class="input-group">
-            <i class="fa fa-lock icon-field"></i>
-            <input
-              [type]="showCurrentPassword ? 'text' : 'password'"
-              placeholder="Sua senha atual"
-              name="currentPassword"
-              [(ngModel)]="editForm.currentPassword"
-              autocomplete="current-password">
-            <button type="button" class="toggle-visibility-btn" (click)="showCurrentPassword = !showCurrentPassword">
-              <i class="fa" [ngClass]="showCurrentPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Nova senha -->
-        <div class="field-section">
-          <label class="field-label">
-            <i class="fa fa-key"></i> Nova senha
-            <span class="field-optional">(deixe em branco para não alterar)</span>
-          </label>
-          <div class="input-group">
-            <i class="fa fa-key icon-field"></i>
-            <input
-              [type]="showNewPassword ? 'text' : 'password'"
-              placeholder="Nova senha"
-              name="newPassword"
-              [(ngModel)]="editForm.newPassword"
-              autocomplete="new-password">
-            <button type="button" class="toggle-visibility-btn" (click)="showNewPassword = !showNewPassword">
-              <i class="fa" [ngClass]="showNewPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Confirmar nova senha -->
-        <div class="field-section">
-          <label class="field-label">
-            <i class="fa fa-key"></i> Confirmar nova senha
-          </label>
-          <div class="input-group">
-            <i class="fa fa-key icon-field"></i>
-            <input
-              [type]="showConfirmPassword ? 'text' : 'password'"
-              placeholder="Repita a nova senha"
-              name="confirmNewPassword"
-              [(ngModel)]="editForm.confirmNewPassword"
-              autocomplete="new-password">
-            <button type="button" class="toggle-visibility-btn" (click)="showConfirmPassword = !showConfirmPassword">
-              <i class="fa" [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
-            </button>
-          </div>
-          <span class="field-hint" *ngIf="passwordsMismatch">As senhas não coincidem.</span>
         </div>
 
         <!-- Feedback -->
