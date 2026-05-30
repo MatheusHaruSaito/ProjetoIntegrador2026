@@ -1,6 +1,7 @@
-export interface UserResponse{
-    id: string
-    userName: string
-    email: string
-    roles: string | string[];
+export interface UserResponse {
+  id: string;
+  userName: string;
+  email: string;
+  roles: string | string[];
+  iconUrl?: string;
 }
