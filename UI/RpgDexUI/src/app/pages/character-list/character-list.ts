@@ -18,64 +18,97 @@ export class CharacterList implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   characterList: Character[] = [];
+
+  // ── Criar ──
   showModal = false;
   isLoading = false;
   errorMessage = '';
+  newCharacter: { name: string; description: string } = { name: '', description: '' };
+  selectedIconFile: File | null = null;
+  iconPreviewUrl = '';
 
-  newCharacter: Partial<Character> = {
-    name: '',
-    description: ''
-  };
+  // ── Visualizar ──
+  showViewModal = false;
+  viewCharacter: Character | null = null;
+
+  // ── Editar ──
+  showEditModal = false;
+  isEditLoading = false;
+  editErrorMessage = '';
+  editCharacter: { id: string; name: string; description: string } = { id: '', name: '', description: '' };
+  selectedEditIconFile: File | null = null;
+  editIconPreviewUrl = '';
 
   ngOnInit(): void {
     this.GetAllCharacters();
   }
 
-  GetAllCharacters() {
+  // ─────────────────────────────────────────────
+  // LISTAGEM
+  // ─────────────────────────────────────────────
+  GetAllCharacters(): void {
     const userId = this.authService.getLoggedUserId();
-
     this.characterService.GetAll().subscribe({
       next: (response) => {
         const all: Character[] = response.data ?? [];
         this.characterList = userId ? all.filter(c => c.userId === userId) : all;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Erro ao carregar personagens', err)
+      error: () => {}
     });
   }
 
-  OpenModal() {
+  // ─────────────────────────────────────────────
+  // CRIAR
+  // ─────────────────────────────────────────────
+  OpenModal(): void {
     this.newCharacter = { name: '', description: '' };
+    this.selectedIconFile = null;
+    this.iconPreviewUrl = '';
     this.errorMessage = '';
     this.showModal = true;
   }
 
-  CloseModal() {
+  CloseModal(): void {
     this.showModal = false;
     this.errorMessage = '';
   }
 
-  CreateCharacter() {
+  onIconSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      this.errorMessage = 'A imagem deve ter no máximo 2MB.';
+      return;
+    }
+    this.selectedIconFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.iconPreviewUrl = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  CreateCharacter(): void {
     this.errorMessage = '';
 
-    if (!this.newCharacter.name?.trim()) {
+    if (!this.newCharacter.name.trim()) {
       this.errorMessage = 'O nome do personagem é obrigatório.';
       return;
     }
 
     const userId = this.authService.getLoggedUserId();
-
-    const payload = {
-      userId: userId,
-      name: this.newCharacter.name!.trim(),
-      description: this.newCharacter.description ?? '',
-      attributes: [],
-      skills: []
-    };
+    const form = new FormData();
+    form.append('userId', userId ?? '');
+    form.append('name', this.newCharacter.name.trim());
+    form.append('description', this.newCharacter.description ?? '');
+    if (this.selectedIconFile) {
+      form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
+    }
 
     this.isLoading = true;
-
-    this.characterService.Post(payload as any).subscribe({
+    this.characterService.Post(form as any).subscribe({
       next: () => {
         this.isLoading = false;
         this.CloseModal();
@@ -83,33 +116,109 @@ export class CharacterList implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-
-        const errorBody = err.error;
-        console.error('Erro ao criar personagem:', JSON.stringify(errorBody));
-
-        if (errorBody?.errors) {
-          const messages = Object.values(errorBody.errors).flat() as string[];
-          this.errorMessage = messages[0] ?? 'Dados inválidos.';
-        } else if (errorBody?.message) {
-          this.errorMessage = errorBody.message;
-        } else if (errorBody?.title) {
-          this.errorMessage = errorBody.title;
-        } else {
-          this.errorMessage = 'Erro ao criar personagem. Tente novamente.';
-        }
+        this.errorMessage = this.parseError(err) ?? 'Erro ao criar personagem. Tente novamente.';
       }
     });
   }
 
-  DeleteCharacter(id: string) {
-    if (!confirm('Tem certeza que deseja excluir este personagem?')) return;
+  // ─────────────────────────────────────────────
+  // VISUALIZAR
+  // ─────────────────────────────────────────────
+  OpenViewModal(character: Character): void {
+    this.viewCharacter = character;
+    this.showViewModal = true;
+  }
 
+  CloseViewModal(): void {
+    this.showViewModal = false;
+    this.viewCharacter = null;
+  }
+
+  // ─────────────────────────────────────────────
+  // EDITAR
+  // ─────────────────────────────────────────────
+  OpenEditModal(character: Character): void {
+    this.editCharacter = { id: character.id, name: character.name, description: character.description ?? '' };
+    this.selectedEditIconFile = null;
+    this.editIconPreviewUrl = character.iconPath ?? '';
+    this.editErrorMessage = '';
+    this.showEditModal = true;
+  }
+
+  CloseEditModal(): void {
+    this.showEditModal = false;
+    this.editErrorMessage = '';
+  }
+
+  onEditIconSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      this.editErrorMessage = 'A imagem deve ter no máximo 2MB.';
+      return;
+    }
+    this.selectedEditIconFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.editIconPreviewUrl = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  UpdateCharacter(): void {
+    this.editErrorMessage = '';
+
+    if (!this.editCharacter.name.trim()) {
+      this.editErrorMessage = 'O nome do personagem é obrigatório.';
+      return;
+    }
+
+    const form = new FormData();
+    form.append('id', this.editCharacter.id);
+    form.append('name', this.editCharacter.name.trim());
+    form.append('description', this.editCharacter.description ?? '');
+    if (this.selectedEditIconFile) {
+      form.append('icon', this.selectedEditIconFile, this.selectedEditIconFile.name);
+    }
+
+    this.isEditLoading = true;
+    this.characterService.Update(form as any).subscribe({
+      next: () => {
+        this.isEditLoading = false;
+        this.CloseEditModal();
+        this.GetAllCharacters();
+      },
+      error: (err) => {
+        this.isEditLoading = false;
+        this.editErrorMessage = this.parseError(err) ?? 'Erro ao atualizar personagem. Tente novamente.';
+      }
+    });
+  }
+
+  // ─────────────────────────────────────────────
+  // DELETAR
+  // ─────────────────────────────────────────────
+  DeleteCharacter(id: string): void {
+    if (!confirm('Tem certeza que deseja excluir este personagem?')) return;
     this.characterService.Delete(id).subscribe({
       next: () => {
         this.characterList = this.characterList.filter(c => c.id !== id);
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Erro ao excluir personagem', err)
+      error: () => {}
     });
+  }
+
+  // ─────────────────────────────────────────────
+  // UTILITÁRIOS
+  // ─────────────────────────────────────────────
+  private parseError(err: any): string | null {
+    const body = err?.error;
+    if (body?.errors) {
+      const messages = Object.values(body.errors).flat() as string[];
+      return messages[0] ?? null;
+    }
+    return body?.message ?? body?.title ?? null;
   }
 }

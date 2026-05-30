@@ -80,7 +80,7 @@ tbody tr:hover {
 }
 
 tbody td {
-    padding: 16px 24px;
+    padding: 14px 24px;
     color: var(--rpg-text-body);
     font-size: 0.95rem;
     vertical-align: middle;
@@ -102,6 +102,29 @@ tbody td:last-child {
     font-family: 'Exo 2', sans-serif;
 }
 
+/* Nome com avatar inline */
+.char-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.char-avatar-thumb {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: var(--rpg-purple-tint);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--rpg-purple);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    border: 2px solid var(--rpg-border-light);
+}
+
 .char-name {
     font-weight: 700;
     color: var(--rpg-text-dark);
@@ -110,10 +133,17 @@ tbody td:last-child {
 
 .char-desc {
     color: var(--rpg-text-muted);
-    max-width: 360px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: block;
+    max-width: 360px;
+}
+
+/* Garante que a célula da descrição não estoure a tabela */
+table td:nth-child(3) {
+    max-width: 0;
+    width: 40%;
 }
 
 /* --- BOTÕES DE AÇÃO --- */
@@ -235,13 +265,8 @@ tbody td:last-child {
 }
 
 @keyframes backdropIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 .modal-card {
@@ -255,15 +280,8 @@ tbody td:last-child {
 }
 
 @keyframes modalIn {
-    from {
-        opacity: 0;
-        transform: translateY(24px) scale(0.97);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translateY(24px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .modal-header {
@@ -383,6 +401,92 @@ tbody td:last-child {
     background: var(--rpg-surface);
 }
 
+/* --- ICON UPLOAD --- */
+.icon-upload-area {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 2px dashed var(--rpg-border);
+    background: var(--rpg-surface-tint);
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.25s, background 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-upload-area:hover,
+.icon-upload-area.has-preview:hover {
+    border-color: var(--rpg-purple);
+}
+
+.icon-upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--rpg-text-faint);
+    font-family: 'Nunito', sans-serif;
+    text-align: center;
+    padding: 8px;
+}
+
+.icon-upload-placeholder i {
+    font-size: 1.4rem;
+    color: var(--rpg-purple);
+    opacity: 0.6;
+}
+
+.icon-upload-placeholder span {
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.icon-upload-placeholder small {
+    font-size: 0.62rem;
+    opacity: 0.65;
+}
+
+.icon-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.icon-upload-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.icon-upload-area:hover .icon-upload-overlay {
+    opacity: 1;
+}
+
+.icon-upload-overlay i {
+    font-size: 1.1rem;
+}
+
+/* --- HIDDEN FILE INPUT --- */
+.file-input-hidden {
+    display: none;
+}
+
 /* --- FEEDBACK --- */
 .feedback-message {
     font-family: 'Nunito', sans-serif;
@@ -408,22 +512,16 @@ tbody td:last-child {
         align-items: flex-start;
     }
 
-    .cl-title {
-        font-size: 1.5rem;
-    }
+    .cl-title { font-size: 1.5rem; }
 
-    .char-desc {
-        max-width: 180px;
-    }
+    .char-desc { max-width: 180px; }
 
     thead th:nth-child(3),
     tbody td:nth-child(3) {
         display: none;
     }
 
-    .modal-card {
-        border-radius: 16px;
-    }
+    .modal-card { border-radius: 16px; }
 
     .modal-header,
     .modal-body,
@@ -431,4 +529,81 @@ tbody td:last-child {
         padding-left: 20px;
         padding-right: 20px;
     }
+}
+/* --- MODAL VISUALIZAÇÃO --- */
+.modal-view-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: var(--rpg-purple-tint);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--rpg-purple);
+    flex-shrink: 0;
+    border: 3px solid var(--rpg-border-light);
+}
+
+.modal-view-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.modal-view-name {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--rpg-text-dark);
+    margin: 0 0 6px;
+}
+
+.modal-view-id {
+    display: inline-block;
+    background: var(--rpg-purple-tint);
+    color: var(--rpg-purple);
+    font-weight: 800;
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-family: 'Exo 2', sans-serif;
+}
+
+.modal-view-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.modal-view-label {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--rpg-text-muted);
+}
+
+.modal-view-desc {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.97rem;
+    color: var(--rpg-text-body);
+    line-height: 1.6;
+    white-space: normal;
+    word-break: break-word;
+    background: var(--rpg-surface-tint);
+    border-radius: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--rpg-border-light);
+    margin: 0;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.modal-view-desc.empty {
+    color: var(--rpg-text-faint);
+    font-style: italic;
 }

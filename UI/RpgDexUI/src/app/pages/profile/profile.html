@@ -1,9 +1,12 @@
 <div class="profile-container">
   <header class="profile-header">
     <div class="user-main-info">
-        <div class="avatar-wrapper">
-          <div class="avatar-placeholder" >
-        <img id="user-avatar" [src]="user?.iconPath" alt="Ícone do Personagem" width="150" height="150">
+      <div class="avatar-wrapper">
+        <div class="avatar-placeholder avatar-placeholder--image" *ngIf="user?.iconPath">
+          <img class="avatar-img" [src]="user!.iconPath" alt="Foto de perfil">
+        </div>
+        <div class="avatar-placeholder" *ngIf="!user?.iconPath">
+          {{ user?.userName?.substring(0, 2)?.toUpperCase() || '??' }}
         </div>
       </div>
 
@@ -40,12 +43,12 @@
   <hr class="divider" />
 
   <section class="campaigns-section">
-  <div class="section-header">
-    <div>
-      <h2 class="section-title">Minhas Campanhas</h2>
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Minhas Campanhas</h2>
+      </div>
     </div>
-  </div>
-  
+
     <div class="campaigns-grid">
       <div class="campaign-card add-card">
         <i class="fa-solid fa-plus"></i>
@@ -80,7 +83,6 @@
     </div>
 
     <div class="campaigns-grid">
-
       <div class="campaign-card add-card" routerLink="/personagens">
         <i class="fa-solid fa-plus"></i>
         <span>Novo Personagem</span>
@@ -91,15 +93,20 @@
         *ngFor="let char of characterPreview"
         routerLink="/personagens"
       >
-        <div class="card-image-placeholder character-avatar">
+        <!-- Com ícone -->
+        <div class="card-image-placeholder character-avatar character-avatar--image" *ngIf="char.iconPath">
+          <img class="character-avatar-img" [src]="char.iconPath" [alt]="char.name">
+        </div>
+        <!-- Sem ícone: ícone padrão -->
+        <div class="card-image-placeholder character-avatar" *ngIf="!char.iconPath">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
+
         <div class="card-info">
           <span class="camp-name">{{ char.name }}</span>
           <span class="char-desc-preview">{{ char.description }}</span>
         </div>
       </div>
-
     </div>
   </section>
 </div>

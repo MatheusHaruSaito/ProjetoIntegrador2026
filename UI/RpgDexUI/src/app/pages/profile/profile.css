@@ -33,6 +33,20 @@
   box-shadow: var(--rpg-shadow-btn);
 }
 
+.avatar-placeholder--image {
+  padding: 0;
+  overflow: hidden;
+  background: var(--rpg-border-light);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
 .username {
   font-size: 2rem;
   color: var(--rpg-text-strong);
@@ -85,13 +99,8 @@
   color: var(--rpg-text-body);
 }
 
-.btn-edit:hover {
-  background: var(--rpg-text-dark);
-}
-
-.btn-logout:hover {
-  background: var(--rpg-border);
-}
+.btn-edit:hover  { background: var(--rpg-text-dark); }
+.btn-logout:hover { background: var(--rpg-border); }
 
 .tool-btns {
   display: flex;
@@ -142,9 +151,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  transition:
-    color 0.2s,
-    gap 0.2s;
+  transition: color 0.2s, gap 0.2s;
   white-space: nowrap;
   margin-top: 4px;
 }
@@ -187,6 +194,19 @@
 .character-avatar {
   background: linear-gradient(135deg, var(--rpg-purple-tint), #e8f8ff);
   color: var(--rpg-purple);
+}
+
+/* Personagem com foto */
+.character-avatar--image {
+  padding: 0;
+  overflow: hidden;
+}
+
+.character-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .card-info {

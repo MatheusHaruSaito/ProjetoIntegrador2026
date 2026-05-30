@@ -15,21 +15,30 @@
       <thead>
         <tr>
           <th>#</th>
-          <th>Nome</th>
+          <th>Personagem</th>
           <th>Descrição</th>
           <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         @for (character of characterList; track character.id) {
-          <tr>
+          <tr (click)="OpenViewModal(character)" style="cursor:pointer;">
             <td><span class="char-id">#{{ character.id.substring(0,4) }}</span></td>
-            <td><span class="char-name">{{ character.name }}</span></td>
+            <td>
+              <div class="char-name-cell">
+                <div class="char-avatar-thumb" [style.background-image]="character.iconPath ? 'url(' + character.iconPath + ')' : ''">
+                  <i class="fa fa-shield-halved" *ngIf="!character.iconPath"></i>
+                </div>
+                <span class="char-name">{{ character.name }}</span>
+              </div>
+            </td>
             <td><span class="char-desc">{{ character.description }}</span></td>
             <td>
               <div class="action-btns">
-                <button class="btn-icon" title="Editar"><i class="fa fa-pen"></i></button>
-                <button class="btn-icon danger" title="Excluir" (click)="DeleteCharacter(character.id)">
+                <button class="btn-icon" title="Editar" (click)="$event.stopPropagation(); OpenEditModal(character)">
+                  <i class="fa fa-pen"></i>
+                </button>
+                <button class="btn-icon danger" title="Excluir" (click)="$event.stopPropagation(); DeleteCharacter(character.id)">
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
@@ -55,7 +64,7 @@
 
 </div>
 
-<!-- Modal -->
+<!-- Modal Criar -->
 @if (showModal) {
   <div class="modal-backdrop" (click)="CloseModal()">
     <div class="modal-card" (click)="$event.stopPropagation()">
@@ -68,6 +77,23 @@
       </div>
 
       <div class="modal-body">
+
+        <div class="input-group">
+          <label class="input-label">Ícone do Personagem</label>
+          <div class="icon-upload-area" (click)="iconInput.click()" [class.has-preview]="iconPreviewUrl">
+            <img *ngIf="iconPreviewUrl" [src]="iconPreviewUrl" class="icon-preview-img" alt="Preview">
+            <div class="icon-upload-placeholder" *ngIf="!iconPreviewUrl">
+              <i class="fa fa-cloud-arrow-up"></i>
+              <span>Clique para selecionar</span>
+              <small>PNG • Máx. 2MB</small>
+            </div>
+            <div class="icon-upload-overlay" *ngIf="iconPreviewUrl">
+              <i class="fa fa-camera"></i>
+              <span>Alterar</span>
+            </div>
+          </div>
+          <input #iconInput type="file" accept="image/*" class="file-input-hidden" (change)="onIconSelected($event)">
+        </div>
 
         <div class="input-group">
           <label class="input-label">Nome <span class="required">*</span></label>
@@ -94,18 +120,6 @@
           </textarea>
         </div>
 
-        <div class="input-group">
-          <label class="input-label">URL do Ícone</label>
-          <div class="input-field-wrapper">
-            <i class="fa fa-image icon-field"></i>
-            <input
-              type="text"
-              placeholder="https://..."
-              [(ngModel)]="newCharacter.iconPath"
-              name="charIcon">
-          </div>
-        </div>
-
         <div class="feedback-message error-message" *ngIf="errorMessage">
           <i class="fa fa-circle-exclamation"></i> {{ errorMessage }}
         </div>
@@ -113,13 +127,129 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn-secondary" (click)="CloseModal()" [disabled]="isLoading">
-          Cancelar
-        </button>
+        <button class="btn-secondary" (click)="CloseModal()" [disabled]="isLoading">Cancelar</button>
         <button class="btn-primary" (click)="CreateCharacter()" [disabled]="isLoading">
           <span *ngIf="!isLoading"><i class="fa fa-plus"></i> Criar</span>
           <span *ngIf="isLoading"><i class="fa fa-spinner fa-spin"></i> Criando...</span>
         </button>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- Modal Editar -->
+@if (showEditModal) {
+  <div class="modal-backdrop" (click)="CloseEditModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <h2 class="modal-title">Editar <span>Personagem</span></h2>
+        <button class="btn-icon modal-close" (click)="CloseEditModal()">
+          <i class="fa fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="input-group">
+          <label class="input-label">Ícone do Personagem</label>
+          <div class="icon-upload-area" (click)="iconEditInput.click()" [class.has-preview]="editIconPreviewUrl">
+            <img *ngIf="editIconPreviewUrl" [src]="editIconPreviewUrl" class="icon-preview-img" alt="Preview">
+            <div class="icon-upload-placeholder" *ngIf="!editIconPreviewUrl">
+              <i class="fa fa-cloud-arrow-up"></i>
+              <span>Clique para selecionar</span>
+              <small>PNG, JPG • Máx. 2MB</small>
+            </div>
+            <div class="icon-upload-overlay" *ngIf="editIconPreviewUrl">
+              <i class="fa fa-camera"></i>
+              <span>Alterar</span>
+            </div>
+          </div>
+          <input #iconEditInput type="file" accept="image/*" class="file-input-hidden" (change)="onEditIconSelected($event)">
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Nome <span class="required">*</span></label>
+          <div class="input-field-wrapper">
+            <i class="fa fa-user icon-field"></i>
+            <input
+              type="text"
+              placeholder="Nome do personagem"
+              [(ngModel)]="editCharacter.name"
+              name="editCharName"
+              maxlength="60">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Descrição</label>
+          <textarea
+            class="input-textarea"
+            placeholder="Uma breve descrição do personagem..."
+            [(ngModel)]="editCharacter.description"
+            name="editCharDesc"
+            rows="3"
+            maxlength="300">
+          </textarea>
+        </div>
+
+        <div class="feedback-message error-message" *ngIf="editErrorMessage">
+          <i class="fa fa-circle-exclamation"></i> {{ editErrorMessage }}
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="CloseEditModal()" [disabled]="isEditLoading">Cancelar</button>
+        <button class="btn-primary" (click)="UpdateCharacter()" [disabled]="isEditLoading">
+          <span *ngIf="!isEditLoading"><i class="fa fa-floppy-disk"></i> Salvar</span>
+          <span *ngIf="isEditLoading"><i class="fa fa-spinner fa-spin"></i> Salvando...</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- Modal Visualizar -->
+@if (showViewModal && viewCharacter) {
+  <div class="modal-backdrop" (click)="CloseViewModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <h2 class="modal-title">Detalhes do <span>Personagem</span></h2>
+        <button class="btn-icon modal-close" (click)="CloseViewModal()">
+          <i class="fa fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="modal-view-info">
+          <div
+            class="modal-view-avatar"
+            [style.background-image]="viewCharacter.iconPath ? 'url(' + viewCharacter.iconPath + ')' : ''"
+          >
+            <i class="fa fa-shield-halved" *ngIf="!viewCharacter.iconPath"></i>
+          </div>
+          <div>
+            <p class="modal-view-name">{{ viewCharacter.name }}</p>
+            <span class="modal-view-id">#{{ viewCharacter.id.substring(0, 8) }}</span>
+          </div>
+        </div>
+
+        <div class="modal-view-section">
+          <span class="modal-view-label"><i class="fa fa-align-left"></i> Descrição</span>
+          <p class="modal-view-desc" [class.empty]="!viewCharacter.description">
+            {{ viewCharacter.description || 'Nenhuma descrição fornecida.' }}
+          </p>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="CloseViewModal()">Fechar</button>
       </div>
 
     </div>

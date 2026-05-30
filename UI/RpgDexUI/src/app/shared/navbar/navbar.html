@@ -10,14 +10,30 @@
   <div class="nav-container" [class.active]="isMenuOpen">
     <ul class="nav-links">
       <li><a routerLink="/home" routerLinkActive="active" (click)="closeMenu()">Início</a></li>
-      
+
       <ng-container *ngIf="authService.isLoggedIn()">
         <li><a routerLink="/campanhas" routerLinkActive="active" (click)="closeMenu()">Jogar</a></li>
         <li><a routerLink="/biblioteca" routerLinkActive="active" (click)="closeMenu()">Biblioteca</a></li>
       </ng-container>
     </ul>
 
-    <div class="user-profile" routerLink="/perfil" (click)="closeMenu()" *ngIf="authService.isLoggedIn()"></div>
+    <div
+      class="user-profile user-profile--image"
+      routerLink="/perfil"
+      (click)="closeMenu()"
+      *ngIf="authService.isLoggedIn() && userAvatarUrl"
+    >
+      <img class="user-profile__img" [src]="userAvatarUrl" alt="Foto de perfil">
+    </div>
+
+    <div
+      class="user-profile"
+      routerLink="/perfil"
+      (click)="closeMenu()"
+      *ngIf="authService.isLoggedIn() && !userAvatarUrl"
+    >
+      <i class="fa-solid fa-user"></i>
+    </div>
 
     <div class="auth-buttons" *ngIf="!authService.isLoggedIn()">
       <button class="btn-login-nav" routerLink="/login" (click)="closeMenu()">Entrar</button>
