@@ -1,9 +1,9 @@
 <div class="profile-container">
   <header class="profile-header">
     <div class="user-main-info">
-      <div class="avatar-wrapper">
-        <div class="avatar-placeholder">
-          {{ user?.userName?.substring(0, 2)?.toUpperCase() || '??' }}
+        <div class="avatar-wrapper">
+          <div class="avatar-placeholder" >
+        <img id="user-avatar" [src]="user?.iconPath" alt="Ícone do Personagem" width="150" height="150">
         </div>
       </div>
 

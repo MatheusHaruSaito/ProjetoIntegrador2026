@@ -46,7 +46,7 @@ export class EditProfileComponent implements OnInit {
         this.currentUser = response.data ?? null;
         this.editForm.userName = this.currentUser?.userName ?? '';
         // Pré-carrega a foto atual do usuário, se houver
-        this.avatarPreviewUrl = this.currentUser?.iconUrl ?? '';
+        this.avatarPreviewUrl = this.currentUser?.iconPath ?? '';
         this.cdr.detectChanges();
       },
       error: () => {

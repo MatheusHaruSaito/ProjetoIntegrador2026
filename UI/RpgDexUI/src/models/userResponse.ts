@@ -3,5 +3,5 @@ export interface UserResponse {
   userName: string;
   email: string;
   roles: string | string[];
-  iconUrl?: string;
+  iconPath: string | undefined; 
 }

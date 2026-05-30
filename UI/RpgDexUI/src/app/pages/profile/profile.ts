@@ -32,6 +32,7 @@ export class ProfileComponent implements OnInit {
     { id: 2, name: 'O Chamado de Cthulhu', role: 'Jogador' },
     { id: 3, name: 'Mundo de Ferro', role: 'Mestre' }
   ];
+http: any;
 
   ngOnInit(): void {
     this.initTheme();
@@ -70,6 +71,7 @@ export class ProfileComponent implements OnInit {
         this.cdr.detectChanges();
         // Carrega personagens só depois de ter o userId
         this.loadCharacterPreview();
+
       },
       error: (err) => {
         console.error('Erro ao carregar usuário', err);
@@ -88,6 +90,7 @@ export class ProfileComponent implements OnInit {
         this.characterTotal = mine.length;
         this.characterPreview = mine.slice(0, 3);
         this.cdr.detectChanges();
+        document.getElementById('user-avatar')?.setAttribute('src', this.user?.iconPath || '');
       },
       error: (err) => console.error('Erro ao carregar personagens', err)
     });
@@ -101,4 +104,5 @@ export class ProfileComponent implements OnInit {
     this.authService.Logout();
     this.router.navigate(['/login']);
   }
+
 }
