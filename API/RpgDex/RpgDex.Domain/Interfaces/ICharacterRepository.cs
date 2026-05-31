@@ -8,7 +8,7 @@ namespace RpgDex.Domain.Interfaces
     public interface ICharacterRepository
     {
         Task<Character> InsertAsync(Character character);
-        Task<IEnumerable<Character>> GetAllAsync();
+        Task<IEnumerable<Character>> GetAllByUserIdAsync(Guid userId);
         Task<Character> GetByIdAsync(Guid Id);
         Task<bool> UpdateAsync(Character NewCharacter);
         Task<bool> SetActiveState(Guid Id,bool ActiveState);

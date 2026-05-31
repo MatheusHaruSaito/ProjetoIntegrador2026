@@ -20,8 +20,8 @@ export class CharacterService {
     return this.http.post<ApiResponse<Character>>(this.env, character);
   }
 
-  public GetAll(): Observable<ApiResponse<Character[]>> {
-    return this.http.get<ApiResponse<Character[]>>(this.env);
+  public GetAll(userId: string): Observable<ApiResponse<Character[]>> {
+    return this.http.get<ApiResponse<Character[]>>(`${this.env}/${userId}/All`);
   }
 
   public GetById(Id: String): Observable<ApiResponse<Character>> {

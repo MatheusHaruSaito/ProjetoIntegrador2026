@@ -27,9 +27,11 @@ namespace RpgDex.Infrastructure.Services
             return await _entitie.Find(o => o.Id == character.Id).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Character>> GetAllAsync()
+        public async Task<IEnumerable<Character>> GetAllByUserIdAsync(Guid userId)
         {
-            return await _entitie.Find(c => c.IsActive == true).ToListAsync();
+            var filter = Builders<Character>.Filter.Eq(c => c.UserId, userId) 
+                & Builders<Character>.Filter.Eq(c => c.IsActive, true);
+            return await _entitie.Find(filter).ToListAsync();
         }
 
         public async Task<Character> GetByIdAsync(Guid Id)

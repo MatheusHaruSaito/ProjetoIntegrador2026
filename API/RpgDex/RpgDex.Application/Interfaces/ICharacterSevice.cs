@@ -10,7 +10,7 @@ namespace RpgDex.Application.Interfaces
     public interface ICharacterSevice
     {
         Task<Result<CharacterResponse>> Create(CreateCharacterRequest request);
-        Task<Result<IEnumerable<CharacterResponse>>> GetAllAsync();
+        Task<Result<IEnumerable<CharacterResponse>>> GetAllByUserIdAsync(Guid userId);
         Task<Result<CharacterResponse>> GetByIdAsync(Guid Id);
         Task<Result<bool>> UpdateAsync(UpdateCharacterRequest request);
         Task<Result<CharacterResponse>> SetActiveState(Guid Id,bool ActiveState);

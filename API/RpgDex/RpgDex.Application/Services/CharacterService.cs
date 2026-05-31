@@ -76,10 +76,10 @@ namespace RpgDex.Application.Services
             return Result<CharacterResponse>.Success(characterFound.Adapt<CharacterResponse>());
         }
 
-        public async Task<Result<IEnumerable<CharacterResponse>>> GetAllAsync()
+        public async Task<Result<IEnumerable<CharacterResponse>>> GetAllByUserIdAsync(Guid userId)
         {
             //Retorna Todos os Perosnagens
-            var characters =  await _character.GetAllAsync();
+            var characters =  await _character.GetAllByUserIdAsync(userId);
             if (characters is null) return Result<IEnumerable<CharacterResponse>>.Failure("Falha ao Obter personagem");
 
             var response = characters.Adapt<List<CharacterResponse>>();
@@ -92,7 +92,7 @@ namespace RpgDex.Application.Services
             var data = await _character.GetByIdAsync(Id);
             if(data is null)
             {
-                return Result<CharacterResponse>.Failure($"Usuario de Id: {Id} Não Encontrado!!");
+                return Result<CharacterResponse>.Failure($"Personagem de Id: {Id} Não Encontrado!!");
             }
             var response = data.Adapt<CharacterResponse>();
             return Result<CharacterResponse>.Success(response);
