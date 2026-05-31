@@ -81,14 +81,13 @@ http: any;
   }
 
   private loadCharacterPreview(): void {
-    const userId = this.user?.id;
+    const userId = this.authService.getLoggedUserId();
 
-    this.characterService.GetAll().subscribe({
+    this.characterService.GetAll(userId!).subscribe({
       next: (response) => {
         const all: Character[] = response.data ?? [];
-        const mine = userId ? all.filter(c => c.userId === userId) : all;
-        this.characterTotal = mine.length;
-        this.characterPreview = mine.slice(0, 3);
+        this.characterTotal = all.length;
+        this.characterPreview = all.slice(0, 3);
         this.cdr.detectChanges();
         document.getElementById('user-avatar')?.setAttribute('src', this.user?.iconPath || '');
       },

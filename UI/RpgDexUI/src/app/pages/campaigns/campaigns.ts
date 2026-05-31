@@ -46,7 +46,7 @@ export class CampaignsComponent implements OnInit {
 
   private loadCharacters(): void {
     const userId = this.authService.getLoggedUserId();
-    this.characterService.GetAll().subscribe({
+    this.characterService.GetAll(userId!).subscribe({
       next: (response) => {
         const all = response.data ?? [];
         this.myCharacters = userId ? all.filter(c => c.userId === userId) : all;

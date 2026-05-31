@@ -48,7 +48,7 @@ export class CharacterList implements OnInit {
   // ─────────────────────────────────────────────
   GetAllCharacters(): void {
     const userId = this.authService.getLoggedUserId();
-    this.characterService.GetAll().subscribe({
+    this.characterService.GetAll(userId!).subscribe({
       next: (response) => {
         const all: Character[] = response.data ?? [];
         this.characterList = userId ? all.filter(c => c.userId === userId) : all;
