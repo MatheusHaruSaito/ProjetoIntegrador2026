@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { RegisterUser } from '../../models/registerUser';
 import { jwtDecode } from 'jwt-decode';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, map, catchError } from 'rxjs';
 import { LoginUser } from '../../models/loginUser';
 import { JwtPayload } from '../../models/jwtPayload';
 import { tokenModel } from '../../models/tokenMode';
@@ -20,7 +20,17 @@ export class AuthService {
   private readonly JWT_Token = 'JWTString';
   private readonly REFRESH_Token = 'REFRESHTOKEN';
 
-  constructor(private http: HttpClient, private cookieService: CookieService) {}
+  private currentUserSubject: BehaviorSubject<any>;
+  public currentUser: Observable<any>;
+
+  constructor(private http: HttpClient, private cookieService: CookieService) {
+    this.currentUserSubject = new BehaviorSubject<any>(this.cookieService.get(this.JWT_Token));
+    this.currentUser = this.currentUserSubject.asObservable();
+  }
+
+  public get currentUserValue() {
+    return this.currentUserSubject.value;
+  }
 
   public Register(authUser: RegisterUser): Observable<boolean> {
     return this.http.post<boolean>(this.env, authUser);
@@ -28,20 +38,47 @@ export class AuthService {
 
   public Login(user: LoginUser): Observable<ApiResponse<tokenModel>> {
     return this.http.post<ApiResponse<tokenModel>>(`${this.env}/Login`, user).pipe(
-      tap(token => {
-        this.cookieService.set(this.JWT_Token, token.data!.accessToken);
-        this.cookieService.set(this.REFRESH_Token, token.data!.refreshToken);
+      map((response: ApiResponse<tokenModel>) => {
+        if(response.success && response.data) {
+          this.cookieService.set(this.JWT_Token, response.data!.accessToken);
+          this.cookieService.set(this.REFRESH_Token, response.data!.refreshToken);
+          this.currentUserSubject.next(response.data);
+        }
+        return response;
       })
+      // tap(token => {
+      //   this.cookieService.set(this.JWT_Token, token.data!.accessToken);
+      //   this.cookieService.set(this.REFRESH_Token, token.data!.refreshToken);
+      // })
     );
   }
 
-  public RefreshToken(token: tokenModel): Observable<ApiResponse<tokenModel>> {
-    return this.http.post<ApiResponse<tokenModel>>(`${this.env}/RefreshToken`, token).pipe(
-      tap(newToken => {
-        this.cookieService.set(this.JWT_Token, newToken.data!.accessToken);
-        this.cookieService.set(this.REFRESH_Token, newToken.data!.refreshToken);
-      })
-    );
+
+  public RefreshToken(): Observable<ApiResponse<tokenModel>> {
+
+    const tokenModel: tokenModel = {
+      accessToken: this.cookieService.get(this.JWT_Token) || '',
+      refreshToken: this.cookieService.get(this.REFRESH_Token) || ''
+    }
+    return this.http.post<ApiResponse<tokenModel>>(`${this.env}/RefreshToken`, tokenModel).pipe(
+      map((response: ApiResponse<tokenModel>) => {
+        if(response.success && response.data?.accessToken) {
+          const currentUser = this.currentUserValue;
+          currentUser.accessToken = response.data.accessToken;
+          this.cookieService.set(this.JWT_Token, response.data.accessToken);
+          this.currentUserSubject.next(currentUser);
+        }
+        return response;
+      }),
+      catchError((error) => {
+        this.Logout();
+        throw error;
+      }
+      // tap(newToken => {
+      //   this.cookieService.set(this.JWT_Token, newToken.data!.accessToken);
+      //   this.cookieService.set(this.REFRESH_Token, newToken.data!.refreshToken);
+      // })
+    ));
   }
 
   // Retorna Observable — o componente assina e recebe o dado quando chegar
@@ -66,5 +103,7 @@ export class AuthService {
 
   public Logout(): void {
     this.cookieService.delete(this.JWT_Token, '/');
+    this.cookieService.delete(this.REFRESH_Token, '/');
+    this.currentUserSubject.next(null);
   }
 }
