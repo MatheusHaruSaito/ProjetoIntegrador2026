@@ -113,13 +113,6 @@ export class CharacterList implements OnInit {
     if (this.selectedIconFile) {
       form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
     }
-
-    console.log('FormData contents:');
-    for (const [key, value] of form.entries()) {
-      console.log(key, value);
-    }
-    
-    console.log('Creating character with data:', form);
     this.isLoading = true;
     this.characterService.Post(form as any).subscribe({
       next: () => {
