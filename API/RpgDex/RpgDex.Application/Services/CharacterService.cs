@@ -101,16 +101,27 @@ namespace RpgDex.Application.Services
         public async Task<Result<bool>> UpdateAsync(UpdateCharacterRequest request)
         {
             var updateCharacter = request.Adapt<Character>();
+            if(request.Icon is not null)
+            {
+                try
+                {
+                    updateCharacter.IconPath = await _fileService.UploadFileAsync(request.Icon, updateCharacter.Id.ToString());
+                }
+                catch (Exception ex)
+                {
+                    return Result<bool>.Failure($"Erro ao salvar a imagem: {ex.Message}");
+                }
+            }
+            else
+            {
+                var characterFound = await _character.GetByIdAsync(request.Id);
+                Console.WriteLine($"character found: {characterFound.IconPath}");
+                if (characterFound is null) return Result<bool>.Failure("Personagem Não Encontrado");
+                updateCharacter.IconPath = characterFound.IconPath;
+            }
 
-            //Aqui Colocar o codigo que altera a foto
-            try
-            {
-                updateCharacter.IconPath = await _fileService.UploadFileAsync(request.Icon, updateCharacter.Id.ToString());
-            }
-            catch (Exception ex)
-            {
-                return Result<bool>.Failure($"Erro ao salvar a imagem: {ex.Message}");
-            }
+            Console.WriteLine($"IconPath: {updateCharacter.IconPath}");
+            Console.WriteLine($"request.Icon: {request.Icon}");
 
 
             var response = await _character.UpdateAsync(updateCharacter);

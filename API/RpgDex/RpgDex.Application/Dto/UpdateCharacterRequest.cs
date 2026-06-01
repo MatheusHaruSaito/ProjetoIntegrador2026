@@ -9,7 +9,7 @@ namespace RpgDex.Application.Dto
     public class UpdateCharacterRequest
     {
         public Guid Id { get; set; }
-        public IFormFile Icon { get; set; }
+        public IFormFile? Icon { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Dictionary<string, JsonElement> Properties { get; set; } = new Dictionary<string, JsonElement>();
