@@ -19,6 +19,7 @@ export class CharacterList implements OnInit {
 
   characterList: Character[] = [];
   customProperties: any[] = [];
+  editCustomProperties: any[] = [];
   // ── Criar ──
   showModal = false;
   isLoading = false;
@@ -66,6 +67,7 @@ export class CharacterList implements OnInit {
     this.selectedIconFile = null;
     this.iconPreviewUrl = '';
     this.errorMessage = '';
+    this.customProperties = [];
     this.showModal = true;
   }
 
@@ -134,6 +136,26 @@ export class CharacterList implements OnInit {
   }
 
   // ─────────────────────────────────────────────
+  // ATRIBUTOS DO MODAL DE EDIÇÃO
+  // ─────────────────────────────────────────────
+  addEditPropertyField(): void {
+    this.editCustomProperties.push({ key: '', value: '' });
+  }
+
+  removeEditPropertyField(index: number): void {
+    this.editCustomProperties.splice(index, 1);
+  }
+
+  // ─────────────────────────────────────────────
+  // HELPER – ATRIBUTOS DO MODAL DE VISUALIZAÇÃO
+  // ─────────────────────────────────────────────
+  viewPropertiesEntries(): { key: string; value: any }[] {
+    const props = (this.viewCharacter as any)?.properties;
+    if (!props || typeof props !== 'object') return [];
+    return Object.entries(props).map(([key, value]) => ({ key, value }));
+  }
+
+  // ─────────────────────────────────────────────
   // VISUALIZAR
   // ─────────────────────────────────────────────
   OpenViewModal(character: Character): void {
@@ -154,6 +176,11 @@ export class CharacterList implements OnInit {
     this.selectedEditIconFile = null;
     this.editIconPreviewUrl = character.iconPath ?? '';
     this.editErrorMessage = '';
+    // Carregar atributos existentes como array editável
+    const props = (character as any).properties;
+    this.editCustomProperties = props && typeof props === 'object'
+      ? Object.entries(props).map(([key, value]) => ({ key, value }))
+      : [];
     this.showEditModal = true;
   }
 
@@ -186,10 +213,18 @@ export class CharacterList implements OnInit {
       return;
     }
 
+    const propertiesObj: Record<string, any> = {};
+    this.editCustomProperties.forEach(prop => {
+      if (prop.key.trim()) {
+        propertiesObj[prop.key.trim()] = prop.value;
+      }
+    });
+
     const form = new FormData();
     form.append('id', this.editCharacter.id);
     form.append('name', this.editCharacter.name.trim());
     form.append('description', this.editCharacter.description ?? '');
+    form.append('properties', JSON.stringify(propertiesObj));
     if (this.selectedEditIconFile) {
       form.append('icon', this.selectedEditIconFile, this.selectedEditIconFile.name);
     }

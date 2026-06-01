@@ -607,3 +607,187 @@ table td:nth-child(3) {
     color: var(--rpg-text-faint);
     font-style: italic;
 }
+
+/* ─────────────────────────────
+   ATRIBUTOS PERSONALIZADOS
+───────────────────────────── */
+
+.properties-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.btn-add-property {
+    border: none;
+    border-radius: 8px;
+    padding: 7px 13px;
+    cursor: pointer;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    background: var(--rpg-purple-tint);
+    color: var(--rpg-purple);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-add-property:hover {
+    background: var(--rpg-purple);
+    color: #fff;
+}
+
+.dynamic-fields-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Placeholder quando não há campos */
+.dynamic-fields-empty {
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    color: var(--rpg-text-faint);
+    padding: 14px 0 6px;
+    font-style: italic;
+}
+
+.dynamic-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 8px;
+    align-items: center;
+    background: var(--rpg-surface-tint);
+    border: 1px solid var(--rpg-border-light);
+    border-radius: 10px;
+    padding: 8px 10px;
+    transition: border-color 0.2s;
+}
+
+.dynamic-field-row:focus-within {
+    border-color: var(--rpg-purple);
+}
+
+.field-wrapper {
+    flex: 1;
+    min-width: 0;
+}
+
+.field-wrapper input {
+    width: 100%;
+    font-family: 'Nunito', sans-serif;
+    padding: 9px 12px;
+    border: 1.5px solid var(--rpg-border-input);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--rpg-text-strong);
+    background: var(--rpg-surface);
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.field-wrapper input::placeholder {
+    color: var(--rpg-text-faint);
+    font-style: italic;
+    font-size: 0.85rem;
+}
+
+.field-wrapper input:focus {
+    outline: none;
+    border-color: var(--rpg-purple);
+}
+
+/* Separador visual entre chave e valor */
+.field-separator {
+    color: var(--rpg-border);
+    font-size: 0.8rem;
+    text-align: center;
+    font-weight: 700;
+    font-family: 'Exo 2', sans-serif;
+    flex-shrink: 0;
+}
+
+.btn-remove-field {
+    flex-shrink: 0;
+    color: var(--rpg-text-faint);
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+}
+
+.btn-remove-field:hover {
+    background: var(--rpg-error-bg);
+    color: var(--rpg-error);
+}
+
+/* ─────────────────────────────
+   ATRIBUTOS NO MODAL DE VIEW
+───────────────────────────── */
+
+.modal-view-properties {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.modal-view-props-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+}
+
+.modal-view-prop-chip {
+    background: var(--rpg-surface-tint);
+    border: 1px solid var(--rpg-border-light);
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.prop-chip-key {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--rpg-purple);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.prop-chip-value {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    color: var(--rpg-text-body);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.modal-view-props-empty {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    color: var(--rpg-text-faint);
+    font-style: italic;
+    padding: 4px 0;
+}
+
+@media (max-width: 640px) {
+    .dynamic-field-row {
+        grid-template-columns: 1fr 1fr auto;
+    }
+
+    .modal-view-props-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
