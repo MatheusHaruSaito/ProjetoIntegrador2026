@@ -1,6 +1,9 @@
-import { Component, OnDestroy, OnInit, signal, computed } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal, computed, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth-service';
+import { CharacterService } from '../../services/character-service';
+import { Character } from '../../../models/character';
 
 export interface Theme {
   tag: string;
@@ -26,8 +29,17 @@ export interface Theme {
   styleUrl: './home.css',
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  private authService = inject(AuthService);
+  private characterService = inject(CharacterService);
+  private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
+
   current = signal(0);
   private timer?: any;
+
+  isLoggedIn = false;
+  characterPreview: Character[] = [];
+  characterTotal = 0;
 
   readonly themes: Theme[] = [
     {
@@ -108,6 +120,27 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.startTimer();
+    this.isLoggedIn = this.authService.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.loadCharacterPreview();
+    }
+  }
+
+  private loadCharacterPreview(): void {
+    const userId = this.authService.getLoggedUserId();
+    this.characterService.GetAll(userId!).subscribe({
+      next: (response) => {
+        const all: Character[] = response.data ?? [];
+        this.characterTotal = all.length;
+        this.characterPreview = all.slice(0, 4);
+        this.cdr.detectChanges();
+      },
+      error: () => {}
+    });
+  }
+
+  goToCta(): void {
+    this.router.navigate(this.isLoggedIn ? ['/campanhas'] : ['/cadastro']);
   }
 
   ngOnDestroy() {
