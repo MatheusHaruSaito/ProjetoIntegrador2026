@@ -75,6 +75,9 @@
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .user-profile:hover {
@@ -177,10 +180,19 @@
     gap: 30px;
   }
 
-  .menu-toggle.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-  .menu-toggle.active span:nth-child(2) { opacity: 0; }
-  .menu-toggle.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+  .menu-toggle.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+
+  .menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-toggle.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
 }
+
 /* --- AVATAR NA NAVBAR --- */
 .user-profile--image {
   padding: 0;
