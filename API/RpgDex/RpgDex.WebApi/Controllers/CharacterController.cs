@@ -21,6 +21,8 @@
             public async Task<ActionResult<CharacterResponse>> CreateCharacter(CreateCharacterRequest request)
             {
 
+                Console.WriteLine(request.Properties);
+           
                 var result = await _characterSevice.Create(request);
                 if (result.IsFailure)
                 {

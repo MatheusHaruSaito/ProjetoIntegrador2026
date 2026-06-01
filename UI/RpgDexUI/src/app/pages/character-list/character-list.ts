@@ -18,7 +18,7 @@ export class CharacterList implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   characterList: Character[] = [];
-
+  customProperties: any[] = [];
   // ── Criar ──
   showModal = false;
   isLoading = false;
@@ -98,15 +98,28 @@ export class CharacterList implements OnInit {
       return;
     }
 
+    const propertiesObj: Record<string, any> = {};
+    this.customProperties.forEach(prop => {
+      if (prop.key.trim()) {
+        propertiesObj[prop.key.trim()] = prop.value;
+      }
+    });
     const userId = this.authService.getLoggedUserId();
     const form = new FormData();
     form.append('userId', userId ?? '');
     form.append('name', this.newCharacter.name.trim());
     form.append('description', this.newCharacter.description ?? '');
+    form.append('properties', JSON.stringify(propertiesObj));
     if (this.selectedIconFile) {
       form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
     }
 
+    console.log('FormData contents:');
+    for (const [key, value] of form.entries()) {
+      console.log(key, value);
+    }
+    
+    console.log('Creating character with data:', form);
     this.isLoading = true;
     this.characterService.Post(form as any).subscribe({
       next: () => {
@@ -119,6 +132,12 @@ export class CharacterList implements OnInit {
         this.errorMessage = this.parseError(err) ?? 'Erro ao criar personagem. Tente novamente.';
       }
     });
+  }
+  addPropertyField(): void {
+      this.customProperties.push({ key: '', value: '' });
+    }
+  removePropertyField(index: number): void {
+    this.customProperties.splice(index, 1);
   }
 
   // ─────────────────────────────────────────────

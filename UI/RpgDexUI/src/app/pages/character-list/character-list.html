@@ -120,6 +120,43 @@
           </textarea>
         </div>
 
+        <div class="input-group">
+  <div class="properties-header">
+    <label class="input-label">Atributos Personalizados</label>
+    <button type="button" class="btn-add-property" (click)="addPropertyField()">
+      <i class="fa fa-plus"></i> Adicionar Campo
+    </button>
+  </div>
+
+  <div class="dynamic-fields-container">
+    @for (field of customProperties; track $index) {
+      <div class="dynamic-field-row">
+        
+        <div class="field-wrapper size-half">
+          <input 
+            type="text" 
+            placeholder="Ex: Força, Classe, Idade" 
+            [(ngModel)]="field.key"
+            name="propKey-{{$index}}">
+        </div>
+
+        <div class="field-wrapper size-half">
+          <input 
+            type="text" 
+            placeholder="Valor" 
+            [(ngModel)]="field.value"
+            name="propValue-{{$index}}">
+        </div>
+
+        <button type="button" class="btn-icon btn-remove-field" (click)="removePropertyField($index)">
+          <i class="fa fa-trash"></i>
+        </button>
+
+      </div>
+    }
+  </div>
+</div>
+
         <div class="feedback-message error-message" *ngIf="errorMessage">
           <i class="fa fa-circle-exclamation"></i> {{ errorMessage }}
         </div>
