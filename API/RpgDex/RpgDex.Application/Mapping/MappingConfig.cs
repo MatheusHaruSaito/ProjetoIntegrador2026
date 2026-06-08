@@ -57,20 +57,18 @@ namespace RpgDex.Application.Mapping
 
         }
 
-        private static BsonDocument ConvertToBsonDocument(Dictionary<string, JsonElement> source)
+        private static BsonDocument ConvertToBsonDocument(string source)
         {
-            if (source is null || source.Count == 0)
+            if (string.IsNullOrWhiteSpace(source))
             {
                 return new BsonDocument();
-
             }
 
             try
             {
-                var json = JsonSerializer.Serialize(source);
-                return BsonSerializer.Deserialize<BsonDocument>(json);
+                return MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(source);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new BsonDocument();
             }

@@ -12,7 +12,7 @@ namespace RpgDex.Application.Dto
         public string Description { get; set; }
         public IFormFile Icon { get; set; }
         public Guid UserId { get; set; }
-        public Dictionary<string, JsonElement> Properties { get; set; } = new Dictionary<string, JsonElement>();
+        public string? Properties { get; set; }
 
     }
 }

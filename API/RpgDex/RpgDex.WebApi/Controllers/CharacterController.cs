@@ -20,7 +20,7 @@
             [HttpPost]
             public async Task<ActionResult<CharacterResponse>> CreateCharacter(CreateCharacterRequest request)
             {
-
+           
                 var result = await _characterSevice.Create(request);
                 if (result.IsFailure)
                 {

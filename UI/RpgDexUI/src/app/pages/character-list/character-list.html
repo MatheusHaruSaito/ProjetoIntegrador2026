@@ -120,6 +120,42 @@
           </textarea>
         </div>
 
+        <div class="input-group">
+          <div class="properties-header">
+            <label class="input-label">Atributos Personalizados</label>
+            <button type="button" class="btn-add-property" (click)="addPropertyField()">
+              <i class="fa fa-plus"></i> Adicionar Campo
+            </button>
+          </div>
+
+          <div class="dynamic-fields-container">
+            @if (customProperties.length === 0) {
+              <p class="dynamic-fields-empty">Nenhum atributo adicionado ainda.</p>
+            }
+            @for (field of customProperties; track $index) {
+              <div class="dynamic-field-row">
+                <div class="field-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Ex: Força, Classe..."
+                    [(ngModel)]="field.key"
+                    name="propKey-{{$index}}">
+                </div>
+                <div class="field-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Valor"
+                    [(ngModel)]="field.value"
+                    name="propValue-{{$index}}">
+                </div>
+                <button type="button" class="btn-icon btn-remove-field" title="Remover" (click)="removePropertyField($index)">
+                  <i class="fa fa-xmark"></i>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+
         <div class="feedback-message error-message" *ngIf="errorMessage">
           <i class="fa fa-circle-exclamation"></i> {{ errorMessage }}
         </div>
@@ -194,6 +230,42 @@
           </textarea>
         </div>
 
+        <div class="input-group">
+          <div class="properties-header">
+            <label class="input-label">Atributos Personalizados</label>
+            <button type="button" class="btn-add-property" (click)="addEditPropertyField()">
+              <i class="fa fa-plus"></i> Adicionar Campo
+            </button>
+          </div>
+
+          <div class="dynamic-fields-container">
+            @if (editCustomProperties.length === 0) {
+              <p class="dynamic-fields-empty">Nenhum atributo adicionado ainda.</p>
+            }
+            @for (field of editCustomProperties; track $index) {
+              <div class="dynamic-field-row">
+                <div class="field-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Ex: Força, Classe..."
+                    [(ngModel)]="field.key"
+                    name="editPropKey-{{$index}}">
+                </div>
+                <div class="field-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Valor"
+                    [(ngModel)]="field.value"
+                    name="editPropValue-{{$index}}">
+                </div>
+                <button type="button" class="btn-icon btn-remove-field" title="Remover" (click)="removeEditPropertyField($index)">
+                  <i class="fa fa-xmark"></i>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+
         <div class="feedback-message error-message" *ngIf="editErrorMessage">
           <i class="fa fa-circle-exclamation"></i> {{ editErrorMessage }}
         </div>
@@ -244,6 +316,18 @@
           <p class="modal-view-desc" [class.empty]="!viewCharacter.description">
             {{ viewCharacter.description || 'Nenhuma descrição fornecida.' }}
           </p>
+        </div>
+
+        <div class="modal-view-section modal-view-properties" *ngIf="viewPropertiesEntries().length > 0">
+          <span class="modal-view-label"><i class="fa fa-list-check"></i> Atributos</span>
+          <div class="modal-view-props-grid">
+            @for (entry of viewPropertiesEntries(); track $index) {
+              <div class="modal-view-prop-chip">
+                <span class="prop-chip-key">{{ entry.key }}</span>
+                <span class="prop-chip-value">{{ entry.value }}</span>
+              </div>
+            }
+          </div>
         </div>
 
       </div>
