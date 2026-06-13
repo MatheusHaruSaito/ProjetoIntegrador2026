@@ -1,5 +1,4 @@
 <div class="cl-wrapper">
-
   <div class="cl-header">
     <div>
       <h1 class="cl-title"><span>Meus Personagens</span></h1>
@@ -22,23 +21,40 @@
       </thead>
       <tbody>
         @for (character of characterList; track character.id) {
-          <tr (click)="OpenViewModal(character)" style="cursor:pointer;">
-            <td><span class="char-id">#{{ character.id.substring(0,4) }}</span></td>
+          <tr (click)="OpenViewModal(character)" style="cursor: pointer">
+            <td>
+              <span class="char-id">#{{ character.id.substring(0, 4) }}</span>
+            </td>
             <td>
               <div class="char-name-cell">
-                <div class="char-avatar-thumb" [style.background-image]="character.iconPath ? 'url(' + character.iconPath + ')' : ''">
+                <div
+                  class="char-avatar-thumb"
+                  [style.background-image]="
+                    character.iconPath ? 'url(' + character.iconPath + ')' : ''
+                  "
+                >
                   <i class="fa fa-shield-halved" *ngIf="!character.iconPath"></i>
                 </div>
                 <span class="char-name">{{ character.name }}</span>
               </div>
             </td>
-            <td><span class="char-desc">{{ character.description }}</span></td>
+            <td>
+              <span class="char-desc">{{ character.description }}</span>
+            </td>
             <td>
               <div class="action-btns">
-                <button class="btn-icon" title="Editar" (click)="$event.stopPropagation(); OpenEditModal(character)">
+                <button
+                  class="btn-icon"
+                  title="Editar"
+                  (click)="$event.stopPropagation(); OpenEditModal(character)"
+                >
                   <i class="fa fa-pen"></i>
                 </button>
-                <button class="btn-icon danger" title="Excluir" (click)="$event.stopPropagation(); DeleteCharacter(character.id)">
+                <button
+                  class="btn-icon danger"
+                  title="Excluir"
+                  (click)="$event.stopPropagation(); DeleteCharacter(character.id)"
+                >
                   <i class="fa fa-trash"></i>
                 </button>
               </div>
@@ -61,124 +77,20 @@
       </tbody>
     </table>
   </div>
-
 </div>
 
 <!-- Modal Criar -->
-@if (showModal) {
-  <div class="modal-backdrop" (click)="CloseModal()">
-    <div class="modal-card" (click)="$event.stopPropagation()">
-
-      <div class="modal-header">
-        <h2 class="modal-title">Novo <span>Personagem</span></h2>
-        <button class="btn-icon modal-close" (click)="CloseModal()">
-          <i class="fa fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="modal-body">
-
-        <div class="input-group">
-          <label class="input-label">Ícone do Personagem</label>
-          <div class="icon-upload-area" (click)="iconInput.click()" [class.has-preview]="iconPreviewUrl">
-            <img *ngIf="iconPreviewUrl" [src]="iconPreviewUrl" class="icon-preview-img" alt="Preview">
-            <div class="icon-upload-placeholder" *ngIf="!iconPreviewUrl">
-              <i class="fa fa-cloud-arrow-up"></i>
-              <span>Clique para selecionar</span>
-              <small>PNG • Máx. 2MB</small>
-            </div>
-            <div class="icon-upload-overlay" *ngIf="iconPreviewUrl">
-              <i class="fa fa-camera"></i>
-              <span>Alterar</span>
-            </div>
-          </div>
-          <input #iconInput type="file" accept="image/*" class="file-input-hidden" (change)="onIconSelected($event)">
-        </div>
-
-        <div class="input-group">
-          <label class="input-label">Nome <span class="required">*</span></label>
-          <div class="input-field-wrapper">
-            <i class="fa fa-user icon-field"></i>
-            <input
-              type="text"
-              placeholder="Ex: Kael, o Errante"
-              [(ngModel)]="newCharacter.name"
-              name="charName"
-              maxlength="60">
-          </div>
-        </div>
-
-        <div class="input-group">
-          <label class="input-label">Descrição</label>
-          <textarea
-            class="input-textarea"
-            placeholder="Uma breve descrição do personagem, sua origem ou aparência..."
-            [(ngModel)]="newCharacter.description"
-            name="charDesc"
-            rows="3"
-            maxlength="300">
-          </textarea>
-        </div>
-
-        <div class="input-group">
-          <div class="properties-header">
-            <label class="input-label">Atributos Personalizados</label>
-            <button type="button" class="btn-add-property" (click)="addPropertyField()">
-              <i class="fa fa-plus"></i> Adicionar Campo
-            </button>
-          </div>
-
-          <div class="dynamic-fields-container">
-            @if (customProperties.length === 0) {
-              <p class="dynamic-fields-empty">Nenhum atributo adicionado ainda.</p>
-            }
-            @for (field of customProperties; track $index) {
-              <div class="dynamic-field-row">
-                <div class="field-wrapper">
-                  <input
-                    type="text"
-                    placeholder="Ex: Força, Classe..."
-                    [(ngModel)]="field.key"
-                    name="propKey-{{$index}}">
-                </div>
-                <div class="field-wrapper">
-                  <input
-                    type="text"
-                    placeholder="Valor"
-                    [(ngModel)]="field.value"
-                    name="propValue-{{$index}}">
-                </div>
-                <button type="button" class="btn-icon btn-remove-field" title="Remover" (click)="removePropertyField($index)">
-                  <i class="fa fa-xmark"></i>
-                </button>
-              </div>
-            }
-          </div>
-        </div>
-
-        <div class="feedback-message error-message" *ngIf="errorMessage">
-          <i class="fa fa-circle-exclamation"></i> {{ errorMessage }}
-        </div>
-
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn-secondary" (click)="CloseModal()" [disabled]="isLoading">Cancelar</button>
-        <button class="btn-primary" (click)="CreateCharacter()" [disabled]="isLoading">
-          <span *ngIf="!isLoading"><i class="fa fa-plus"></i> Criar</span>
-          <span *ngIf="isLoading"><i class="fa fa-spinner fa-spin"></i> Criando...</span>
-        </button>
-      </div>
-
-    </div>
-  </div>
-}
+<app-create-character-modal
+  [visible]="showModal"
+  (close)="showModal = false"
+  (created)="GetAllCharacters()"
+>
+</app-create-character-modal>
 
 <!-- Modal Editar -->
 @if (showEditModal) {
   <div class="modal-backdrop" (click)="CloseEditModal()">
     <div class="modal-card" (click)="$event.stopPropagation()">
-
       <div class="modal-header">
         <h2 class="modal-title">Editar <span>Personagem</span></h2>
         <button class="btn-icon modal-close" (click)="CloseEditModal()">
@@ -187,11 +99,19 @@
       </div>
 
       <div class="modal-body">
-
         <div class="input-group">
           <label class="input-label">Ícone do Personagem</label>
-          <div class="icon-upload-area" (click)="iconEditInput.click()" [class.has-preview]="editIconPreviewUrl">
-            <img *ngIf="editIconPreviewUrl" [src]="editIconPreviewUrl" class="icon-preview-img" alt="Preview">
+          <div
+            class="icon-upload-area"
+            (click)="iconEditInput.click()"
+            [class.has-preview]="editIconPreviewUrl"
+          >
+            <img
+              *ngIf="editIconPreviewUrl"
+              [src]="editIconPreviewUrl"
+              class="icon-preview-img"
+              alt="Preview"
+            />
             <div class="icon-upload-placeholder" *ngIf="!editIconPreviewUrl">
               <i class="fa fa-cloud-arrow-up"></i>
               <span>Clique para selecionar</span>
@@ -202,7 +122,13 @@
               <span>Alterar</span>
             </div>
           </div>
-          <input #iconEditInput type="file" accept="image/*" class="file-input-hidden" (change)="onEditIconSelected($event)">
+          <input
+            #iconEditInput
+            type="file"
+            accept="image/*"
+            class="file-input-hidden"
+            (change)="onEditIconSelected($event)"
+          />
         </div>
 
         <div class="input-group">
@@ -214,7 +140,8 @@
               placeholder="Nome do personagem"
               [(ngModel)]="editCharacter.name"
               name="editCharName"
-              maxlength="60">
+              maxlength="60"
+            />
           </div>
         </div>
 
@@ -226,7 +153,8 @@
             [(ngModel)]="editCharacter.description"
             name="editCharDesc"
             rows="3"
-            maxlength="300">
+            maxlength="300"
+          >
           </textarea>
         </div>
 
@@ -249,16 +177,23 @@
                     type="text"
                     placeholder="Ex: Força, Classe..."
                     [(ngModel)]="field.key"
-                    name="editPropKey-{{$index}}">
+                    name="editPropKey-{{ $index }}"
+                  />
                 </div>
                 <div class="field-wrapper">
                   <input
                     type="text"
                     placeholder="Valor"
                     [(ngModel)]="field.value"
-                    name="editPropValue-{{$index}}">
+                    name="editPropValue-{{ $index }}"
+                  />
                 </div>
-                <button type="button" class="btn-icon btn-remove-field" title="Remover" (click)="removeEditPropertyField($index)">
+                <button
+                  type="button"
+                  class="btn-icon btn-remove-field"
+                  title="Remover"
+                  (click)="removeEditPropertyField($index)"
+                >
                   <i class="fa fa-xmark"></i>
                 </button>
               </div>
@@ -269,17 +204,17 @@
         <div class="feedback-message error-message" *ngIf="editErrorMessage">
           <i class="fa fa-circle-exclamation"></i> {{ editErrorMessage }}
         </div>
-
       </div>
 
       <div class="modal-footer">
-        <button class="btn-secondary" (click)="CloseEditModal()" [disabled]="isEditLoading">Cancelar</button>
+        <button class="btn-secondary" (click)="CloseEditModal()" [disabled]="isEditLoading">
+          Cancelar
+        </button>
         <button class="btn-primary" (click)="UpdateCharacter()" [disabled]="isEditLoading">
           <span *ngIf="!isEditLoading"><i class="fa fa-floppy-disk"></i> Salvar</span>
           <span *ngIf="isEditLoading"><i class="fa fa-spinner fa-spin"></i> Salvando...</span>
         </button>
       </div>
-
     </div>
   </div>
 }
@@ -288,7 +223,6 @@
 @if (showViewModal && viewCharacter) {
   <div class="modal-backdrop" (click)="CloseViewModal()">
     <div class="modal-card" (click)="$event.stopPropagation()">
-
       <div class="modal-header">
         <h2 class="modal-title">Detalhes do <span>Personagem</span></h2>
         <button class="btn-icon modal-close" (click)="CloseViewModal()">
@@ -297,11 +231,12 @@
       </div>
 
       <div class="modal-body">
-
         <div class="modal-view-info">
           <div
             class="modal-view-avatar"
-            [style.background-image]="viewCharacter.iconPath ? 'url(' + viewCharacter.iconPath + ')' : ''"
+            [style.background-image]="
+              viewCharacter.iconPath ? 'url(' + viewCharacter.iconPath + ')' : ''
+            "
           >
             <i class="fa fa-shield-halved" *ngIf="!viewCharacter.iconPath"></i>
           </div>
@@ -318,7 +253,10 @@
           </p>
         </div>
 
-        <div class="modal-view-section modal-view-properties" *ngIf="viewPropertiesEntries().length > 0">
+        <div
+          class="modal-view-section modal-view-properties"
+          *ngIf="viewPropertiesEntries().length > 0"
+        >
           <span class="modal-view-label"><i class="fa fa-list-check"></i> Atributos</span>
           <div class="modal-view-props-grid">
             @for (entry of viewPropertiesEntries(); track $index) {
@@ -329,13 +267,11 @@
             }
           </div>
         </div>
-
       </div>
 
       <div class="modal-footer">
         <button class="btn-secondary" (click)="CloseViewModal()">Fechar</button>
       </div>
-
     </div>
   </div>
 }

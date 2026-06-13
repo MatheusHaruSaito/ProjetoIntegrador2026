@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { CharacterService } from '../../services/character-service';
 import { AuthService } from '../../services/auth-service';
 import { Character } from '../../../models/character';
+import { CreateCharacterModal } from '../../modals/create-character-modal/create-character-modal';
 
 @Component({
   selector: 'app-character-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CreateCharacterModal],
   templateUrl: './character-list.html',
   styleUrl: './character-list.css',
 })
@@ -36,7 +37,11 @@ export class CharacterList implements OnInit {
   showEditModal = false;
   isEditLoading = false;
   editErrorMessage = '';
-  editCharacter: { id: string; name: string; description: string } = { id: '', name: '', description: '' };
+  editCharacter: { id: string; name: string; description: string } = {
+    id: '',
+    name: '',
+    description: '',
+  };
   selectedEditIconFile: File | null = null;
   editIconPreviewUrl = '';
 
@@ -52,10 +57,10 @@ export class CharacterList implements OnInit {
     this.characterService.GetAll(userId!).subscribe({
       next: (response) => {
         const all: Character[] = response.data ?? [];
-        this.characterList = userId ? all.filter(c => c.userId === userId) : all;
+        this.characterList = userId ? all.filter((c) => c.userId === userId) : all;
         this.cdr.detectChanges();
       },
-      error: () => {}
+      error: () => {},
     });
   }
 
@@ -63,12 +68,14 @@ export class CharacterList implements OnInit {
   // CRIAR
   // ─────────────────────────────────────────────
   OpenModal(): void {
+    console.log(this.showModal);
     this.newCharacter = { name: '', description: '' };
     this.selectedIconFile = null;
     this.iconPreviewUrl = '';
     this.errorMessage = '';
     this.customProperties = [];
     this.showModal = true;
+    console.log('Modal Aberto');
   }
 
   CloseModal(): void {
@@ -76,64 +83,64 @@ export class CharacterList implements OnInit {
     this.errorMessage = '';
   }
 
-  onIconSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      this.errorMessage = 'A imagem deve ter no máximo 2MB.';
-      return;
-    }
-    this.selectedIconFile = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.iconPreviewUrl = e.target?.result as string;
-      this.cdr.detectChanges();
-    };
-    reader.readAsDataURL(file);
-  }
+  // onIconSelected(event: Event): void {
+  //   const file = (event.target as HTMLInputElement).files?.[0];
+  //   if (!file) return;
+  //   if (file.size > 2 * 1024 * 1024) {
+  //     this.errorMessage = 'A imagem deve ter no máximo 2MB.';
+  //     return;
+  //   }
+  //   this.selectedIconFile = file;
+  //   const reader = new FileReader();
+  //   reader.onload = (e) => {
+  //     this.iconPreviewUrl = e.target?.result as string;
+  //     this.cdr.detectChanges();
+  //   };
+  //   reader.readAsDataURL(file);
+  // }
 
-  CreateCharacter(): void {
-    this.errorMessage = '';
+  // CreateCharacter(): void {
+  //   this.errorMessage = '';
 
-    if (!this.newCharacter.name.trim()) {
-      this.errorMessage = 'O nome do personagem é obrigatório.';
-      return;
-    }
+  //   if (!this.newCharacter.name.trim()) {
+  //     this.errorMessage = 'O nome do personagem é obrigatório.';
+  //     return;
+  //   }
 
-    const propertiesObj: Record<string, any> = {};
-    this.customProperties.forEach(prop => {
-      if (prop.key.trim()) {
-        propertiesObj[prop.key.trim()] = prop.value;
-      }
-    });
-    const userId = this.authService.getLoggedUserId();
-    const form = new FormData();
-    form.append('userId', userId ?? '');
-    form.append('name', this.newCharacter.name.trim());
-    form.append('description', this.newCharacter.description ?? '');
-    form.append('properties', JSON.stringify(propertiesObj));
-    if (this.selectedIconFile) {
-      form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
-    }
-    this.isLoading = true;
-    this.characterService.Post(form as any).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.CloseModal();
-        this.GetAllCharacters();
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = this.parseError(err) ?? 'Erro ao criar personagem. Tente novamente.';
-      }
-    });
-  }
-  addPropertyField(): void {
-      this.customProperties.push({ key: '', value: '' });
-    }
-  removePropertyField(index: number): void {
-    this.customProperties.splice(index, 1);
-  }
+  //   const propertiesObj: Record<string, any> = {};
+  //   this.customProperties.forEach((prop) => {
+  //     if (prop.key.trim()) {
+  //       propertiesObj[prop.key.trim()] = prop.value;
+  //     }
+  //   });
+  //   const userId = this.authService.getLoggedUserId();
+  //   const form = new FormData();
+  //   form.append('userId', userId ?? '');
+  //   form.append('name', this.newCharacter.name.trim());
+  //   form.append('description', this.newCharacter.description ?? '');
+  //   form.append('properties', JSON.stringify(propertiesObj));
+  //   if (this.selectedIconFile) {
+  //     form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
+  //   }
+  //   this.isLoading = true;
+  //   this.characterService.Post(form as any).subscribe({
+  //     next: () => {
+  //       this.isLoading = false;
+  //       this.CloseModal();
+  //       this.GetAllCharacters();
+  //     },
+  //     error: (err) => {
+  //       this.isLoading = false;
+  //       this.errorMessage = this.parseError(err) ?? 'Erro ao criar personagem. Tente novamente.';
+  //     },
+  //   });
+  // }
+  // addPropertyField(): void {
+  //   this.customProperties.push({ key: '', value: '' });
+  // }
+  // removePropertyField(index: number): void {
+  //   this.customProperties.splice(index, 1);
+  // }
 
   // ─────────────────────────────────────────────
   // ATRIBUTOS DO MODAL DE EDIÇÃO
@@ -172,15 +179,20 @@ export class CharacterList implements OnInit {
   // EDITAR
   // ─────────────────────────────────────────────
   OpenEditModal(character: Character): void {
-    this.editCharacter = { id: character.id, name: character.name, description: character.description ?? '' };
+    this.editCharacter = {
+      id: character.id,
+      name: character.name,
+      description: character.description ?? '',
+    };
     this.selectedEditIconFile = null;
     this.editIconPreviewUrl = character.iconPath ?? '';
     this.editErrorMessage = '';
     // Carregar atributos existentes como array editável
     const props = (character as any).properties;
-    this.editCustomProperties = props && typeof props === 'object'
-      ? Object.entries(props).map(([key, value]) => ({ key, value }))
-      : [];
+    this.editCustomProperties =
+      props && typeof props === 'object'
+        ? Object.entries(props).map(([key, value]) => ({ key, value }))
+        : [];
     this.showEditModal = true;
   }
 
@@ -214,7 +226,7 @@ export class CharacterList implements OnInit {
     }
 
     const propertiesObj: Record<string, any> = {};
-    this.editCustomProperties.forEach(prop => {
+    this.editCustomProperties.forEach((prop) => {
       if (prop.key.trim()) {
         propertiesObj[prop.key.trim()] = prop.value;
       }
@@ -238,8 +250,9 @@ export class CharacterList implements OnInit {
       },
       error: (err) => {
         this.isEditLoading = false;
-        this.editErrorMessage = this.parseError(err) ?? 'Erro ao atualizar personagem. Tente novamente.';
-      }
+        this.editErrorMessage =
+          this.parseError(err) ?? 'Erro ao atualizar personagem. Tente novamente.';
+      },
     });
   }
 
@@ -250,10 +263,10 @@ export class CharacterList implements OnInit {
     if (!confirm('Tem certeza que deseja excluir este personagem?')) return;
     this.characterService.Delete(id).subscribe({
       next: () => {
-        this.characterList = this.characterList.filter(c => c.id !== id);
+        this.characterList = this.characterList.filter((c) => c.id !== id);
         this.cdr.detectChanges();
       },
-      error: () => {}
+      error: () => {},
     });
   }
 
