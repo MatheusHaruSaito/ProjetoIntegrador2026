@@ -1,0 +1,55 @@
+@if (visible && viewCharacter) {
+  <div class="modal-backdrop" (click)="CloseViewModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">Detalhes do <span>Personagem</span></h2>
+        <button class="btn-icon modal-close" (click)="CloseViewModal()">
+          <i class="fa fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-view-info">
+          <div
+            class="modal-view-avatar"
+            [style.background-image]="
+              viewCharacter.iconPath ? 'url(' + viewCharacter.iconPath + ')' : ''
+            "
+          >
+            <i class="fa fa-shield-halved" *ngIf="!viewCharacter.iconPath"></i>
+          </div>
+          <div>
+            <p class="modal-view-name">{{ viewCharacter.name }}</p>
+            <span class="modal-view-id">#{{ viewCharacter.id.substring(0, 8) }}</span>
+          </div>
+        </div>
+
+        <div class="modal-view-section">
+          <span class="modal-view-label"><i class="fa fa-align-left"></i> Descrição</span>
+          <p class="modal-view-desc" [class.empty]="!viewCharacter.description">
+            {{ viewCharacter.description || 'Nenhuma descrição fornecida.' }}
+          </p>
+        </div>
+
+        <div
+          class="modal-view-section modal-view-properties"
+          *ngIf="viewPropertiesEntries().length > 0"
+        >
+          <span class="modal-view-label"><i class="fa fa-list-check"></i> Atributos</span>
+          <div class="modal-view-props-grid">
+            @for (entry of viewPropertiesEntries(); track $index) {
+              <div class="modal-view-prop-chip">
+                <span class="prop-chip-key">{{ entry.key }}</span>
+                <span class="prop-chip-value">{{ entry.value }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="CloseViewModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
+}

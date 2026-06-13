@@ -6,11 +6,12 @@ import { AuthService } from '../../services/auth-service';
 import { Character } from '../../../models/character';
 import { CreateCharacterModal } from '../../modals/create-character-modal/create-character-modal';
 import { EditCharacterModal } from '../../modals/edit-character-modal/edit-character-modal';
+import { ShowViewModal } from '../../modals/show-view-modal/show-view-modal';
 
 @Component({
   selector: 'app-character-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, CreateCharacterModal, EditCharacterModal],
+  imports: [CommonModule, FormsModule, CreateCharacterModal, EditCharacterModal, ShowViewModal],
   templateUrl: './character-list.html',
   styleUrl: './character-list.css',
 })
@@ -18,7 +19,7 @@ export class CharacterList implements OnInit {
   characterService = inject(CharacterService);
   authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
-  editModalCharacterId = '';
+  selectedCharacterId = '';
   characterList: Character[] = [];
   customProperties: any[] = [];
   editCustomProperties: any[] = [];
@@ -32,7 +33,7 @@ export class CharacterList implements OnInit {
 
   // ── Visualizar ──
   showViewModal = false;
-  viewCharacter: Character | null = null;
+  // viewCharacter: Character | null = null;
 
   // ── Editar ──
   showEditModal = false;
@@ -150,30 +151,28 @@ export class CharacterList implements OnInit {
   // ─────────────────────────────────────────────
   // HELPER – ATRIBUTOS DO MODAL DE VISUALIZAÇÃO
   // ─────────────────────────────────────────────
-  viewPropertiesEntries(): { key: string; value: any }[] {
-    const props = (this.viewCharacter as any)?.properties;
-    if (!props || typeof props !== 'object') return [];
-    return Object.entries(props).map(([key, value]) => ({ key, value }));
-  }
+  // viewPropertiesEntries(): { key: string; value: any }[] {
+  //   const props = (this.viewCharacter as any)?.properties;
+  //   if (!props || typeof props !== 'object') return [];
+  //   return Object.entries(props).map(([key, value]) => ({ key, value }));
+  // }
 
   // ─────────────────────────────────────────────
   // VISUALIZAR
   // ─────────────────────────────────────────────
-  OpenViewModal(character: Character): void {
-    this.viewCharacter = character;
+  OpenViewModal(id: string): void {
+    this.selectedCharacterId = id;
     this.showViewModal = true;
   }
 
   CloseViewModal(): void {
     this.showViewModal = false;
-    this.viewCharacter = null;
   }
 
   // ─────────────────────────────────────────────
   // EDITAR
   // ─────────────────────────────────────────────
-  OpenEditModal(character: Character): void {
-    this.editModalCharacterId = character.id;
+  OpenEditModal(): void {
     this.cdr.detectChanges();
     this.showEditModal = true;
   }
