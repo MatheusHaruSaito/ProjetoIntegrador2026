@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { CharacterService } from '../../services/character-service';
 import { AuthService } from '../../services/auth-service';
 import { FormsModule } from '@angular/forms';
@@ -26,19 +35,18 @@ export class CreateCharacterModal {
   selectedIconFile: File | null = null;
   iconPreviewUrl = '';
   customProperties: any[] = [];
-  editCustomProperties: any[] = [];
 
-  OpenModal(): void {
+  private ResetModalForm(): void {
     this.newCharacter = { name: '', description: '' };
     this.selectedIconFile = null;
     this.iconPreviewUrl = '';
     this.errorMessage = '';
     this.customProperties = [];
-    this.close.emit();
   }
 
   CloseModal(): void {
     this.close.emit();
+    this.ResetModalForm();
     this.errorMessage = '';
   }
 
