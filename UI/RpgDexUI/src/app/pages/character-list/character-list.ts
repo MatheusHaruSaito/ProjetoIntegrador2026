@@ -173,11 +173,9 @@ export class CharacterList implements OnInit {
   // EDITAR
   // ─────────────────────────────────────────────
   OpenEditModal(character: Character): void {
-    console.log(this.showEditModal);
     this.editModalCharacterId = character.id;
     this.cdr.detectChanges();
     this.showEditModal = true;
-    console.log('editar');
   }
 
   CloseEditModal(): void {

@@ -24,8 +24,6 @@ import { error } from 'console';
 export class EditCharacterModal implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['visible']?.currentValue === true) {
-      console.log('Modal abriu');
-
       this.ShowCharacterToEdit();
     }
   }
@@ -68,9 +66,7 @@ export class EditCharacterModal implements OnChanges {
           props && typeof props === 'object'
             ? Object.entries(props).map(([key, value]) => ({ key, value }))
             : [];
-        console.log('teste');
         this.cdr.detectChanges();
-        console.log('é pr ater abrido');
       },
       error: (err) => {
         this.editErrorMessage = this.parseError(err) ?? 'Erro ao obter personagem.';
