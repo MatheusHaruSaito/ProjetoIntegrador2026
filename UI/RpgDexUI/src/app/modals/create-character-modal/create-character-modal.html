@@ -1,0 +1,131 @@
+@if (visible) {
+  <p>create-character-modal works!</p>
+  <div class="modal-backdrop" (click)="CloseModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">Novo <span>Personagem</span></h2>
+        <button class="btn-icon modal-close" (click)="CloseModal()">
+          <i class="fa fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="input-group">
+          <label class="input-label">Ícone do Personagem</label>
+          <div
+            class="icon-upload-area"
+            (click)="iconInput.click()"
+            [class.has-preview]="iconPreviewUrl"
+          >
+            <img
+              *ngIf="iconPreviewUrl"
+              [src]="iconPreviewUrl"
+              class="icon-preview-img"
+              alt="Preview"
+            />
+            <div class="icon-upload-placeholder" *ngIf="!iconPreviewUrl">
+              <i class="fa fa-cloud-arrow-up"></i>
+              <span>Clique para selecionar</span>
+              <small>PNG • Máx. 2MB</small>
+            </div>
+            <div class="icon-upload-overlay" *ngIf="iconPreviewUrl">
+              <i class="fa fa-camera"></i>
+              <span>Alterar</span>
+            </div>
+          </div>
+          <input
+            #iconInput
+            type="file"
+            accept="image/*"
+            class="file-input-hidden"
+            (change)="onIconSelected($event)"
+          />
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Nome <span class="required">*</span></label>
+          <div class="input-field-wrapper">
+            <i class="fa fa-user icon-field"></i>
+            <input
+              type="text"
+              placeholder="Ex: Kael, o Errante"
+              [(ngModel)]="newCharacter.name"
+              name="charName"
+              maxlength="60"
+            />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Descrição</label>
+          <textarea
+            class="input-textarea"
+            placeholder="Uma breve descrição do personagem, sua origem ou aparência..."
+            [(ngModel)]="newCharacter.description"
+            name="charDesc"
+            rows="3"
+            maxlength="300"
+          >
+          </textarea>
+        </div>
+
+        <div class="input-group">
+          <div class="properties-header">
+            <label class="input-label">Atributos Personalizados</label>
+            <button type="button" class="btn-add-property" (click)="addPropertyField()">
+              <i class="fa fa-plus"></i> Adicionar Campo
+            </button>
+          </div>
+
+          <div class="dynamic-fields-container">
+            @if (customProperties.length === 0) {
+              <p class="dynamic-fields-empty">Nenhum atributo adicionado ainda.</p>
+            }
+            @for (field of customProperties; track $index) {
+              <div class="dynamic-field-row">
+                <div class="field-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Ex: Força, Classe..."
+                    [(ngModel)]="field.key"
+                    name="propKey-{{ $index }}"
+                  />
+                </div>
+                <div class="field-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Valor"
+                    [(ngModel)]="field.value"
+                    name="propValue-{{ $index }}"
+                  />
+                </div>
+                <button
+                  type="button"
+                  class="btn-icon btn-remove-field"
+                  title="Remover"
+                  (click)="removePropertyField($index)"
+                >
+                  <i class="fa fa-xmark"></i>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="feedback-message error-message" *ngIf="errorMessage">
+          <i class="fa fa-circle-exclamation"></i> {{ errorMessage }}
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="CloseModal()" [disabled]="isLoading">
+          Cancelar
+        </button>
+        <button class="btn-primary" (click)="CreateCharacter()" [disabled]="isLoading">
+          <span *ngIf="!isLoading"><i class="fa fa-plus"></i> Criar</span>
+          <span *ngIf="isLoading"><i class="fa fa-spinner fa-spin"></i> Criando...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+}
