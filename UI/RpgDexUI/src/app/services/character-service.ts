@@ -29,7 +29,7 @@ export class CharacterService {
   }
 
   public Delete(Id: String): Observable<ApiResponse<Character>> {
-    return this.http.delete<ApiResponse<Character>>(`${this.env}/${Id}`);
+    return this.http.put<ApiResponse<Character>>(`${this.env}/SetActiveState/${Id}`, '');
   }
 
   public Update(character: UpdateCharacter): Observable<ApiResponse<Character>> {
