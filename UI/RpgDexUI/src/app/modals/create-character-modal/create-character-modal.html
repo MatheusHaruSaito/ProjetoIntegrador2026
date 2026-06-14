@@ -72,22 +72,27 @@
         <div class="input-group">
           <div class="properties-header">
             <label class="input-label">Atributos Personalizados</label>
-            <button type="button" class="btn-add-property" (click)="addPropertyField()">
+            <button
+              type="button"
+              class="btn-add-property"
+              (click)="addPropertyOrganizationField('')"
+            >
               <i class="fa fa-plus"></i> Adicionar Campo
             </button>
+            sera que seria legal um dropdown com os modelos aqui?
           </div>
-
           <div class="dynamic-fields-container">
             @if (customProperties.length === 0) {
               <p class="dynamic-fields-empty">Nenhum atributo adicionado ainda.</p>
             }
             @for (field of customProperties; track $index) {
+              {{ field.id }}
               <div class="dynamic-field-row">
                 <div class="field-wrapper">
                   <input
                     type="text"
                     placeholder="Ex: Força, Classe..."
-                    [(ngModel)]="field.key"
+                    [(ngModel)]="field.title"
                     name="propKey-{{ $index }}"
                   />
                 </div>
@@ -95,10 +100,23 @@
                   <input
                     type="text"
                     placeholder="Valor"
-                    [(ngModel)]="field.value"
+                    [(ngModel)]="field.data"
                     name="propValue-{{ $index }}"
                   />
                 </div>
+                <button
+                  type="button"
+                  class="btn-add-property"
+                  (click)="addPropertyOrganizationField(field.id)"
+                >
+                  <i class="fa fa-plus"></i> Adicionar Organização
+                </button>
+                sera que seria legal um dropdown com os modelos aqui?
+
+                <button type="button" class="btn-add-property" (click)="addPropertyField(field.id)">
+                  <i class="fa fa-plus"></i> Adicionar Campo
+                </button>
+
                 <button
                   type="button"
                   class="btn-icon btn-remove-field"
