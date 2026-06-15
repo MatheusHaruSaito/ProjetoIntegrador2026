@@ -37,6 +37,7 @@ export class EditCharacterModal implements OnChanges {
   characterService = inject(CharacterService);
   cdr = inject(ChangeDetectorRef);
   isEditLoading = false;
+  readonly MAX_PROPERTIES = 20;
   editErrorMessage = '';
   editCharacter: { id: string; name: string; description: string } = {
     id: '',
@@ -135,6 +136,10 @@ export class EditCharacterModal implements OnChanges {
   }
 
   addEditPropertyField(): void {
+    if (this.editCustomProperties.length >= this.MAX_PROPERTIES) {
+      this.editErrorMessage = `Limite de ${this.MAX_PROPERTIES} atributos atingido.`;
+      return;
+    }
     this.editCustomProperties.push({ key: '', value: '' });
   }
 

@@ -71,9 +71,12 @@
         <div class="input-group">
           <div class="properties-header">
             <label class="input-label">Atributos Personalizados</label>
-            <button type="button" class="btn-add-property" (click)="addEditPropertyField()">
-              <i class="fa fa-plus"></i> Adicionar Campo
-            </button>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-family:'Nunito',sans-serif;font-size:0.78rem;color:var(--rpg-text-faint);">{{ editCustomProperties.length }}/{{ MAX_PROPERTIES }}</span>
+              <button type="button" class="btn-add-property" (click)="addEditPropertyField()" [disabled]="editCustomProperties.length >= MAX_PROPERTIES">
+                <i class="fa fa-plus"></i> Adicionar Campo
+              </button>
+            </div>
           </div>
 
           <div class="dynamic-fields-container">

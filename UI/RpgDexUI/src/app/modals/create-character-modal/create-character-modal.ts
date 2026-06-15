@@ -4,10 +4,8 @@ import {
   EventEmitter,
   inject,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
 } from '@angular/core';
 import { CharacterService } from '../../services/character-service';
 import { AuthService } from '../../services/auth-service';
@@ -17,6 +15,7 @@ import { CharacterPropertyOrganization } from '../../../models/characterProperty
 import { CharacterPropertyOrganizationEnum } from '../../../models/characterPropertyOrganizationEnum';
 import { CharacterPropertyValueEnum } from '../../../models/CharacterPropertyValueEnum';
 import { CharacterPropertyModel } from '../../../models/characterPropertyModel';
+
 @Component({
   selector: 'app-create-character-modal',
   imports: [CommonModule, FormsModule],
@@ -32,8 +31,10 @@ export class CreateCharacterModal implements OnInit {
   authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
 
-  public propertyTypes: { key: string; value: CharacterPropertyOrganizationEnum }[] = [];
-  // ── Criar ──
+  readonly MAX_PROPERTIES = 20;
+  readonly MAX_TITLE_LENGTH = 40;
+  readonly MAX_VALUE_LENGTH = 100;
+
   isLoading = false;
   errorMessage = '';
   newCharacter: { name: string; description: string } = { name: '', description: '' };
@@ -41,13 +42,93 @@ export class CreateCharacterModal implements OnInit {
   iconPreviewUrl = '';
   customProperties: CharacterPropertyOrganization[] = [];
 
-  ngOnInit(): void {
-    this.propertyTypes = Object.keys(CharacterPropertyOrganizationEnum).map((key) => ({
-      key: key,
-      value:
-        CharacterPropertyOrganizationEnum[key as keyof typeof CharacterPropertyOrganizationEnum],
-    }));
+  ngOnInit(): void {}
+
+  // ── Contagem recursiva total ──────────────────────────
+  countAllProperties(list: CharacterPropertyOrganization[]): number {
+    return list.reduce(
+      (acc, p) =>
+        acc + 1 + (Array.isArray(p.data) ? this.countAllProperties(p.data as CharacterPropertyOrganization[]) : 0),
+      0
+    );
   }
+
+  get totalCount(): number {
+    return this.countAllProperties(this.customProperties);
+  }
+
+  // ── Busca por id (recursiva) ──────────────────────────
+  searchProperty(
+    id: string,
+    list: CharacterPropertyOrganization[]
+  ): CharacterPropertyOrganization | null {
+    for (const prop of list) {
+      if (prop.id === id) return prop;
+      if (Array.isArray(prop.data)) {
+        const found = this.searchProperty(id, prop.data as CharacterPropertyOrganization[]);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
+
+  // ── Adicionar organização (grupo/coluna) ──────────────
+  addPropertyOrganizationField(parentId: string): void {
+    if (this.totalCount >= this.MAX_PROPERTIES) {
+      this.errorMessage = `Limite de ${this.MAX_PROPERTIES} atributos atingido.`;
+      return;
+    }
+    const org: CharacterPropertyOrganization = {
+      id: crypto.randomUUID(),
+      title: '',
+      type: CharacterPropertyOrganizationEnum.Collum,
+      data: [],
+    };
+    if (!parentId) {
+      this.customProperties.push(org);
+    } else {
+      const parent = this.searchProperty(parentId, this.customProperties);
+      if (parent) {
+        if (!Array.isArray(parent.data)) parent.data = [];
+        (parent.data as CharacterPropertyOrganization[]).push(org);
+      }
+    }
+  }
+
+  // ── Adicionar campo de valor dentro de uma organização ─
+  addPropertyField(parentId: string): void {
+    if (this.totalCount >= this.MAX_PROPERTIES) {
+      this.errorMessage = `Limite de ${this.MAX_PROPERTIES} atributos atingido.`;
+      return;
+    }
+    const parent = this.searchProperty(parentId, this.customProperties);
+    if (!parent) return;
+    if (!Array.isArray(parent.data)) parent.data = [];
+    const field: CharacterPropertyModel = {
+      id: crypto.randomUUID(),
+      title: '',
+      type: CharacterPropertyValueEnum.Default,
+      data: '',
+    };
+    (parent.data as any[]).push(field);
+  }
+
+  // ── Remover item raiz ─────────────────────────────────
+  removePropertyField(index: number): void {
+    this.customProperties.splice(index, 1);
+  }
+
+  // ── Remover item filho dentro de um pai ───────────────
+  removeChildField(parent: CharacterPropertyOrganization, index: number): void {
+    (parent.data as any[]).splice(index, 1);
+  }
+
+  // ── Verifica se item é organização (tem array data) ───
+  isOrganization(item: any): item is CharacterPropertyOrganization {
+    return Array.isArray(item.data);
+  }
+
+  // ── Reset ─────────────────────────────────────────────
   private ResetModalForm(): void {
     this.newCharacter = { name: '', description: '' };
     this.selectedIconFile = null;
@@ -59,55 +140,51 @@ export class CreateCharacterModal implements OnInit {
   CloseModal(): void {
     this.close.emit();
     this.ResetModalForm();
-    this.errorMessage = '';
   }
 
   onIconSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      this.errorMessage = 'A imagem deve ter no máximo 2MB.';
-      return;
-    }
+    if (file.size > 2 * 1024 * 1024) { this.errorMessage = 'A imagem deve ter no máximo 2MB.'; return; }
     this.selectedIconFile = file;
     const reader = new FileReader();
-    reader.onload = (e) => {
-      this.iconPreviewUrl = e.target?.result as string;
-      this.cdr.detectChanges();
-    };
+    reader.onload = (e) => { this.iconPreviewUrl = e.target?.result as string; this.cdr.detectChanges(); };
     reader.readAsDataURL(file);
   }
 
-  CreateCharacter(): void {
-    this.errorMessage = '';
-
-    if (!this.newCharacter.name.trim()) {
-      this.errorMessage = 'O nome do personagem é obrigatório.';
-      return;
-    }
-
-    const propertiesObj: Record<string, any> = {};
-    this.customProperties.forEach((prop) => {
-      if (prop.id) {
-        propertiesObj[prop.id] = prop.data;
-      }
-    });
+  // ── Serializa customProperties → Properties[chave] ───
+  private buildFormData(): FormData {
     const userId = this.authService.getLoggedUserId();
     const form = new FormData();
     form.append('userId', userId ?? '');
     form.append('name', this.newCharacter.name.trim());
     form.append('description', this.newCharacter.description ?? '');
-    form.append('properties', JSON.stringify(propertiesObj));
-    if (this.selectedIconFile) {
-      form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
+    if (this.selectedIconFile) form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
+
+    // Cada organização raiz vira uma chave Properties[título]
+    for (const org of this.customProperties) {
+      const key = org.title.trim() || org.id;
+      form.append(`Properties[${key}]`, JSON.stringify(this.serializeOrg(org)));
     }
+    return form;
+  }
+
+  private serializeOrg(org: CharacterPropertyOrganization): any {
+    if (!Array.isArray(org.data)) return org.data;
+    return (org.data as any[]).map((child) =>
+      this.isOrganization(child)
+        ? { [child.title || child.id]: this.serializeOrg(child) }
+        : { Name: child.title, Value: child.data }
+    );
+  }
+
+  CreateCharacter(): void {
+    this.errorMessage = '';
+    if (!this.newCharacter.name.trim()) { this.errorMessage = 'O nome do personagem é obrigatório.'; return; }
+
     this.isLoading = true;
-    this.characterService.Post(form as any).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.created.emit();
-        this.CloseModal();
-      },
+    this.characterService.Post(this.buildFormData() as any).subscribe({
+      next: () => { this.isLoading = false; this.created.emit(); this.CloseModal(); },
       error: (err: any) => {
         this.isLoading = false;
         this.errorMessage = this.parseError(err) ?? 'Erro ao criar personagem. Tente novamente.';
@@ -115,94 +192,9 @@ export class CreateCharacterModal implements OnInit {
     });
   }
 
-  //Aqui é o botão do form para adicionar uma organização
-  addPropertyOrganizationField(id: string): void {
-    const newId = crypto.randomUUID();
-    //para testes vou utilizar isso, depois implementa ae
-    let test: CharacterPropertyOrganization = {
-      id: newId,
-      title: 'Test',
-      type: CharacterPropertyOrganizationEnum.Collum,
-      data: [],
-    };
-    this.addPropertyOrganization(id, test);
-  }
-  addPropertyOrganization(id: string, organization: CharacterPropertyOrganization): void {
-    let parentProperty: CharacterPropertyOrganization | null = null;
-    if (this.customProperties.length > 0) {
-      parentProperty = this.searchProperty(id, this.customProperties);
-    }
-
-    if (parentProperty) {
-      if (!parentProperty.data) {
-        parentProperty.data = [];
-      }
-      parentProperty.data.push(organization);
-    } else {
-      this.customProperties.push(organization);
-    }
-    console.log(this.customProperties);
-  }
-  searchProperty(
-    id: string,
-    propertyList: CharacterPropertyOrganization[],
-  ): CharacterPropertyOrganization | null {
-    for (const prop of propertyList) {
-      if (prop.id === id) {
-        return (propertyList.length, prop);
-      }
-      if (prop.data && Array.isArray(prop.data)) {
-        let nested = this.searchProperty(id, prop.data);
-        console.log('nested ', nested);
-
-        if (nested) {
-          return nested;
-        }
-      }
-    }
-    return null;
-  }
-
-  //Botão para adicionar Propriedade de valor na Organização
-  addPropertyField(id: string): void {
-    // this.customProperties[0].data!['push']({ id: '', value: '' });
-    const newId = crypto.randomUUID();
-    //Para teste vou usar isso
-    let test: CharacterPropertyModel = {
-      id: newId,
-      title: 'Test',
-      type: CharacterPropertyValueEnum.Default,
-      data: {},
-    };
-    this.addPropertyTo(id, test);
-  }
-
-  addPropertyTo(id: string, organization: CharacterPropertyModel): void {
-    let parentProperty: CharacterPropertyOrganization | null = null;
-    if (this.customProperties.length > 0) {
-      parentProperty = this.searchProperty(id, this.customProperties);
-    }
-
-    if (parentProperty) {
-      if (!parentProperty.data) {
-        parentProperty.data = [];
-      }
-      parentProperty.data.push(organization);
-    }
-
-    console.log(this.customProperties);
-  }
-
-  removePropertyField(index: number): void {
-    this.customProperties.splice(index, 1);
-  }
-
   private parseError(err: any): string | null {
     const body = err?.error;
-    if (body?.errors) {
-      const messages = Object.values(body.errors).flat() as string[];
-      return messages[0] ?? null;
-    }
+    if (body?.errors) return (Object.values(body.errors).flat() as string[])[0] ?? null;
     return body?.message ?? body?.title ?? null;
   }
 }
