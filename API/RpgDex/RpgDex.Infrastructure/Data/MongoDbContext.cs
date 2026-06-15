@@ -29,6 +29,9 @@ namespace RpgDex.Infrastructure.Data
         public IMongoCollection<RefreshToken> RefreshTokens =>
             _database.GetCollection<RefreshToken>("RefreshTokens");
 
+        public IMongoCollection<Campaign> Campaigns =>
+            _database.GetCollection<Campaign>("Campaigns");
+
         public IMongoDatabase GetDatabase() => _database;
     }
 }
