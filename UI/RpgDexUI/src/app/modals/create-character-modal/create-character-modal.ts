@@ -162,10 +162,15 @@ export class CreateCharacterModal implements OnInit {
     if (this.selectedIconFile) form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
 
     // Cada organização raiz vira uma chave Properties[título]
+    const propertiesObj : Record<string,any> = {};
     for (const org of this.customProperties) {
-      const key = org.title.trim() || org.id;
-      form.append(`Properties[${key}]`, JSON.stringify(this.serializeOrg(org)));
+      const key = org.title.trim() +"_"+ org.id;
+      console.log("org ",key)
+      console.log("serialized", this.serializeOrg(org))
+      propertiesObj[key] = this.serializeOrg(org);
     }
+      form.append(`properties`, JSON.stringify(propertiesObj));
+    console.log("form", Object.fromEntries(form))
     return form;
   }
 
