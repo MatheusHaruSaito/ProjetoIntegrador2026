@@ -46,9 +46,65 @@ export class ShowViewModal implements OnChanges {
     this.close.emit();
     this.viewCharacter = null;
   }
+
+  private readonly GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  private cleanKey(key: string): string {
+    if (this.GUID_RE.test(key)) return 'Grupo';
+    const cleaned = key.replace(
+      /_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+      ''
+    );
+    return cleaned.trim() || 'Atributo';
+  }
+
+  private flattenProperties(
+    node: any,
+    pathLabel: string,
+    out: { key: string; value: any }[]
+  ): void {
+    if (node && typeof node === 'object' && !Array.isArray(node) && ('Name' in node || 'Value' in node)) {
+      const label = node.Name ? `${pathLabel} > ${node.Name}` : pathLabel;
+      out.push({ key: label.replace(/^ > /, ''), value: node.Value ?? '' });
+      return;
+    }
+
+    if (Array.isArray(node)) {
+      for (const item of node) {
+        this.flattenProperties(item, pathLabel, out);
+      }
+      return;
+    }
+
+    if (node && typeof node === 'object') {
+      const entries = Object.entries(node);
+      for (const [rawKey, value] of entries) {
+        const label = this.cleanKey(rawKey);
+        const nextPath = pathLabel ? `${pathLabel} > ${label}` : label;
+
+        if (value === null || typeof value === 'object') {
+          this.flattenProperties(value, nextPath, out);
+        } else {
+          out.push({ key: nextPath, value });
+        }
+      }
+      return;
+    }
+
+    if (node !== null && node !== undefined && node !== '') {
+      out.push({ key: pathLabel || 'Atributo', value: node });
+    }
+  }
+
   viewPropertiesEntries(): { key: string; value: any }[] {
     const props = (this.viewCharacter as any)?.properties;
     if (!props || typeof props !== 'object') return [];
-    return Object.entries(props).map(([key, value]) => ({ key, value }));
+
+    const out: { key: string; value: any }[] = [];
+    for (const [rawKey, value] of Object.entries(props)) {
+      const label = this.cleanKey(rawKey);
+      this.flattenProperties(value, label, out);
+    }
+    return out;
   }
 }

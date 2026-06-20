@@ -12,9 +12,12 @@ export interface Campaign {
   imageUrl: string;
 }
 
-// Tipos para renderização da ficha
 export interface SheetItem  { name: string; value: any; }
-export interface SheetSection { title: string; items: SheetItem[]; }
+export interface SheetSection {
+  title: string;
+  items: SheetItem[];
+  subsections: SheetSection[];
+}
 export interface SheetColumn  { key: string; sections: SheetSection[]; scalar?: string; }
 
 @Component({
@@ -60,74 +63,54 @@ export class CampaignsComponent implements OnInit {
     this.expandedCharacterId = this.expandedCharacterId === id ? null : id;
   }
 
-  /**
-   * Converte properties em colunas para o template.
-   *
-   * Cada chave de nível superior vira uma coluna.
-   * O valor pode ser:
-   *   - Array de { Name, Value }          → seção única com título = nome da chave
-   *   - Array de objetos com sub-chaves   → cada sub-chave vira uma seção (ex: Collum1)
-   *   - String / número / outro           → scalar exibido como badge
-   */
+  private readonly GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  private cleanKey(key: string): string {
+    if (this.GUID_RE.test(key)) return 'Grupo';
+    const cleaned = key.replace(
+      /_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+      ''
+    );
+    return cleaned.trim() || 'Atributo';
+  }
+
+  private buildSection(title: string, value: any): SheetSection {
+    if (value === null || value === undefined || (!Array.isArray(value) && typeof value !== 'object')) {
+      return { title, items: [{ name: title, value }], subsections: [] };
+    }
+
+    const items: SheetItem[] = [];
+    const subsections: SheetSection[] = [];
+
+    const entries: any[] = Array.isArray(value) ? value : [value];
+
+    for (const entry of entries) {
+      if (!entry || typeof entry !== 'object') continue;
+
+      if (!Array.isArray(entry) && ('Name' in entry || 'Value' in entry)) {
+        items.push({ name: entry.Name ?? entry.name ?? '', value: entry.Value ?? entry.value ?? '' });
+      } else {
+                for (const [rawKey, childValue] of Object.entries(entry)) {
+          subsections.push(this.buildSection(this.cleanKey(rawKey), childValue));
+        }
+      }
+    }
+
+    return { title, items, subsections };
+  }
+
   getSheetColumns(character: Character): SheetColumn[] {
     if (!character.properties) return [];
 
-    return Object.entries(character.properties).map(([colKey, colValue]) => {
-      // Valor escalar simples
+    return Object.entries(character.properties).map(([rawColKey, colValue]) => {
+      const colKey = this.cleanKey(rawColKey);
+
       if (!Array.isArray(colValue) && typeof colValue !== 'object') {
         return { key: colKey, sections: [], scalar: String(colValue) };
       }
 
-      // Array direto de { Name, Value }
-      if (Array.isArray(colValue) && colValue.length > 0 && 'Name' in colValue[0]) {
-        return {
-          key: colKey,
-          sections: [{
-            title: colKey,
-            items: colValue.map((i: any) => ({ name: i.Name ?? i.name, value: i.Value ?? i.value }))
-          }]
-        };
-      }
-
-      // Array de objetos com sub-seções (ex: [{ Skills: [...] }, { Attributes: [...] }])
-      if (Array.isArray(colValue)) {
-        const sections: SheetSection[] = [];
-        for (const block of colValue) {
-          if (typeof block === 'object' && block !== null) {
-            for (const [sectionKey, sectionItems] of Object.entries(block)) {
-              if (Array.isArray(sectionItems)) {
-                sections.push({
-                  title: sectionKey,
-                  items: (sectionItems as any[]).map(i => ({
-                    name:  i.Name  ?? i.name  ?? '',
-                    value: i.Value ?? i.value ?? ''
-                  }))
-                });
-              }
-            }
-          }
-        }
-        return { key: colKey, sections };
-      }
-
-      // Objeto direto com sub-chaves { Skills: [...], Attributes: [...] }
-      if (typeof colValue === 'object' && colValue !== null) {
-        const sections: SheetSection[] = [];
-        for (const [sectionKey, sectionItems] of Object.entries(colValue as Record<string, any>)) {
-          if (Array.isArray(sectionItems)) {
-            sections.push({
-              title: sectionKey,
-              items: sectionItems.map((i: any) => ({
-                name:  i.Name  ?? i.name  ?? '',
-                value: i.Value ?? i.value ?? ''
-              }))
-            });
-          }
-        }
-        return { key: colKey, sections };
-      }
-
-      return { key: colKey, sections: [] };
+      const root = this.buildSection(colKey, colValue);
+      return { key: colKey, sections: root.subsections.length > 0 || root.items.length > 0 ? [root] : [] };
     });
   }
 }

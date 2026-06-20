@@ -72,15 +72,10 @@
                 <span class="char-prop__value">{{ col.scalar }}</span>
               </div>
 
-              <!-- Seções com itens -->
               <div class="char-section" *ngFor="let section of col.sections">
-                <h4 class="char-section__title">{{ section.title }}</h4>
-                <div class="char-section__items">
-                  <div class="char-prop" *ngFor="let item of section.items">
-                    <span class="char-prop__key">{{ item.name }}</span>
-                    <span class="char-prop__value">{{ item.value }}</span>
-                  </div>
-                </div>
+                <ng-container
+                  *ngTemplateOutlet="sectionTpl; context: { section: section, depth: 0 }"
+                ></ng-container>
               </div>
 
             </div>
@@ -105,3 +100,24 @@
     <button class="btn-create" (click)="toggleModal()">CRIAR</button>
   </div>
 </div>
+
+<ng-template #sectionTpl let-section="section" let-depth="depth">
+  <div class="char-section" [class.char-section--nested]="depth > 0" [style.--nest-depth]="depth">
+    <h4 class="char-section__title">{{ section.title }}</h4>
+
+    <div class="char-section__items" *ngIf="section.items?.length > 0">
+      <div class="char-prop" *ngFor="let item of section.items">
+        <span class="char-prop__key">{{ item.name }}</span>
+        <span class="char-prop__value">{{ item.value }}</span>
+      </div>
+    </div>
+
+    <div class="char-section__subsections" *ngIf="section.subsections?.length > 0">
+      <ng-container *ngFor="let sub of section.subsections">
+        <ng-container
+          *ngTemplateOutlet="sectionTpl; context: { section: sub, depth: depth + 1 }"
+        ></ng-container>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>

@@ -460,9 +460,9 @@
   .char-session-card__header { padding: 14px 16px; }
   .char-sheet { padding: 18px 16px; }
 }
+
 /* ── CORREÇÕES DE OVERFLOW ── */
 
-/* Descrição do card — limita a 2 linhas com ellipsis */
 .char-session-card__desc {
   display: -webkit-box !important;
   -webkit-line-clamp: 2;
@@ -473,7 +473,6 @@
   word-break: break-word;
 }
 
-/* Valor de atributo — não deixa vazar */
 .char-prop__value {
   max-width: 120px;
   overflow: hidden;
@@ -481,7 +480,6 @@
   white-space: nowrap;
 }
 
-/* Chave do atributo — também protegida */
 .char-prop__key {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -490,7 +488,6 @@
   min-width: 0;
 }
 
-/* Scalar — texto longo dentro do badge */
 .char-sheet__scalar .char-prop__value {
   max-width: 100%;
   word-break: break-word;
@@ -498,7 +495,6 @@
   font-size: 1rem;
 }
 
-/* Garante que as colunas da ficha não ultrapassem o container */
 .char-sheet__columns {
   overflow: hidden;
 }
@@ -508,7 +504,29 @@
   min-width: 0;
 }
 
-/* Itens da seção não vazam */
 .char-section__items {
   overflow: hidden;
+}
+
+/* ── SUB-GRUPOS RECURSIVOS ── */
+
+.char-section__subsections {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+.char-section--nested {
+  padding-left: 14px;
+  margin-left: 4px;
+  border-left: 2px solid var(--rpg-purple-tint);
+}
+
+.char-section--nested > .char-section__title {
+  font-size: 0.72rem;
+  opacity: 0.9;
+}
+
+.char-section--nested .char-section--nested {
+  border-left-color: var(--rpg-border-light);
 }
