@@ -8,8 +8,9 @@ namespace RpgDex.Domain.Interfaces
     public interface ICampaignRepository
     {
         Task<Campaign> InsertAsync(Campaign campaign);
-
         Task<IEnumerable<Campaign>> GetAllAsync();
-        Task<Campaign> GetByIdAsync(Guid Id);
+        Task<IEnumerable<Campaign>> GetAllAsync(Guid userId);
+        Task<Campaign> GetByIdAsync(Guid id);
+        Task<bool> UpdateAsync(Campaign newCampaign);
     }
 }

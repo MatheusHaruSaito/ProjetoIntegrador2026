@@ -28,9 +28,28 @@ namespace RpgDex.Infrastructure.Repositories
         {
             return await _entitie.Find(_ => true).ToListAsync();
         }
-        public async Task<Campaign> GetByIdAsync(Guid Id)
+        public async Task<IEnumerable<Campaign>> GetAllAsync(Guid userId)
         {
-            return await _entitie.Find(u => u.Id == Id).FirstOrDefaultAsync();
+            var filter = Builders<Campaign>.Filter.Eq(c => c.GameMasterId, userId);
+            return await _entitie.Find(filter).ToListAsync();
+
+        }
+        public async Task<Campaign> GetByIdAsync(Guid id)
+        {
+            return await _entitie.Find(u => u.Id == id).FirstOrDefaultAsync();
+        }
+
+        public Task<bool> UpdateAsync(Campaign newCampaign)
+        {
+            var filter = Builders<Campaign>.Filter.Eq(c => c.Id, newCampaign.Id);
+            var updatedCampaign = Builders<Campaign>.Update
+                .Set(c => c.Description, newCampaign.Description)
+                .Set(c => c.Title, newCampaign.Title)
+                .Set(c => c.IsActive, newCampaign.IsActive)
+                .Set(c => c.PlayersId, newCampaign.PlayersId)
+                .Set(c => c.CharactersId, newCampaign.CharactersId);
+            _entitie.UpdateOneAsync(filter, updatedCampaign);
+            throw new NotImplementedException();
         }
     }
 }

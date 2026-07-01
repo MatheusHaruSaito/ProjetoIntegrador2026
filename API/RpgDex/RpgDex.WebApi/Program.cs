@@ -51,7 +51,8 @@ builder.Services.AddScoped<ITokenRepository,TokenRepository>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IFileService, FileService>();
-
+builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
+builder.Services.AddScoped<ICampaignService, CampaignService>();
 
 
 

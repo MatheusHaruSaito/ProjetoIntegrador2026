@@ -55,7 +55,19 @@ namespace RpgDex.Application.Mapping
                  : $"http://localhost:8080/api/File/{src.IconPath}"); //Tirar isso quando Implementar o uso  do cloudflare r2 / Solução Temporaria para mostrar a imagem
 
 
+            //Mapeamentos para Campaign podem ser adicionados aqui, se necessário
+            TypeAdapterConfig<CreateCampaignRequest, Campaign>
+                .NewConfig()
+                .Ignore(dest => dest.Id);
+            TypeAdapterConfig<Campaign, CampaignResponse>
+                .NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Title, src => src.Title)
+                .Map(dest => dest.Description, src => src.Description);
         }
+
+
+        // Metodos para converter Dictionary<string, object> em BsonDocument
 
         private static BsonDocument ConvertToBsonDocument(string source)
         {

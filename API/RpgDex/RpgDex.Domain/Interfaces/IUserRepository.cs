@@ -7,7 +7,7 @@ namespace RpgDex.Domain.Interfaces
 {
     public interface IUserRepository
     {
-        Task<bool> PushCharacterAsync(Guid UserId, Guid CharacterID);
+        Task<bool> PushCharacterAsync(Guid userId, Guid characterID);
         Task<bool> PullCharacterAsync(Guid userId, Guid characterId);
         Task<ApplicationUser> GetByIdAsync(Guid userId);
 

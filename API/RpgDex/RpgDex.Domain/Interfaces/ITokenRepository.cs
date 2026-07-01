@@ -8,7 +8,7 @@ namespace RpgDex.Domain.Interfaces
     public interface ITokenRepository
     {
         Task<RefreshToken> StoreTokenAsync(RefreshToken token);
-        Task<RefreshToken> GetRefreshTokenByTokenAsync(string Token);
+        Task<RefreshToken> GetRefreshTokenByTokenAsync(string token);
         Task<RefreshToken> GetRefreshTokenByUserIdAsync(Guid userId);
         Task<bool> DeleteTokenByUserId(Guid userId);
 
