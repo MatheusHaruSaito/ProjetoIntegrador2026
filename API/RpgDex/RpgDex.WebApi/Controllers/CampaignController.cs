@@ -140,7 +140,7 @@ namespace RpgDex.WebApi.Controllers
                 data = result.Value
             });
         }
-        [HttpPut("addPlayer")]
+        [HttpPut("AddPlayer")]
         public async Task<ActionResult<bool>> JoinCampaignRequest(JoinCampaignRequest request)
         {
 

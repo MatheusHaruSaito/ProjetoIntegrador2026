@@ -32,7 +32,7 @@ export class CampaignService {
   Update(campaign: UpdateCampaignRequest): Observable<ApiResponse<CampaignResponse>> {
     return this.http.put<ApiResponse<CampaignResponse>>(`${this.env}`, campaign);
   }
-  public Delete(Id: String): Observable<ApiResponse<CampaignResponse>> {
+  Delete(Id: String): Observable<ApiResponse<CampaignResponse>> {
     return this.http.put<ApiResponse<CampaignResponse>>(`${this.env}/SetActiveState/${Id}`, '');
   }
   AddPlayer(request: JoinCampaignRequest): Observable<ApiResponse<CampaignResponse>> {

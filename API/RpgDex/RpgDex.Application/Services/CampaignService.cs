@@ -88,12 +88,15 @@ namespace RpgDex.Application.Services
             {
                 return Result<CampaignResponse>.Failure("Campanha não encontrada");
             }
+            if(campaign.PlayerIds.Count() > request.MaxPlayers)
+            {
+                return Result<CampaignResponse>.Failure("Remova Jogadores antes de diminuir a capacidade da campanha");
+            }
 
             campaign.Title = request.Title;
             campaign.Description = request.Description;
             campaign.IsActive = request.IsActive;
-            campaign.PlayerIds = request.PlayerIds;
-            campaign.CharacterIds = request.CharacterIds;
+            campaign.MaxPlayers = request.MaxPlayers;
 
             var result = await _campaignRepository.UpdateAsync(campaign);
 

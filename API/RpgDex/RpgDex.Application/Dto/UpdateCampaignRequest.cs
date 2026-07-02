@@ -10,8 +10,7 @@ namespace RpgDex.Application.Dto
         public string Title { get; set; }
         public string? Description { get; set; }
         public bool IsActive { get; set; } = true;
-        public IEnumerable<Guid>? PlayerIds { get; set; }
-        public IEnumerable<Guid>? CharacterIds { get; set; }
+        public int MaxPlayers { get; set; }
 
     }
 }
