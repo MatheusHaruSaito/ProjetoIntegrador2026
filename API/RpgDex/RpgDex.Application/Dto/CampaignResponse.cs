@@ -11,8 +11,9 @@ namespace RpgDex.Application.Dto
         public string? Description { get; set; }
         public bool IsActive { get; set; } = true;
         public Guid GameMasterId { get; set; }
-        public Guid[]? PlayersId { get; set; }
-        public Guid[]? CharactersId { get; set; }
+        public int MaxPlayers { get; set; }
+        public IEnumerable<Guid>? PlayerIds { get; set; }
+        public IEnumerable<Guid>? CharacterIds { get; set; }
 
     }
 }

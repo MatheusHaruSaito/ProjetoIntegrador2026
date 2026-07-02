@@ -29,6 +29,12 @@ namespace RpgDex.Application.Services
             }
 
             var campaign = request.Adapt<Campaign>();
+            //Temporario, mudar quando definir assinaturas
+            if(request.MaxPlayers > 15)
+            {
+                campaign.MaxPlayers = 15;
+            }
+
             var result = await _campaignRepository.InsertAsync(campaign);
             if(result is null)
             {
@@ -86,17 +92,17 @@ namespace RpgDex.Application.Services
             campaign.Title = request.Title;
             campaign.Description = request.Description;
             campaign.IsActive = request.IsActive;
-            campaign.PlayersId = request.PlayersId;
-            campaign.CharactersId = request.CharactersId;
+            campaign.PlayerIds = request.PlayerIds;
+            campaign.CharacterIds = request.CharacterIds;
 
             var result = await _campaignRepository.UpdateAsync(campaign);
 
-            if(!result)
+            if(result is null)
             {
                 return Result<CampaignResponse>.Failure("Falha ao atualizar campanha");
             }
 
-            return Result<CampaignResponse>.Success(campaign.Adapt<CampaignResponse>());
+            return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
         }
 
         public async Task<Result<bool>> SetActiveState(Guid Id, bool ActiveState)
@@ -107,6 +113,48 @@ namespace RpgDex.Application.Services
                 return Result<bool>.Failure("Falha ao atualizar estado da campanha");
             } 
             return Result<bool>.Success(result);
+        }
+
+        public async Task<Result<CampaignResponse>> AddPlayerRequest(JoinCampaignRequest request)
+        {
+            var campaign = await _campaignRepository.GetByIdAsync(request.CampaignId);
+            if(campaign is null)
+            {
+                return Result<CampaignResponse>.Failure("Campanha não encontrada");
+            }
+            //Campanha encontrada
+
+            var player = await _userRepository.GetByIdAsync(request.PlayerId);
+            if(player is null)
+            {
+                return Result<CampaignResponse>.Failure("Jogador não encontrado");
+            }
+            //Jogador Encontrado
+            if(campaign.Password != request.Password)
+            {
+                return Result<CampaignResponse>.Failure("Senha incorreta");
+            }
+            //Senha verificada
+
+            if(campaign.PlayerIds.Contains(player.Id))
+            {
+                return Result<CampaignResponse>.Failure("Jogador já está na campanha");
+            }
+            //Player Não esta na campanha
+            var playerAdded = campaign.TryAddPlayer(player.Id);
+            if (!playerAdded)
+            {
+                return Result<CampaignResponse>.Failure("Falha ao adicionar jogador à campanha / Capacidade maxima atingida");
+            }
+            var result = await _campaignRepository.UpdateAsync(campaign);
+            if(result is null)
+            {
+                return Result<CampaignResponse>.Failure("Falha ao atualizar campanha");
+            }
+            //Player Adicionado
+
+            //Tudo Certo :ThumbsUp:
+            return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
         }
     }
 }

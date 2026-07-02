@@ -11,7 +11,10 @@ namespace RpgDex.Domain.Interfaces
         Task<IEnumerable<Campaign>> GetAllAsync();
         Task<IEnumerable<Campaign>> GetAllAsync(Guid userId);
         Task<Campaign> GetByIdAsync(Guid id);
-        Task<bool> UpdateAsync(Campaign newCampaign);
+        Task<Campaign> UpdateAsync(Campaign newCampaign);
         Task<bool> SetActiveState(Guid Id, bool ActiveState);
+        Task<Campaign> PushPlayer(Guid campaignId, Guid playerId);
+
+
     }
 }

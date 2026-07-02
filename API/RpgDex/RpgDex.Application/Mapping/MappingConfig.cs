@@ -63,7 +63,8 @@ namespace RpgDex.Application.Mapping
                 .NewConfig()
                 .Map(dest => dest.Id, src => src.Id)
                 .Map(dest => dest.Title, src => src.Title)
-                .Map(dest => dest.Description, src => src.Description);
+                .Map(dest => dest.Description, src => src.Description)
+                .Map(dest => dest.MaxPlayers, src => src.MaxPlayers);
         }
 
 

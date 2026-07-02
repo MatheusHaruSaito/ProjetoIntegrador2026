@@ -140,5 +140,26 @@ namespace RpgDex.WebApi.Controllers
                 data = result.Value
             });
         }
+        [HttpPut("addPlayer")]
+        public async Task<ActionResult<bool>> JoinCampaignRequest(JoinCampaignRequest request)
+        {
+
+            var result = await _campaignService.AddPlayerRequest(request);
+
+            if (result.IsFailure)
+            {
+                return NotFound(new
+                {
+                    success = result.IsSuccess,
+                    message = result.Error,
+                    data = result.Value
+                });
+            }
+            return Ok(new
+            {
+                success = result.IsSuccess,
+                data = result.Value
+            });
+        }
     }
 }

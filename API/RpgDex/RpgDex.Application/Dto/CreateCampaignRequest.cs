@@ -8,6 +8,8 @@ namespace RpgDex.Application.Dto
     {
         public string Title { get; set; }
         public string? Description { get; set; }
+        public string? Password { get; set; }
+        public int MaxPlayers { get; set; }
         public Guid GameMasterId { get; set; }
 
     }
