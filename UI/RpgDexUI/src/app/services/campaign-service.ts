@@ -6,6 +6,7 @@ import { UpdateCampaignRequest } from '../../models/updateCampaignRequest';
 import { Observable } from 'rxjs';
 import { CampaignResponse } from '../../models/campaignResponse';
 import { ApiResponse } from '../../models/apiResponse';
+import { JoinCampaignRequest } from '../../models/JoinCampaignRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,6 @@ export class CampaignService {
   GetAllByUserId(userId: string): Observable<ApiResponse<CampaignResponse[]>> {
     return this.http.get<ApiResponse<CampaignResponse[]>>(`${this.env}/${userId}/All`);
   }
-
   GetById(Id: String): Observable<ApiResponse<CampaignResponse>> {
     return this.http.get<ApiResponse<CampaignResponse>>(`${this.env}/${Id}`);
   }
@@ -34,5 +34,8 @@ export class CampaignService {
   }
   public Delete(Id: String): Observable<ApiResponse<CampaignResponse>> {
     return this.http.put<ApiResponse<CampaignResponse>>(`${this.env}/SetActiveState/${Id}`, '');
+  }
+  AddPlayer(request: JoinCampaignRequest): Observable<ApiResponse<CampaignResponse>> {
+    return this.http.put<ApiResponse<CampaignResponse>>(`${this.env}/AddPlayer`, request);
   }
 }

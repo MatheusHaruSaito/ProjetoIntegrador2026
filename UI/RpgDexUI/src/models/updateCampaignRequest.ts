@@ -3,6 +3,6 @@ export interface UpdateCampaignRequest {
   title: string;
   description?: string;
   isActive: boolean;
-  playersId?: string[];
-  charactersId?: string[];
+  playerIds?: string[];
+  characterIds?: string[];
 }

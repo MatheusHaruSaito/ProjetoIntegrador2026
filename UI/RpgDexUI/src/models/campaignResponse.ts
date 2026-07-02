@@ -4,6 +4,7 @@ export interface CampaignResponse {
   description?: string;
   isActive: boolean;
   gameMasterId: string;
-  playersId?: string[];
-  charactersId?: string[];
+  maxPlayers: number;
+  playerIds?: string[];
+  characterIds?: string[];
 }
