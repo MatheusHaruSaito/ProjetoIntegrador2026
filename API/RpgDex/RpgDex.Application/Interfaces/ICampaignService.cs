@@ -13,6 +13,7 @@ namespace RpgDex.Application.Interfaces
         public Task<Result<IEnumerable<CampaignResponse>>> GetAll(Guid userId);
         public Task<Result<CampaignResponse>> GetById(Guid id);
         public Task<Result<CampaignResponse>> Update(UpdateCampaignRequest request);
+        public Task<Result<bool>> SetActiveState(Guid Id, bool ActiveState);
 
         //Pensar Melhor sobre essa funcionalidade
         //public Task<Result<CampaignResponse>> GenerateInvite();

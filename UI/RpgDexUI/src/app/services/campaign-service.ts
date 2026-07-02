@@ -5,6 +5,7 @@ import { CreateCampaignRequest } from '../../models/createCampaignRequest';
 import { UpdateCampaignRequest } from '../../models/updateCampaignRequest';
 import { Observable } from 'rxjs';
 import { CampaignResponse } from '../../models/campaignResponse';
+import { ApiResponse } from '../../models/apiResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -15,20 +16,23 @@ export class CampaignService {
 
   http = inject(HttpClient);
 
-  Post(request: CreateCampaignRequest) : Observable<CampaignResponse> {
-    return this.http.post<CampaignResponse>(`${this.env}`, request);
+  Post(request: CreateCampaignRequest): Observable<ApiResponse<CampaignResponse>> {
+    return this.http.post<ApiResponse<CampaignResponse>>(`${this.env}`, request);
   }
-  GetAll() : Observable<CampaignResponse[]> {
-    return this.http.get<CampaignResponse[]>(`${this.env}`);
+  GetAll(): Observable<ApiResponse<CampaignResponse[]>> {
+    return this.http.get<ApiResponse<CampaignResponse[]>>(`${this.env}`);
   }
-  GetAllByUserId(userId: string) : Observable<CampaignResponse[]> {
-    return this.http.get<CampaignResponse[]>(`${this.env}/${userId}/All`);
+  GetAllByUserId(userId: string): Observable<ApiResponse<CampaignResponse[]>> {
+    return this.http.get<ApiResponse<CampaignResponse[]>>(`${this.env}/${userId}/All`);
   }
 
-  GetById(Id: String) : Observable<CampaignResponse> {
-    return this.http.get<CampaignResponse>(`${this.env}/${Id}`);
+  GetById(Id: String): Observable<ApiResponse<CampaignResponse>> {
+    return this.http.get<ApiResponse<CampaignResponse>>(`${this.env}/${Id}`);
   }
-  Update(campaign: UpdateCampaignRequest) : Observable<CampaignResponse> {
-    return this.http.put<CampaignResponse>(`${this.env}`, campaign);
+  Update(campaign: UpdateCampaignRequest): Observable<ApiResponse<CampaignResponse>> {
+    return this.http.put<ApiResponse<CampaignResponse>>(`${this.env}`, campaign);
+  }
+  public Delete(Id: String): Observable<ApiResponse<CampaignResponse>> {
+    return this.http.put<ApiResponse<CampaignResponse>>(`${this.env}/SetActiveState/${Id}`, '');
   }
 }

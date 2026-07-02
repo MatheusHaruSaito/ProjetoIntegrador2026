@@ -98,5 +98,15 @@ namespace RpgDex.Application.Services
 
             return Result<CampaignResponse>.Success(campaign.Adapt<CampaignResponse>());
         }
+
+        public async Task<Result<bool>> SetActiveState(Guid Id, bool ActiveState)
+        {
+            var result = await _campaignRepository.SetActiveState(Id, ActiveState);
+            if(!result)
+            {
+                return Result<bool>.Failure("Falha ao atualizar estado da campanha");
+            } 
+            return Result<bool>.Success(result);
+        }
     }
 }

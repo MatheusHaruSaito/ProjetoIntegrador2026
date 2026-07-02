@@ -119,5 +119,26 @@ namespace RpgDex.WebApi.Controllers
                 data = result.Value
             });
         }
+        [HttpPut("SetActiveState/{Id}")]
+        public async Task<ActionResult<bool>> SetActiveState(Guid Id, bool state)
+        {
+
+            var result = await _campaignService.SetActiveState(Id, state);
+
+            if (result.IsFailure)
+            {
+                return NotFound(new
+                {
+                    success = result.IsSuccess,
+                    message = result.Error,
+                    data = result.Value
+                });
+            }
+            return Ok(new
+            {
+                success = result.IsSuccess,
+                data = result.Value
+            });
+        }
     }
 }

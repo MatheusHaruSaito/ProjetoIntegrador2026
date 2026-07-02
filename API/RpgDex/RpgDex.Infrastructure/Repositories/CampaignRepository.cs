@@ -39,7 +39,7 @@ namespace RpgDex.Infrastructure.Repositories
             return await _entitie.Find(u => u.Id == id).FirstOrDefaultAsync();
         }
 
-        public Task<bool> UpdateAsync(Campaign newCampaign)
+        public async Task<bool> UpdateAsync(Campaign newCampaign)
         {
             var filter = Builders<Campaign>.Filter.Eq(c => c.Id, newCampaign.Id);
             var updatedCampaign = Builders<Campaign>.Update
@@ -48,8 +48,17 @@ namespace RpgDex.Infrastructure.Repositories
                 .Set(c => c.IsActive, newCampaign.IsActive)
                 .Set(c => c.PlayersId, newCampaign.PlayersId)
                 .Set(c => c.CharactersId, newCampaign.CharactersId);
-            _entitie.UpdateOneAsync(filter, updatedCampaign);
-            throw new NotImplementedException();
+            var result = await _entitie.UpdateOneAsync(filter, updatedCampaign);
+            return result.MatchedCount > 0;
+        }
+
+        public async Task<bool> SetActiveState(Guid Id, bool ActiveState)
+        {
+            var filter = Builders<Campaign>.Filter.Eq(c => c.Id, Id);
+            var updatedCampaign = Builders<Campaign>.Update
+                .Set(c => c.IsActive, ActiveState);
+            var result = await _entitie.UpdateOneAsync(filter, updatedCampaign);
+            return result.MatchedCount > 0;
         }
     }
 }
