@@ -3,6 +3,7 @@ import { HomeComponent } from './pages/home/home';
 import { UserLoginComponent } from './pages/user-login/user-login.component';
 import { UserRegisterComponent } from './pages/user-register/user-register.component';
 import { CharacterList } from './pages/character-list/character-list';
+import { CharacterEditor } from './pages/character-editor/character-editor';
 import { CampaignsComponent } from './pages/campaigns/campaigns';
 import { ProfileComponent } from './pages/profile/profile';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile';
@@ -26,6 +27,11 @@ export const routes: Routes = [
   {
     path: 'personagens',
     component: CharacterList,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'personagens/:id',
+    component: CharacterEditor,
     canActivate: [authGuard]
   },
   {

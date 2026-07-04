@@ -15,76 +15,51 @@
       </button>
     </div>
 
-    <!-- ── PERSONAGENS ── -->
-    <h2 class="section-title">Seus Personagens</h2>
-    <p class="section-sub">Clique em um personagem para expandir a ficha durante a sessão.</p>
+    <!-- ── ACESSO RÁPIDO AOS PERSONAGENS ── -->
+    <h2 class="section-title">Acesso Rápido</h2>
+    <p class="section-sub">Seus personagens ordenados pelo último acesso.</p>
 
-    <div class="char-session-list">
-
-      <div class="char-empty" *ngIf="myCharacters.length === 0">
-        <div class="char-empty__icon"><i class="fa fa-scroll"></i></div>
-        <p class="char-empty__text">Nenhum personagem encontrado.</p>
-        <a routerLink="/personagens" class="char-empty__link">
-          <i class="fa fa-plus"></i> Criar personagem
-        </a>
-      </div>
-
-      <div
-        class="char-session-card"
-        *ngFor="let char of myCharacters"
-        [class.expanded]="expandedCharacterId === char.id"
-      >
-        <!-- Cabeçalho -->
-        <div class="char-session-card__header" (click)="toggleCharacter(char.id)">
-          <div class="char-session-card__left">
-            <div
-              class="char-session-avatar"
-              [style.background-image]="char.iconPath ? 'url(' + char.iconPath + ')' : ''"
-            >
-              <i class="fa fa-shield-halved" *ngIf="!char.iconPath"></i>
-            </div>
-            <div class="char-session-card__info">
-              <span class="char-session-card__name">{{ char.name }}</span>
-              <span class="char-session-card__desc" *ngIf="char.description">{{ char.description }}</span>
-            </div>
-          </div>
-          <div class="char-session-card__toggle">
-            <i class="fa" [ngClass]="expandedCharacterId === char.id ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
-          </div>
-        </div>
-
-        <!-- Ficha expandida -->
-        <div class="char-sheet" *ngIf="expandedCharacterId === char.id">
-
-          <!-- Sem properties -->
-          <div class="char-sheet__empty" *ngIf="getSheetColumns(char).length === 0">
-            <i class="fa fa-circle-info"></i>
-            Nenhum atributo ou habilidade registrado ainda.
-          </div>
-
-          <!-- Colunas -->
-          <div class="char-sheet__columns" *ngIf="getSheetColumns(char).length > 0">
-            <div class="char-sheet__col" *ngFor="let col of getSheetColumns(char)">
-
-              <!-- Scalar (valor simples) -->
-              <div class="char-sheet__scalar" *ngIf="col.scalar !== undefined">
-                <span class="char-section__title">{{ col.key }}</span>
-                <span class="char-prop__value">{{ col.scalar }}</span>
-              </div>
-
-              <div class="char-section" *ngFor="let section of col.sections">
-                <ng-container
-                  *ngTemplateOutlet="sectionTpl; context: { section: section, depth: 0 }"
-                ></ng-container>
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
-
+    <!-- Vazio -->
+    <div class="char-empty" *ngIf="myCharacters.length === 0">
+      <div class="char-empty__icon"><i class="fa fa-scroll"></i></div>
+      <p class="char-empty__text">Nenhum personagem encontrado.</p>
+      <a routerLink="/personagens" class="char-empty__link">
+        <i class="fa fa-plus"></i> Criar personagem
+      </a>
     </div>
+
+    <!-- Grid de cards -->
+    <div class="char-quick-grid" *ngIf="myCharacters.length > 0">
+      <div
+        class="char-quick-card"
+        *ngFor="let char of myCharacters"
+        (click)="openCharacter(char.id)"
+      >
+        <!-- Avatar -->
+        <div
+          class="char-quick-avatar"
+          [style.background-image]="char.iconPath ? 'url(' + char.iconPath + ')' : ''"
+        >
+          <i class="fa fa-shield-halved" *ngIf="!char.iconPath"></i>
+        </div>
+
+        <!-- Info -->
+        <div class="char-quick-info">
+          <span class="char-quick-name">{{ char.name }}</span>
+          <span class="char-quick-desc" *ngIf="char.description">{{ char.description }}</span>
+        </div>
+
+        <!-- Último acesso -->
+        <div class="char-quick-meta">
+          <span class="char-quick-time" [class.never]="!wasAccessed(char.id)">
+            <i class="fa fa-clock"></i>
+            {{ lastAccessedLabel(char.id) }}
+          </span>
+          <i class="fa fa-arrow-right char-quick-arrow"></i>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -100,24 +75,3 @@
     <button class="btn-create" (click)="toggleModal()">CRIAR</button>
   </div>
 </div>
-
-<ng-template #sectionTpl let-section="section" let-depth="depth">
-  <div class="char-section" [class.char-section--nested]="depth > 0" [style.--nest-depth]="depth">
-    <h4 class="char-section__title">{{ section.title }}</h4>
-
-    <div class="char-section__items" *ngIf="section.items?.length > 0">
-      <div class="char-prop" *ngFor="let item of section.items">
-        <span class="char-prop__key">{{ item.name }}</span>
-        <span class="char-prop__value">{{ item.value }}</span>
-      </div>
-    </div>
-
-    <div class="char-section__subsections" *ngIf="section.subsections?.length > 0">
-      <ng-container *ngFor="let sub of section.subsections">
-        <ng-container
-          *ngTemplateOutlet="sectionTpl; context: { section: sub, depth: depth + 1 }"
-        ></ng-container>
-      </ng-container>
-    </div>
-  </div>
-</ng-template>

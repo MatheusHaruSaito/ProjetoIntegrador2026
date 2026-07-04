@@ -19,7 +19,7 @@
             <div class="icon-upload-placeholder" *ngIf="!iconPreviewUrl">
               <i class="fa fa-cloud-arrow-up"></i>
               <span>Clique para selecionar</span>
-              <small>PNG • Máx. 2MB</small>
+              <small>PNG, JPG • Máx. 2MB</small>
             </div>
             <div class="icon-upload-overlay" *ngIf="iconPreviewUrl">
               <i class="fa fa-camera"></i><span>Alterar</span>
@@ -40,161 +40,18 @@
 
         <!-- Descrição -->
         <div class="input-group">
-          <label class="input-label">Descrição</label>
+          <label class="input-label">Descrição <span class="field-optional">(opcional)</span></label>
           <textarea class="input-textarea"
-            placeholder="Uma breve descrição do personagem, sua origem ou aparência..."
+            placeholder="Uma breve descrição do personagem. Você poderá detalhar tudo no editor."
             [(ngModel)]="newCharacter.description" name="charDesc"
             rows="3" maxlength="300"></textarea>
         </div>
 
-        <!-- Atributos -->
-        <div class="input-group">
-          <div class="properties-header">
-            <label class="input-label">Atributos Personalizados</label>
-            <div class="prop-header-right">
-              <span class="prop-counter" [class.at-limit]="totalCount >= MAX_PROPERTIES">
-                {{ totalCount }}/{{ MAX_PROPERTIES }}
-              </span>
-              <button type="button" class="btn-add-property"
-                (click)="addPropertyOrganizationField('')"
-                [disabled]="totalCount >= MAX_PROPERTIES">
-                <i class="fa fa-plus"></i> Grupo
-              </button>
-            </div>
-          </div>
+        <p class="create-hint">
+          <i class="fa fa-circle-info"></i>
+          Após criar, você será levado ao editor completo para montar a ficha do personagem.
+        </p>
 
-          <div class="dynamic-fields-container">
-            @if (customProperties.length === 0) {
-              <p class="dynamic-fields-empty">
-                Clique em <strong>+ Grupo</strong> para criar uma seção de atributos.
-              </p>
-            }
-
-            <!-- Nível raiz: organizações -->
-            @for (org of customProperties; track org.id) {
-              <div class="prop-org-block">
-
-                <!-- Cabeçalho do grupo -->
-                <div class="prop-org-header">
-                  <i class="fa fa-layer-group prop-org-icon"></i>
-                  <input type="text"
-                    class="prop-org-title-input"
-                    placeholder="Nome do grupo (ex: Atributos, Skills...)"
-                    [(ngModel)]="org.title"
-                    [name]="'orgTitle-' + org.id"
-                    [maxlength]="MAX_TITLE_LENGTH"/>
-                  <div class="prop-org-actions">
-                    <button type="button" class="btn-add-property btn-add-sm"
-                      (click)="addPropertyField(org.id)"
-                      [disabled]="totalCount >= MAX_PROPERTIES"
-                      title="Adicionar campo neste grupo">
-                      <i class="fa fa-plus"></i> Campo
-                    </button>
-                    <button type="button" class="btn-add-property btn-add-sm"
-                      (click)="addPropertyOrganizationField(org.id)"
-                      [disabled]="totalCount >= MAX_PROPERTIES"
-                      title="Adicionar sub-grupo">
-                      <i class="fa fa-folder-plus"></i>
-                    </button>
-                    <button type="button" class="btn-icon btn-remove-field"
-                      (click)="removePropertyField($index)" title="Remover grupo">
-                      <i class="fa fa-xmark"></i>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Filhos do grupo -->
-                <div class="prop-org-children" *ngIf="org.data && org.data.length > 0">
-                  @for (child of $any(org.data); track child.id) {
-
-                    <!-- Filho é campo de valor -->
-                    @if (!isOrganization(child)) {
-                      <div class="dynamic-field-row child-field">
-                        <div class="field-wrapper">
-                          <input type="text" placeholder="Nome do atributo"
-                            [(ngModel)]="child.title"
-                            [name]="'childTitle-' + child.id"
-                            [maxlength]="MAX_TITLE_LENGTH"/>
-                        </div>
-                        <div class="field-wrapper">
-                          <input type="text" placeholder="Valor"
-                            [(ngModel)]="child.data"
-                            [name]="'childData-' + child.id"
-                            [maxlength]="MAX_VALUE_LENGTH"/>
-                        </div>
-                        <button type="button" class="btn-icon btn-remove-field"
-                          (click)="removeChildField(org, $index)" title="Remover">
-                          <i class="fa fa-xmark"></i>
-                        </button>
-                      </div>
-                    }
-
-                    <!-- Filho é sub-grupo -->
-                    @if (isOrganization(child)) {
-                      <div class="prop-org-block prop-org-nested">
-
-                        <div class="prop-org-header">
-                          <i class="fa fa-folder prop-org-icon"></i>
-                          <input type="text"
-                            class="prop-org-title-input"
-                            placeholder="Nome do sub-grupo"
-                            [(ngModel)]="child.title"
-                            [name]="'subOrgTitle-' + child.id"
-                            [maxlength]="MAX_TITLE_LENGTH"/>
-                          <div class="prop-org-actions">
-                            <button type="button" class="btn-add-property btn-add-sm"
-                              (click)="addPropertyField(child.id)"
-                              [disabled]="totalCount >= MAX_PROPERTIES"
-                              title="Adicionar campo">
-                              <i class="fa fa-plus"></i> Campo
-                            </button>
-                            <button type="button" class="btn-icon btn-remove-field"
-                              (click)="removeChildField(org, $index)" title="Remover sub-grupo">
-                              <i class="fa fa-xmark"></i>
-                            </button>
-                          </div>
-                        </div>
-
-                        <div class="prop-org-children" *ngIf="child.data && $any(child.data).length > 0">
-                          @for (grandchild of $any(child.data); track grandchild.id) {
-                            <div class="dynamic-field-row child-field">
-                              <div class="field-wrapper">
-                                <input type="text" placeholder="Nome do atributo"
-                                  [(ngModel)]="grandchild.title"
-                                  [name]="'gcTitle-' + grandchild.id"
-                                  [maxlength]="MAX_TITLE_LENGTH"/>
-                              </div>
-                              <div class="field-wrapper">
-                                <input type="text" placeholder="Valor"
-                                  [(ngModel)]="grandchild.data"
-                                  [name]="'gcData-' + grandchild.id"
-                                  [maxlength]="MAX_VALUE_LENGTH"/>
-                              </div>
-                              <button type="button" class="btn-icon btn-remove-field"
-                                (click)="removeChildField($any(child), $index)" title="Remover">
-                                <i class="fa fa-xmark"></i>
-                              </button>
-                            </div>
-                          }
-                        </div>
-
-                      </div>
-                    }
-
-                  }
-                </div>
-
-                <!-- Vazio -->
-                <p class="prop-children-empty" *ngIf="!org.data || org.data.length === 0">
-                  <i class="fa fa-arrow-up-long"></i> Adicione campos ou sub-grupos acima.
-                </p>
-
-              </div>
-            }
-          </div>
-        </div>
-
-        <!-- Erro -->
         <div class="feedback-message error-message" *ngIf="errorMessage">
           <i class="fa fa-circle-exclamation"></i> {{ errorMessage }}
         </div>
@@ -204,7 +61,7 @@
       <div class="modal-footer">
         <button class="btn-secondary" (click)="CloseModal()" [disabled]="isLoading">Cancelar</button>
         <button class="btn-primary" (click)="CreateCharacter()" [disabled]="isLoading">
-          <span *ngIf="!isLoading"><i class="fa fa-plus"></i> Criar</span>
+          <span *ngIf="!isLoading"><i class="fa fa-arrow-right"></i> Criar e Editar</span>
           <span *ngIf="isLoading"><i class="fa fa-spinner fa-spin"></i> Criando...</span>
         </button>
       </div>
