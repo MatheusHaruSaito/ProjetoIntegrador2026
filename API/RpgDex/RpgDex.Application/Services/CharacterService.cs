@@ -115,13 +115,9 @@ namespace RpgDex.Application.Services
             else
             {
                 var characterFound = await _character.GetByIdAsync(request.Id);
-                Console.WriteLine($"character found: {characterFound.IconPath}");
                 if (characterFound is null) return Result<bool>.Failure("Personagem Não Encontrado");
                 updateCharacter.IconPath = characterFound.IconPath;
             }
-
-            Console.WriteLine($"IconPath: {updateCharacter.IconPath}");
-            Console.WriteLine($"request.Icon: {request.Icon}");
 
 
             var response = await _character.UpdateAsync(updateCharacter);
