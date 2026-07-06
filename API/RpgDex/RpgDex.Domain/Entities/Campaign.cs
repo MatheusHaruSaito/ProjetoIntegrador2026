@@ -1,4 +1,7 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using RpgDex.Domain.Exceptions;
+using RpgDex.Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +9,15 @@ namespace RpgDex.Domain.Entities
 {
     public class Campaign
     {
+        [BsonElement("PlayerIds")]
+        private List<Guid> _playerIds = new();
+
+        [BsonElement("CharacterIds")]
+        private List<Guid> _characterIds = new();
+
+        [BsonElement("CharacterRequests")]
+        private List<Guid> _characterRequests = new();
+
         public Guid Id{ get; set; }
         public string Title{ get; set; }
         public string? Description{ get; set; }
@@ -14,25 +26,54 @@ namespace RpgDex.Domain.Entities
         public string? IconPath { get; set; }
         public bool IsActive { get; set; } = true;
         public Guid GameMasterId{ get; set; }
-        public IEnumerable<Guid>? PlayerIds { get; set; }
-        public IEnumerable<Guid>? CharacterIds { get; set; }
+        public CampaignSettings? Settings { get; set; }
+
+        [BsonIgnore]
+        public IReadOnlyCollection<Guid> PlayerIds => _playerIds.AsReadOnly();
+        [BsonIgnore]
+        public IReadOnlyCollection<Guid> CharacterIds => _characterIds.AsReadOnly();
+        [BsonIgnore]
+        public IReadOnlyCollection<Guid> CharacterRequests => _characterRequests.AsReadOnly();
 
         public Campaign()
         {
-            PlayerIds = new List<Guid>();
-            CharacterIds = new List<Guid>();
+            Settings = new CampaignSettings();
         }
-
-        public bool TryAddPlayer(Guid playerId)
+        public void AddPlayer(Guid playerId, string password)
         {
-            if (PlayerIds == null)
-                PlayerIds = new List<Guid>();
+            if (_playerIds.Contains(playerId))
+                throw new DomainException("Player já está na campanha");
 
-            if (PlayerIds.Count() >= MaxPlayers)
+            if (_playerIds.Count >= MaxPlayers)
+                throw new DomainException("Falha ao adicionar jogador à campanha / Capacidade maxima atingida");
+
+            if(Password != password)
+            {
+                throw new DomainException("Senha inválida.");
+            }
+
+            _playerIds.Add(playerId);
+        }
+        public bool TryAddCharacter(Guid characterId)
+        {
+            if (_characterIds.Contains(characterId))
+                throw new DomainException("Personagem já está na campanha.");
+
+            if(Settings.RequireApprovalForCharacters)
+            {
+                if (_characterRequests.Contains(characterId))
+                {
+                    throw new DomainException("O Mestre esta avaliando sua solicitação.");
+                }
+                _characterRequests.Add(characterId);
                 return false;
+            }
 
-            ((List<Guid>)PlayerIds).Add(playerId);
+            _characterIds.Add(characterId);
             return true;
         }
+
+        public void UpdateSettings(CampaignSettings newSettings) => Settings = newSettings
+            ?? throw new ArgumentNullException(nameof(newSettings));
     }
 }

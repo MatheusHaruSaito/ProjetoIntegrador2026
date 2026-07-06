@@ -42,19 +42,13 @@ namespace RpgDex.Infrastructure.Repositories
         public async Task<Campaign> UpdateAsync(Campaign newCampaign)
         {
             var filter = Builders<Campaign>.Filter.Eq(c => c.Id, newCampaign.Id);
-            var updatedCampaign = Builders<Campaign>.Update
-                .Set(c => c.Description, newCampaign.Description)
-                .Set(c => c.Title, newCampaign.Title)
-                .Set(c => c.IsActive, newCampaign.IsActive)
-                .Set(c => c.PlayerIds, newCampaign.PlayerIds)
-                .Set(c => c.CharacterIds, newCampaign.CharacterIds);
 
-            var options = new FindOneAndUpdateOptions<Campaign>
+            var options = new FindOneAndReplaceOptions<Campaign>
             {
                 ReturnDocument = ReturnDocument.After
             };
 
-            var result = await _entitie.FindOneAndUpdateAsync(filter, updatedCampaign,options);
+            var result = await _entitie.FindOneAndReplaceAsync(filter, newCampaign, options);
             return result;
         }
 
@@ -63,15 +57,9 @@ namespace RpgDex.Infrastructure.Repositories
             var filter = Builders<Campaign>.Filter.Eq(c => c.Id, Id);
             var updatedCampaign = Builders<Campaign>.Update
                 .Set(c => c.IsActive, ActiveState);
+
             var result = await _entitie.UpdateOneAsync(filter, updatedCampaign);
             return result.MatchedCount > 0;
-        }
-
-        public Task<Campaign> PushPlayer(Guid campaignId, Guid playerId)
-        {
-            var filter = Builders<Campaign>.Filter.Eq(c => c.Id, campaignId);
-            var update = Builders<Campaign>.Update.Push(c => c.PlayerIds, playerId);
-            return _entitie.FindOneAndUpdateAsync(filter, update);
         }
     }
 }

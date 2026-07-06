@@ -13,8 +13,9 @@ namespace RpgDex.Application.Dto
         public Guid GameMasterId { get; set; }
         public int MaxPlayers { get; set; }
         public string? IconPath { get; set; }
-        public IEnumerable<Guid>? PlayerIds { get; set; }
-        public IEnumerable<Guid>? CharacterIds { get; set; }
+        public IReadOnlyCollection<Guid>? PlayerIds { get; set; }
+        public IReadOnlyCollection<Guid>? CharacterIds { get; set; }
+        public IReadOnlyCollection<Guid>? CharacterRequests { get; set; }
 
     }
 }

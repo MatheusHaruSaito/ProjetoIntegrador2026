@@ -161,5 +161,26 @@ namespace RpgDex.WebApi.Controllers
                 data = result.Value
             });
         }
+        [HttpPut("AddCharacter")]
+        public async Task<ActionResult<string>> AddCharacterRequest(AddCharacterToCampaignRequest request)
+        {
+
+            var result = await _campaignService.AddCharacterRequest(request);
+
+            if (result.IsFailure)
+            {
+                return NotFound(new
+                {
+                    success = result.IsSuccess,
+                    message = result.Error,
+                    data = result.Value
+                });
+            }
+            return Ok(new
+            {
+                success = result.IsSuccess,
+                data = result.Value
+            });
+        }
     }
 }

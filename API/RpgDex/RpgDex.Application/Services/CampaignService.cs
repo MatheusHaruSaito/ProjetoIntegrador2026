@@ -3,6 +3,7 @@ using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
 using RpgDex.Application.Interfaces;
 using RpgDex.Domain.Entities;
+using RpgDex.Domain.Exceptions;
 using RpgDex.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,16 @@ namespace RpgDex.Application.Services
 {
     public class CampaignService : ICampaignService
     {
-        ICampaignRepository _campaignRepository;
-        IFileService _fileService;
+        private readonly ICampaignRepository _campaignRepository;
+        private readonly IFileService _fileService;
         private readonly IUserRepository _userRepository;
-        public CampaignService(ICampaignRepository campaignRepository, IFileService fileService, IUserRepository userRepository)
+        private readonly ICharacterRepository _characterRepository;
+        public CampaignService(ICampaignRepository campaignRepository, IFileService fileService, IUserRepository userRepository, ICharacterRepository characterRepository)
         {
             _campaignRepository = campaignRepository;
             _fileService = fileService;
             _userRepository = userRepository;
+            _characterRepository = characterRepository;
         }
 
         public async Task<Result<CampaignResponse>> Create(CreateCampaignRequest request)
@@ -135,9 +138,9 @@ namespace RpgDex.Application.Services
             return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
         }
 
-        public async Task<Result<bool>> SetActiveState(Guid Id, bool ActiveState)
+        public async Task<Result<bool>> SetActiveState(Guid Id, bool activeState)
         {
-            var result = await _campaignRepository.SetActiveState(Id, ActiveState);
+            var result = await _campaignRepository.SetActiveState(Id, activeState);
             if(!result)
             {
                 return Result<bool>.Failure("Falha ao atualizar estado da campanha");
@@ -148,7 +151,7 @@ namespace RpgDex.Application.Services
         public async Task<Result<CampaignResponse>> AddPlayerRequest(JoinCampaignRequest request)
         {
             var campaign = await _campaignRepository.GetByIdAsync(request.CampaignId);
-            if(campaign is null)
+            if (campaign is null)
             {
                 return Result<CampaignResponse>.Failure("Campanha não encontrada");
             }
@@ -160,31 +163,61 @@ namespace RpgDex.Application.Services
                 return Result<CampaignResponse>.Failure("Jogador não encontrado");
             }
             //Jogador Encontrado
-            if(campaign.Password != request.Password)
-            {
-                return Result<CampaignResponse>.Failure("Senha incorreta");
-            }
-            //Senha verificada
 
-            if(campaign.PlayerIds.Contains(player.Id))
+            try
             {
-                return Result<CampaignResponse>.Failure("Jogador já está na campanha");
+                campaign.AddPlayer(player.Id, request.Password);
             }
-            //Player Não esta na campanha
-            var playerAdded = campaign.TryAddPlayer(player.Id);
-            if (!playerAdded)
+            catch (DomainException ex)
             {
-                return Result<CampaignResponse>.Failure("Falha ao adicionar jogador à campanha / Capacidade maxima atingida");
+                return Result<CampaignResponse>.Failure(ex.Message);
             }
+
             var result = await _campaignRepository.UpdateAsync(campaign);
             if(result is null)
             {
                 return Result<CampaignResponse>.Failure("Falha ao atualizar campanha");
             }
-            //Player Adicionado
 
             //Tudo Certo :ThumbsUp:
             return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
+        }
+
+        public async Task<Result<string>> AddCharacterRequest(AddCharacterToCampaignRequest request)
+        {
+            var characterFound = await _characterRepository.GetByIdAsync(request.CharacterId);
+            if(characterFound is null) {
+                return Result<string>.Failure("Personagem não encontrado");
+            }
+            //Personagem Encontrado
+
+            var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
+            if(campaignFound is null) {
+                return Result<string>.Failure("Campanha não encontrada");
+            }
+            //Campanha Encontrada
+            string successMessage;
+            try
+            {
+                //Retorna falso caso seja necessario que o mestre revise a ficha do personagem antes de adiciona-lo a campanha
+                var characterAdded = campaignFound.TryAddCharacter(request.CharacterId);
+
+                successMessage = characterAdded
+                    ? "Personagem adicionado à campanha"
+                    : "O mestre da campanha precisa aprovar a ficha do personagem antes de adiciona-lo a campanha";
+            }
+            catch (DomainException ex)
+            {
+                return Result<string>.Failure(ex.Message);
+            }
+
+
+            var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
+            if(updatedCampaign is null)
+            {
+                return Result<string>.Failure("Falha ao atualizar campanha");
+            }
+            return Result<string>.Success(successMessage);
         }
     }
 }
