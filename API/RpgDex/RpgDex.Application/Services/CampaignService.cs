@@ -13,10 +13,12 @@ namespace RpgDex.Application.Services
     public class CampaignService : ICampaignService
     {
         ICampaignRepository _campaignRepository;
+        IFileService _fileService;
         private readonly IUserRepository _userRepository;
-        public CampaignService(ICampaignRepository campaignRepository, IUserRepository userRepository)
+        public CampaignService(ICampaignRepository campaignRepository, IFileService fileService, IUserRepository userRepository)
         {
             _campaignRepository = campaignRepository;
+            _fileService = fileService;
             _userRepository = userRepository;
         }
 
@@ -33,6 +35,18 @@ namespace RpgDex.Application.Services
             if(request.MaxPlayers > 15)
             {
                 campaign.MaxPlayers = 15;
+            }
+            //Salvar Icone, caso exista
+            if(request.Icon is not null)
+            {
+                try
+                {
+                    campaign.IconPath = await _fileService.UploadFileAsync(request.Icon, campaign.Id.ToString());
+                }
+                catch
+                {
+                    return Result<CampaignResponse>.Failure("Falha ao fazer upload do ícone");
+                }
             }
 
             var result = await _campaignRepository.InsertAsync(campaign);
@@ -97,6 +111,19 @@ namespace RpgDex.Application.Services
             campaign.Description = request.Description;
             campaign.IsActive = request.IsActive;
             campaign.MaxPlayers = request.MaxPlayers;
+
+            //Altera Icone, caso request envie outro
+            if (request.Icon is not null)
+            {
+                try
+                {
+                    campaign.IconPath = await _fileService.UploadFileAsync(request.Icon, campaign.Id.ToString());
+                }
+                catch
+                {
+                    return Result<CampaignResponse>.Failure("Falha ao fazer upload do ícone");
+                }
+            }
 
             var result = await _campaignRepository.UpdateAsync(campaign);
 

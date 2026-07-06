@@ -11,6 +11,7 @@ namespace RpgDex.Domain.Entities
         public string? Description{ get; set; }
         public string? Password { get; set; }
         public int MaxPlayers { get; set; }
+        public string? IconPath { get; set; }
         public bool IsActive { get; set; } = true;
         public Guid GameMasterId{ get; set; }
         public IEnumerable<Guid>? PlayerIds { get; set; }

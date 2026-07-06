@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,6 +10,7 @@ namespace RpgDex.Application.Dto
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
+        public IFormFile? Icon { get; set; }
         public bool IsActive { get; set; } = true;
         public int MaxPlayers { get; set; }
 

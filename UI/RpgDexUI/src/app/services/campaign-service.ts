@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CreateCampaignRequest } from '../../models/createCampaignRequest';
 import { UpdateCampaignRequest } from '../../models/updateCampaignRequest';
 import { Observable } from 'rxjs';
-import { CampaignResponse } from '../../models/campaignResponse';
+import { Campaign } from '../../models/campaign';
 import { ApiResponse } from '../../models/apiResponse';
 import { JoinCampaignRequest } from '../../models/JoinCampaignRequest';
 
@@ -17,25 +17,25 @@ export class CampaignService {
 
   http = inject(HttpClient);
 
-  Post(request: CreateCampaignRequest): Observable<ApiResponse<CampaignResponse>> {
-    return this.http.post<ApiResponse<CampaignResponse>>(`${this.env}`, request);
+  Post(request: CreateCampaignRequest): Observable<ApiResponse<Campaign>> {
+    return this.http.post<ApiResponse<Campaign>>(`${this.env}`, request);
   }
-  GetAll(): Observable<ApiResponse<CampaignResponse[]>> {
-    return this.http.get<ApiResponse<CampaignResponse[]>>(`${this.env}`);
+  GetAll(): Observable<ApiResponse<Campaign[]>> {
+    return this.http.get<ApiResponse<Campaign[]>>(`${this.env}`);
   }
-  GetAllByUserId(userId: string): Observable<ApiResponse<CampaignResponse[]>> {
-    return this.http.get<ApiResponse<CampaignResponse[]>>(`${this.env}/${userId}/All`);
+  GetAllByUserId(userId: string): Observable<ApiResponse<Campaign[]>> {
+    return this.http.get<ApiResponse<Campaign[]>>(`${this.env}/${userId}/All`);
   }
-  GetById(Id: String): Observable<ApiResponse<CampaignResponse>> {
-    return this.http.get<ApiResponse<CampaignResponse>>(`${this.env}/${Id}`);
+  GetById(Id: String): Observable<ApiResponse<Campaign>> {
+    return this.http.get<ApiResponse<Campaign>>(`${this.env}/${Id}`);
   }
-  Update(campaign: UpdateCampaignRequest): Observable<ApiResponse<CampaignResponse>> {
-    return this.http.put<ApiResponse<CampaignResponse>>(`${this.env}`, campaign);
+  Update(campaign: UpdateCampaignRequest): Observable<ApiResponse<Campaign>> {
+    return this.http.put<ApiResponse<Campaign>>(`${this.env}`, campaign);
   }
-  Delete(Id: String): Observable<ApiResponse<CampaignResponse>> {
-    return this.http.put<ApiResponse<CampaignResponse>>(`${this.env}/SetActiveState/${Id}`, '');
+  Delete(Id: String): Observable<ApiResponse<Campaign>> {
+    return this.http.put<ApiResponse<Campaign>>(`${this.env}/SetActiveState/${Id}`, '');
   }
-  AddPlayer(request: JoinCampaignRequest): Observable<ApiResponse<CampaignResponse>> {
-    return this.http.put<ApiResponse<CampaignResponse>>(`${this.env}/AddPlayer`, request);
+  AddPlayer(request: JoinCampaignRequest): Observable<ApiResponse<Campaign>> {
+    return this.http.put<ApiResponse<Campaign>>(`${this.env}/AddPlayer`, request);
   }
 }
