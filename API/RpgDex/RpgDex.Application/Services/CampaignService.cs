@@ -241,6 +241,12 @@ namespace RpgDex.Application.Services
                 return Result<string>.Failure("Usuário Logado não encontrado");
             }
             //Usuario Encontrado
+
+            var isUserGameMaster = campaignFound.GameMasterId == userFound.Id;
+            if (!isUserGameMaster)
+            {
+                return Result<string>.Failure("Apenas o mestre da campanha pode aceitar ou rejeitar personagens");
+            }
             string successMessage;
             try
             {
