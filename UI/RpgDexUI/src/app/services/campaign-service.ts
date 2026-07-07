@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
 import { Campaign } from '../../models/campaign';
 import { ApiResponse } from '../../models/apiResponse';
 import { JoinCampaignRequest } from '../../models/JoinCampaignRequest';
+import { AddCharacterToCampaignRequest } from '../../models/AddCharacterToCampaignRequest';
+import { AcceptCharacterToCampaignRequest } from '../../models/AcceptCharacterToCampaignRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -37,5 +39,11 @@ export class CampaignService {
   }
   AddPlayer(request: JoinCampaignRequest): Observable<ApiResponse<Campaign>> {
     return this.http.put<ApiResponse<Campaign>>(`${this.env}/AddPlayer`, request);
+  }
+  AddCharacter(request: AddCharacterToCampaignRequest): Observable<ApiResponse<String>> {
+    return this.http.put<ApiResponse<String>>(`${this.env}/AddCharacter`, request);
+  }
+  AcceptCharacter(request: AcceptCharacterToCampaignRequest): Observable<ApiResponse<String>> {
+    return this.http.put<ApiResponse<String>>(`${this.env}/AcceptCharacter`, request);
   }
 }
