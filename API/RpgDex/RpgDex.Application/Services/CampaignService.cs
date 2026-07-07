@@ -148,7 +148,7 @@ namespace RpgDex.Application.Services
             return Result<bool>.Success(result);
         }
 
-        public async Task<Result<CampaignResponse>> AddPlayerRequest(JoinCampaignRequest request)
+        public async Task<Result<CampaignResponse>> AddPlayer(JoinCampaignRequest request)
         {
             var campaign = await _campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaign is null)
@@ -183,7 +183,7 @@ namespace RpgDex.Application.Services
             return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
         }
 
-        public async Task<Result<string>> AddCharacterRequest(AddCharacterToCampaignRequest request)
+        public async Task<Result<string>> AddCharacter(AddCharacterToCampaignRequest request)
         {
             var characterFound = await _characterRepository.GetByIdAsync(request.CharacterId);
             if(characterFound is null) {
@@ -212,6 +212,54 @@ namespace RpgDex.Application.Services
             }
 
 
+            var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
+            if(updatedCampaign is null)
+            {
+                return Result<string>.Failure("Falha ao atualizar campanha");
+            }
+            return Result<string>.Success(successMessage);
+        }
+
+        public async Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request)
+        {
+            var characterFound = await _characterRepository.GetByIdAsync(request.CharacterId);
+            if (characterFound is null)
+            {
+                return Result<string>.Failure("Personagem não encontrado");
+            }
+            //Personagem Encontrado
+
+            var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
+            if (campaignFound is null)
+            {
+                return Result<string>.Failure("Campanha não encontrada");
+            }
+            //Campanha Encontrada
+            var userFound = await _userRepository.GetByIdAsync(request.UserId);
+            if (userFound is null)
+            {
+                return Result<string>.Failure("Usuário Logado não encontrado");
+            }
+            //Usuario Encontrado
+            string successMessage;
+            try
+            {
+                if (request.IsAccepted)
+                {
+                    campaignFound.AcceptCharacter(request.CharacterId);
+                    successMessage = "Personagem aceito na campanha";
+                }
+                else
+                {
+                    campaignFound.RejectCharacter(request.CharacterId);
+                    successMessage = "Personagem rejeitado da campanha";
+                }
+            }
+            catch (DomainException ex)
+            {
+                return Result<string>.Failure(ex.Message);
+            }
+            //Personagem aceito na campanha
             var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
             if(updatedCampaign is null)
             {

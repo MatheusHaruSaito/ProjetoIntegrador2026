@@ -65,9 +65,9 @@ namespace RpgDex.Application.Mapping
                 .Map(dest => dest.Title, src => src.Title)
                 .Map(dest => dest.Description, src => src.Description)
                 .Map(dest => dest.MaxPlayers, src => src.MaxPlayers)
-                .Map(dest => dest.PlayerIds, "_playerIds")
-                .Map(dest => dest.CharacterIds, "_characterIds")
-                .Map(dest => dest.CharacterRequests, "_characterRequests")
+                .Map(dest => dest.PlayerIds, src => src.PlayerIds)
+                .Map(dest => dest.CharacterIds, src => src.CharacterIds)
+                .Map(dest => dest.CharacterRequests, src => src.CharacterRequests)
                 .Map(dest => dest.IconPath, src => string.IsNullOrEmpty(src.IconPath)
                  ? null
                  : $"http://localhost:8080/api/File/{src.IconPath}");

@@ -75,5 +75,19 @@ namespace RpgDex.Domain.Entities
 
         public void UpdateSettings(CampaignSettings newSettings) => Settings = newSettings
             ?? throw new ArgumentNullException(nameof(newSettings));
+
+        public void AcceptCharacter(Guid characterId)
+        {
+            if (!_characterRequests.Contains(characterId))
+                throw new DomainException("Personagem não está na lista de solicitações.");
+            _characterRequests.Remove(characterId);
+            _characterIds.Add(characterId);
+        }
+        public void RejectCharacter(Guid characterId)
+        {
+            if (!_characterRequests.Contains(characterId))
+                throw new DomainException("Personagem não está na lista de solicitações.");
+            _characterRequests.Remove(characterId);
+        }
     }
 }

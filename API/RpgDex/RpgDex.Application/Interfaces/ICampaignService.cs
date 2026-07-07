@@ -14,8 +14,10 @@ namespace RpgDex.Application.Interfaces
         public Task<Result<CampaignResponse>> GetById(Guid id);
         public Task<Result<CampaignResponse>> Update(UpdateCampaignRequest request);
         public Task<Result<bool>> SetActiveState(Guid Id, bool activeState);
-        public Task<Result<CampaignResponse>> AddPlayerRequest(JoinCampaignRequest request);
-        public Task<Result<string>> AddCharacterRequest(AddCharacterToCampaignRequest request);
+        public Task<Result<CampaignResponse>> AddPlayer(JoinCampaignRequest request);
+        public Task<Result<string>> AddCharacter(AddCharacterToCampaignRequest request);
+        public Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request);
+
         //Pensar Melhor sobre essa funcionalidade
         //public Task<Result<CampaignResponse>> GenerateInvite();
 

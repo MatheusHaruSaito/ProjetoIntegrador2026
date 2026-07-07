@@ -21,22 +21,6 @@ using MongoDB.Driver.GridFS;
 var builder = WebApplication.CreateBuilder(args);
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
-if (!BsonClassMap.IsClassMapRegistered(typeof(Campaign)))
-{
-    BsonClassMap.RegisterClassMap<Campaign>(cm =>
-    {
-        cm.AutoMap();
-        cm.UnmapProperty(c => c.PlayerIds);
-        cm.UnmapProperty(c => c.CharacterIds);
-        cm.UnmapProperty(c => c.CharacterRequests);
-
-        // 2. Mapeia os campos privados associando-os aos nomes corretos
-        cm.MapField("_playerIds").SetElementName("PlayerIds");
-        cm.MapField("_characterIds").SetElementName("CharacterIds");
-        cm.MapField("_characterRequests").SetElementName("CharacterRequests");
-    });
-}
-
 // Add services to the container.
 
 builder.Services.AddSingleton<MongoDbContext>();

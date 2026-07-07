@@ -144,7 +144,7 @@ namespace RpgDex.WebApi.Controllers
         public async Task<ActionResult<bool>> JoinCampaignRequest(JoinCampaignRequest request)
         {
 
-            var result = await _campaignService.AddPlayerRequest(request);
+            var result = await _campaignService.AddPlayer(request);
 
             if (result.IsFailure)
             {
@@ -165,7 +165,7 @@ namespace RpgDex.WebApi.Controllers
         public async Task<ActionResult<string>> AddCharacterRequest(AddCharacterToCampaignRequest request)
         {
 
-            var result = await _campaignService.AddCharacterRequest(request);
+            var result = await _campaignService.AddCharacter(request);
 
             if (result.IsFailure)
             {
@@ -182,5 +182,27 @@ namespace RpgDex.WebApi.Controllers
                 data = result.Value
             });
         }
+        [HttpPut("AcceptCharacter")]
+        public async Task<ActionResult<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request)
+        {
+
+            var result = await _campaignService.AcceptCharacter(request);
+
+            if (result.IsFailure)
+            {
+                return NotFound(new
+                {
+                    success = result.IsSuccess,
+                    message = result.Error,
+                    data = result.Value
+                });
+            }
+            return Ok(new
+            {
+                success = result.IsSuccess,
+                data = result.Value
+            });
+        }
+
     }
 }
