@@ -39,55 +39,65 @@ namespace RpgDex.Domain.Entities
         {
             Settings = new CampaignSettings();
         }
-        public void AddPlayer(Guid playerId, string password)
+        public (string message, bool IsSuccess) TryAddPlayer(Guid playerId, string password)
         {
             if (_playerIds.Contains(playerId))
-                throw new DomainException("Player já está na campanha");
+                return ("Player já está na campanha", false);
 
             if (_playerIds.Count >= MaxPlayers)
-                throw new DomainException("Falha ao adicionar jogador à campanha / Capacidade maxima atingida");
+                return ("Falha ao adicionar jogador à campanha / Capacidade maxima atingida", false);
 
             if(Password != password)
             {
-                throw new DomainException("Senha inválida.");
+                return ("Senha inválida.", false);
             }
 
             _playerIds.Add(playerId);
+            return ("Jogador adicionado à campanha.", true);
         }
-        public bool TryAddCharacter(Guid characterId)
+        public (string message, bool IsSuccess) TryAddCharacter(Guid characterId)
         {
             if (_characterIds.Contains(characterId))
-                throw new DomainException("Personagem já está na campanha.");
+                return ("Personagem já está na campanha", false);
 
-            if(Settings.RequireApprovalForCharacters)
+            if (Settings.RequireApprovalForCharacters)
             {
                 if (_characterRequests.Contains(characterId))
                 {
-                    throw new DomainException("O Mestre esta avaliando sua solicitação.");
+                    return ("Personagem já está aguardando aprovação.", false);
                 }
                 _characterRequests.Add(characterId);
-                return false;
+                return ("Solicitação enviada para o Mestre da campanha.", true);
             }
 
             _characterIds.Add(characterId);
-            return true;
+            return ("Personagem adicionado à campanha.", true);
         }
 
         public void UpdateSettings(CampaignSettings newSettings) => Settings = newSettings
             ?? throw new ArgumentNullException(nameof(newSettings));
 
-        public void AcceptCharacter(Guid characterId)
+        public (string message, bool IsSuccess) TryAcceptCharacter(Guid characterId)
         {
             if (!_characterRequests.Contains(characterId))
-                throw new DomainException("Personagem não está na lista de solicitações.");
+                return ("Personagem não está aguardando aprovação.", false);
             _characterRequests.Remove(characterId);
             _characterIds.Add(characterId);
+            return ("Personagem aceito na campanha.", true);
         }
-        public void RejectCharacter(Guid characterId)
+        public (string message, bool IsSuccess) TryRejectCharacter(Guid characterId)
         {
             if (!_characterRequests.Contains(characterId))
-                throw new DomainException("Personagem não está na lista de solicitações.");
+                return ("Personagem não está aguardando aprovação.", false);
             _characterRequests.Remove(characterId);
+            return ("Solicitação de personagem rejeitada.", true);
+        }
+        public (string message, bool IsSuccess) TryRemovePlayer(Guid playerId)
+        {
+            if (!PlayerIds.Contains(playerId))
+                return ("Jogador não está na campanha.", false);
+            _playerIds.Remove(playerId);
+            return ("Jogador removido da campanha.", true);
         }
     }
 }

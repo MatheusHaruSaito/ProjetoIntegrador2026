@@ -148,39 +148,44 @@ namespace RpgDex.Application.Services
             return Result<bool>.Success(result);
         }
 
-        public async Task<Result<CampaignResponse>> AddPlayer(JoinCampaignRequest request)
+        public async Task<Result<string>> AddPlayer(JoinCampaignRequest request)
         {
             var campaign = await _campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaign is null)
             {
-                return Result<CampaignResponse>.Failure("Campanha não encontrada");
+                return Result<string>.Failure("Campanha não encontrada");
             }
             //Campanha encontrada
 
             var player = await _userRepository.GetByIdAsync(request.PlayerId);
             if(player is null)
             {
-                return Result<CampaignResponse>.Failure("Jogador não encontrado");
+                return Result<string>.Failure("Jogador não encontrado");
             }
             //Jogador Encontrado
 
-            try
+            var (message, IsSuccess) = campaign.TryAddPlayer(request.PlayerId, request.Password);
+            if (!IsSuccess)
             {
-                campaign.AddPlayer(player.Id, request.Password);
+                return Result<string>.Failure(message);
             }
-            catch (DomainException ex)
-            {
-                return Result<CampaignResponse>.Failure(ex.Message);
-            }
+            //try
+            //{
+            //    campaign.AddPlayer(player.Id, request.Password);
+            //}
+            //catch (DomainException ex)
+            //{
+            //    return Result<CampaignResponse>.Failure(ex.Message);
+            //}
 
             var result = await _campaignRepository.UpdateAsync(campaign);
             if(result is null)
             {
-                return Result<CampaignResponse>.Failure("Falha ao atualizar campanha");
+                return Result<string>.Failure("Falha ao atualizar campanha");
             }
 
             //Tudo Certo :ThumbsUp:
-            return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
+            return Result<string>.Success("Jogador adicionado à campanha com sucesso");
         }
 
         public async Task<Result<string>> AddCharacter(AddCharacterToCampaignRequest request)
@@ -196,19 +201,10 @@ namespace RpgDex.Application.Services
                 return Result<string>.Failure("Campanha não encontrada");
             }
             //Campanha Encontrada
-            string successMessage;
-            try
+            var (message, IsSuccess) = campaignFound.TryAddCharacter(request.CharacterId);
+            if (!IsSuccess)
             {
-                //Retorna falso caso seja necessario que o mestre revise a ficha do personagem antes de adiciona-lo a campanha
-                var characterAdded = campaignFound.TryAddCharacter(request.CharacterId);
-
-                successMessage = characterAdded
-                    ? "Personagem adicionado à campanha"
-                    : "O mestre da campanha precisa aprovar a ficha do personagem antes de adiciona-lo a campanha";
-            }
-            catch (DomainException ex)
-            {
-                return Result<string>.Failure(ex.Message);
+                return Result<string>.Failure(message);
             }
 
 
@@ -217,7 +213,7 @@ namespace RpgDex.Application.Services
             {
                 return Result<string>.Failure("Falha ao atualizar campanha");
             }
-            return Result<string>.Success(successMessage);
+            return Result<string>.Success(message);
         }
 
         public async Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request)
@@ -248,24 +244,18 @@ namespace RpgDex.Application.Services
                 return Result<string>.Failure("Apenas o mestre da campanha pode aceitar ou rejeitar personagens");
             }
             string successMessage;
-            try
+
+            var (message, IsSuccess) = campaignFound.TryAcceptCharacter(request.CharacterId);
+            if (IsSuccess)
             {
-                if (request.IsAccepted)
-                {
-                    campaignFound.AcceptCharacter(request.CharacterId);
-                    successMessage = "Personagem aceito na campanha";
-                }
-                else
-                {
-                    campaignFound.RejectCharacter(request.CharacterId);
-                    successMessage = "Personagem rejeitado da campanha";
-                }
+                successMessage = message;
             }
-            catch (DomainException ex)
+            else
             {
-                return Result<string>.Failure(ex.Message);
+                return Result<string>.Failure(message);
             }
             //Personagem aceito na campanha
+
             var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
             if(updatedCampaign is null)
             {
@@ -273,5 +263,38 @@ namespace RpgDex.Application.Services
             }
             return Result<string>.Success(successMessage);
         }
+
+        public async Task<Result<string>> RemovePlayer(KickPlayerFromCampaignRequest request)
+        {
+            var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
+            if (campaignFound is null)
+            {
+                return Result<string>.Failure("Campanha não encontrada");
+            }
+            //Usuario Encontrado
+            var isUserGameMaster = campaignFound.GameMasterId == request.IssuerPlayerId;
+            if (!isUserGameMaster)
+            {
+                return Result<string>.Failure("Apenas o mestre da campanha pode expulsar jogadores");
+            }
+            if (!campaignFound.PlayerIds.Contains(request.PlayerId))
+            {
+                return Result<string>.Failure("Jogador a ser expulso não encontrado");
+            }
+            //Jogador a ser expulso encontrado
+            var (message, IsSuccess) = campaignFound.TryRemovePlayer(request.PlayerId);
+            if (!IsSuccess)
+            {
+                return Result<string>.Failure(message);
+            }
+            var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
+            if (updatedCampaign is null)
+            {
+                return Result<string>.Failure("Falha ao atualizar campanha");
+            }
+
+            return Result<string>.Success(message);
+        }
+
     }
 }
