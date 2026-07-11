@@ -50,7 +50,7 @@ export class CampaignService {
   RemovePlayer(request:RemovePlayerFromCampaignRequest): Observable<ApiResponse<String>> {
     return this.http.put<ApiResponse<String>>(`${this.env}/RemovePlayer`, request);
   }
-    UpdateSettings(request:UpdateCampaignSettingsRequest): Observable<ApiResponse<String>> {
+  UpdateSettings(request:UpdateCampaignSettingsRequest): Observable<ApiResponse<String>> {
     return this.http.put<ApiResponse<String>>(`${this.env}/UpdateSettings`, request);
   }
 }

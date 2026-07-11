@@ -111,7 +111,7 @@ namespace RpgDex.Application.Services
                 return Result<CampaignResponse>.Failure("Remova Jogadores antes de diminuir a capacidade da campanha");
             }
 
-            campaign.Update(request.Title, request.Description, request.MaxPlayers);
+            campaign.Update(request.Title, request.Description, request.MaxPlayers,request.NextSession);
 
             //Altera Icone, caso request envie outro
             if (request.Icon is not null)

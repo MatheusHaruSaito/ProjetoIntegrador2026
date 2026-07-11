@@ -25,6 +25,8 @@ namespace RpgDex.Domain.Entities
         public int MaxPlayers { get; set; }
         public string? IconPath { get; set; }
         public bool IsActive { get; set; } = true;
+        public DateTime NextSession { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
         public Guid GameMasterId{ get; set; }
         public CampaignSettings? Settings { get; set; }
 
@@ -74,11 +76,12 @@ namespace RpgDex.Domain.Entities
             return ("Personagem adicionado à campanha.", true);
         }
 
-        public void Update(string title, string? description, int maxPlayers)
+        public void Update(string title, string? description, int maxPlayers, DateTime nextSession)
         {
             Title = title;
             Description = description;
             MaxPlayers = maxPlayers;
+            NextSession = nextSession;
         }
         public void UpdateSettings(CampaignSettings newSettings) => Settings = newSettings
             ?? throw new ArgumentNullException(nameof(newSettings));

@@ -10,6 +10,7 @@ namespace RpgDex.Application.Dto
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
+        public DateTime NextSession { get; set; }
         public IFormFile? Icon { get; set; }
         public int MaxPlayers { get; set; }
 
