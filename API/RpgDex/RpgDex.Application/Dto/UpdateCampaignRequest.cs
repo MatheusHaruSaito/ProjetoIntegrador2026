@@ -11,7 +11,6 @@ namespace RpgDex.Application.Dto
         public string Title { get; set; }
         public string? Description { get; set; }
         public IFormFile? Icon { get; set; }
-        public bool IsActive { get; set; } = true;
         public int MaxPlayers { get; set; }
 
     }

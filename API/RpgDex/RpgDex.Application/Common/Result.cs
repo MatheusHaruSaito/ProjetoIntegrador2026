@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RpgDex.Application.Common
 {
@@ -14,13 +12,13 @@ namespace RpgDex.Application.Common
         public Result(bool IsSuccess, T? Value, string Error)
         {
             this.IsSuccess = IsSuccess;
-            this.Value = Value;
+            this.Value = Value; 
             this.Error = Error;
         }
 
         public static Result<T> Success(T Value) => new Result<T>(true, Value, null);
         public static Result<T> Failure(string Error) => new Result<T>(false, default, Error);
-
-
     }
+
+   
 }

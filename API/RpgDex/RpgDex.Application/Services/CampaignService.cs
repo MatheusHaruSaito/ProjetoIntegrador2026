@@ -5,6 +5,7 @@ using RpgDex.Application.Interfaces;
 using RpgDex.Domain.Entities;
 using RpgDex.Domain.Exceptions;
 using RpgDex.Domain.Interfaces;
+using RpgDex.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -110,10 +111,7 @@ namespace RpgDex.Application.Services
                 return Result<CampaignResponse>.Failure("Remova Jogadores antes de diminuir a capacidade da campanha");
             }
 
-            campaign.Title = request.Title;
-            campaign.Description = request.Description;
-            campaign.IsActive = request.IsActive;
-            campaign.MaxPlayers = request.MaxPlayers;
+            campaign.Update(request.Title, request.Description, request.MaxPlayers);
 
             //Altera Icone, caso request envie outro
             if (request.Icon is not null)
@@ -296,5 +294,23 @@ namespace RpgDex.Application.Services
             return Result<string>.Success(message);
         }
 
+        public async Task<Result<string>> UpdateConfiguration(UpdateCampaignSettingsRequest request)
+        {
+            var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
+            if (campaignFound is null)
+            {
+                return Result<string>.Failure("Campanha não encontrada");
+            }
+
+            campaignFound.UpdateSettings(request.Adapt<CampaignSettings>());
+
+            var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
+            if (updatedCampaign is null)
+            {
+                return Result<string>.Failure("Falha ao atualizar Configurações da campanha");
+            }
+
+            return Result<string>.Success("Configurações da campanha atualizadas com sucesso");
+        }
     }
 }

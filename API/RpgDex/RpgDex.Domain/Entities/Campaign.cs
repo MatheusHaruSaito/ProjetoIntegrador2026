@@ -74,6 +74,12 @@ namespace RpgDex.Domain.Entities
             return ("Personagem adicionado à campanha.", true);
         }
 
+        public void Update(string title, string? description, int maxPlayers)
+        {
+            Title = title;
+            Description = description;
+            MaxPlayers = maxPlayers;
+        }
         public void UpdateSettings(CampaignSettings newSettings) => Settings = newSettings
             ?? throw new ArgumentNullException(nameof(newSettings));
 

@@ -18,6 +18,8 @@ namespace RpgDex.Application.Interfaces
         public Task<Result<string>> AddCharacter(AddCharacterToCampaignRequest request);
         public Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request);
         public Task<Result<string>> RemovePlayer(KickPlayerFromCampaignRequest request);
+        public Task<Result<string>> UpdateConfiguration(UpdateCampaignSettingsRequest request);
+
 
 
         //Pensar Melhor sobre essa funcionalidade
