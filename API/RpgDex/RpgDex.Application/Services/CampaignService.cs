@@ -262,7 +262,7 @@ namespace RpgDex.Application.Services
             return Result<string>.Success(successMessage);
         }
 
-        public async Task<Result<string>> RemovePlayer(KickPlayerFromCampaignRequest request)
+        public async Task<Result<string>> RemovePlayer(RemovePlayerFromCampaignRequest request)
         {
             var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaignFound is null)

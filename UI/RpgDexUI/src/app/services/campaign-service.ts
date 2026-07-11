@@ -9,7 +9,8 @@ import { ApiResponse } from '../../models/apiResponse';
 import { JoinCampaignRequest } from '../../models/JoinCampaignRequest';
 import { AddCharacterToCampaignRequest } from '../../models/AddCharacterToCampaignRequest';
 import { AcceptCharacterToCampaignRequest } from '../../models/AcceptCharacterToCampaignRequest';
-
+import { RemovePlayerFromCampaignRequest } from '../../models/removePlayerFromCampaignRequest';
+import { UpdateCampaignSettingsRequest } from '../../models/updateCampaignSettingsRequest';
 @Injectable({
   providedIn: 'root',
 })
@@ -45,5 +46,11 @@ export class CampaignService {
   }
   AcceptCharacter(request: AcceptCharacterToCampaignRequest): Observable<ApiResponse<String>> {
     return this.http.put<ApiResponse<String>>(`${this.env}/AcceptCharacter`, request);
+  }
+  RemovePlayer(request:RemovePlayerFromCampaignRequest): Observable<ApiResponse<String>> {
+    return this.http.put<ApiResponse<String>>(`${this.env}/RemovePlayer`, request);
+  }
+    UpdateSettings(request:UpdateCampaignSettingsRequest): Observable<ApiResponse<String>> {
+    return this.http.put<ApiResponse<String>>(`${this.env}/UpdateSettings`, request);
   }
 }

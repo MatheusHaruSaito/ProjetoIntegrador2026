@@ -4,7 +4,7 @@ using System.Text;
 
 namespace RpgDex.Application.Dto
 {
-    public class KickPlayerFromCampaignRequest
+    public class RemovePlayerFromCampaignRequest
     {
         public Guid CampaignId { get; set; }
         public Guid IssuerPlayerId { get; set; }
