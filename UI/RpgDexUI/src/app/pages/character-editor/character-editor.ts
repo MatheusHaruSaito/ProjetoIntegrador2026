@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CharacterService } from '../../services/character-service';
 import { Character } from '../../../models/character';
 
-export interface AttrEntry  { key: string; value: string; }
+export interface AttrEntry { key: string; value: string; }
 export interface AttrGroup  { title: string; entries: AttrEntry[]; }
 
 @Component({
@@ -23,15 +23,23 @@ export class CharacterEditor implements OnInit {
 
   character: Character | null = null;
   editForm = { name: '', description: '' };
-
-  // Grupos de atributos — cada grupo vira uma seção visual e uma chave no backend
   groups: AttrGroup[] = [];
+
+  private savedState: { editForm: { name: string; description: string }; groups: AttrGroup[] } = {
+    editForm: { name: '', description: '' },
+    groups: [],
+  };
+
+  private captureSavedState(): void {
+    this.savedState = JSON.parse(JSON.stringify({ editForm: this.editForm, groups: this.groups }));
+  }
 
   selectedIconFile: File | null = null;
   iconPreviewUrl = '';
-  isSaving     = false;
-  errorMessage = '';
+  isSaving       = false;
+  errorMessage   = '';
   successMessage = '';
+  isEditing      = false;
 
   private readonly GUID_RE =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -42,7 +50,6 @@ export class CharacterEditor implements OnInit {
     this.loadCharacter(id);
   }
 
-  // ─── CARREGAR ──────────────────────────────────────────
   private loadCharacter(id: string): void {
     this.characterService.GetById(id).subscribe({
       next: (res) => {
@@ -52,41 +59,47 @@ export class CharacterEditor implements OnInit {
         this.groups = this.buildGroups((this.character as any).properties);
         this.selectedIconFile = null;
         this.iconPreviewUrl = '';
+        this.captureSavedState();
         this.cdr.detectChanges();
       },
       error: () => this.router.navigate(['/personagens']),
     });
   }
 
-  // ─── CONVERTER properties → AttrGroup[] ────────────────
-  /**
-   * Suporta todos os formatos que o backend pode retornar:
-   *   1. { "<title>_<uuid>": { title, data: [...] } }  ← novo formato (CharacterPropertyOrganization)
-   *   2. { "<key>": [ { Name, Value }, ... ] }          ← formato Properties[chave] com array
-   *   3. { "<key>": { Name, Value } }                   ← objeto único legado
-   *   4. { "<key>": "valor" }                           ← escalar simples
-   */
+  get hasUnsavedChanges(): boolean {
+    const current = JSON.stringify({ editForm: this.editForm, groups: this.groups });
+    const saved = JSON.stringify(this.savedState);
+    return current !== saved || !!this.selectedIconFile;
+  }
+
+  toggleEditMode(): void {
+    if (this.isEditing) {
+      if (this.hasUnsavedChanges) {
+        const confirmed = confirm('Você tem alterações não salvas. Deseja descartar?');
+        if (!confirmed) return;
+      }
+
+      this.editForm = JSON.parse(JSON.stringify(this.savedState.editForm));
+      this.groups = JSON.parse(JSON.stringify(this.savedState.groups));
+      this.selectedIconFile = null;
+      this.iconPreviewUrl = '';
+      this.errorMessage = '';
+    }
+    this.isEditing = !this.isEditing;
+  }
+
   private buildGroups(props: any): AttrGroup[] {
     if (!props || typeof props !== 'object') return [];
-    const groups: AttrGroup[] = [];
-
-    for (const [rawKey, val] of Object.entries(props)) {
-      const groupTitle = this.cleanKey(rawKey, val);
-      const entries    = this.extractEntries(val);
-      groups.push({ title: groupTitle, entries });
-    }
-
-    return groups;
+    return Object.entries(props).map(([rawKey, val]) => ({
+      title: this.cleanKey(rawKey, val),
+      entries: this.extractEntries(val),
+    }));
   }
 
   private cleanKey(rawKey: string, node: any): string {
-    // Usa o title do nó se disponível (novo formato)
-    if (node && typeof node === 'object' && !Array.isArray(node) && node.title) {
+    if (node && typeof node === 'object' && !Array.isArray(node) && node.title)
       return String(node.title);
-    }
-    // Chave é só um UUID — título genérico
     if (this.GUID_RE.test(rawKey)) return 'Grupo';
-    // Remove sufixo "_uuid" se presente
     return rawKey.replace(/_[0-9a-f-]{36}$/i, '').trim() || rawKey;
   }
 
@@ -98,99 +111,65 @@ export class CharacterEditor implements OnInit {
 
   private walkNode(node: any, parentKey: string, out: AttrEntry[]): void {
     if (node === null || node === undefined) return;
-
-    // Primitivo
     if (typeof node !== 'object') {
       if (parentKey) out.push({ key: parentKey, value: String(node) });
       return;
     }
-
-    // Array — itera itens
-    if (Array.isArray(node)) {
-      for (const item of node) this.walkNode(item, parentKey, out);
-      return;
-    }
-
-    // Formato { Name, Value } (legado ou novo)
+    if (Array.isArray(node)) { for (const i of node) this.walkNode(i, parentKey, out); return; }
     if ('Name' in node || 'Value' in node) {
-      const k = String((node.Name ?? node.name ?? parentKey) || 'Atributo');
-      const v = String(node.Value ?? node.value ?? '');
-      out.push({ key: k, value: v });
+      out.push({
+        key: String((node.Name ?? node.name ?? parentKey) || 'Atributo'),
+        value: String(node.Value ?? node.value ?? ''),
+      });
       return;
     }
-
-    // CharacterPropertyOrganization: { id, title, type, data: [...] }
     if ('data' in node) {
       const childKey = node.title ? String(node.title) : parentKey;
       const data = node.data;
-
       if (Array.isArray(data) && data.length > 0) {
-        for (const child of data) this.walkNode(child, childKey, out);
+        for (const c of data) this.walkNode(c, childKey, out);
         return;
       }
-
-      // Folha: data é objeto { value: "..." }
       if (data && typeof data === 'object' && 'value' in data) {
         out.push({ key: childKey, value: String(data['value'] ?? '') });
         return;
       }
-
-      // Folha: data é objeto vazio
       if (childKey) out.push({ key: childKey, value: '' });
       return;
     }
-
-    // Objeto genérico — itera entradas
-    for (const [k, v] of Object.entries(node)) {
-      this.walkNode(v, k, out);
-    }
+    for (const [k, v] of Object.entries(node)) this.walkNode(v, k, out);
   }
 
-  // ─── GRUPOS: adicionar / remover ───────────────────────
-  addGroup(): void {
-    this.groups.push({ title: '', entries: [] });
-  }
+  // ── Grupos ─────────────────────────────────────────────
+  addGroup(): void              { this.groups.push({ title: '', entries: [] }); }
+  removeGroup(i: number): void  { this.groups.splice(i, 1); }
+  addEntry(g: AttrGroup): void  { g.entries.push({ key: '', value: '' }); }
+  removeEntry(g: AttrGroup, i: number): void { g.entries.splice(i, 1); }
 
-  removeGroup(index: number): void {
-    this.groups.splice(index, 1);
-  }
-
-  // ─── ENTRADAS dentro de um grupo ───────────────────────
-  addEntry(group: AttrGroup): void {
-    group.entries.push({ key: '', value: '' });
-  }
-
-  removeEntry(group: AttrGroup, index: number): void {
-    group.entries.splice(index, 1);
-  }
-
-  // ─── ÍCONE ─────────────────────────────────────────────
+  // ── Ícone ──────────────────────────────────────────────
   onIconSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) { this.errorMessage = 'A imagem deve ter no máximo 2MB.'; return; }
     this.selectedIconFile = file;
     const reader = new FileReader();
-    reader.onload = (e) => { this.iconPreviewUrl = e.target?.result as string; this.cdr.detectChanges(); };
+    reader.onload = (e) => {
+      this.iconPreviewUrl = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
     reader.readAsDataURL(file);
   }
 
-  // ─── SALVAR ────────────────────────────────────────────
-  /**
-   * Cada grupo vira Properties[título] = JSON.stringify([{ Name, Value }, ...])
-   * compatível com o backend ASP.NET [FromForm] + Dictionary<string, JsonElement>.
-   */
+  // ── Salvar ─────────────────────────────────────────────
   Save(): void {
     this.errorMessage = '';
     this.successMessage = '';
-    if (!this.editForm.name.trim()) { this.errorMessage = 'O nome do personagem é obrigatório.'; return; }
 
-    const form = new FormData();
-    form.append('id',          this.character!.id);
-    form.append('name',        this.editForm.name.trim());
-    form.append('description', this.editForm.description ?? '');
+    if (!this.editForm.name.trim()) {
+      this.errorMessage = 'O nome do personagem é obrigatório.';
+      return;
+    }
 
-    // Monta um único objeto properties, igual ao edit-character-modal que funciona
     const propertiesObj: Record<string, any> = {};
     for (const group of this.groups) {
       const key = group.title.trim() || 'Grupo';
@@ -198,17 +177,38 @@ export class CharacterEditor implements OnInit {
         .filter(e => e.key.trim())
         .map(e => ({ Name: e.key.trim(), Value: e.value }));
     }
-    form.append('properties', JSON.stringify(propertiesObj));
 
-    if (this.selectedIconFile) form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
+    const form = new FormData();
+    form.append('id',          this.character!.id);
+    form.append('name',        this.editForm.name.trim());
+    form.append('description', this.editForm.description ?? '');
+    form.append('properties',  JSON.stringify(propertiesObj));
+    if (this.selectedIconFile) {
+      form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
+    }
 
     this.isSaving = true;
+
     this.characterService.Update(form as any).subscribe({
       next: () => {
         this.isSaving = false;
+
+        // Atualiza o objeto local sem fazer novo request
+        this.character = {
+          ...this.character!,
+          name: this.editForm.name.trim(),
+          description: this.editForm.description,
+          iconPath: this.iconPreviewUrl || this.character!.iconPath,
+        };
+
+        this.captureSavedState();
+        this.selectedIconFile = null;
+
+        // Volta para visualização e mostra feedback
+        this.isEditing = false;
         this.successMessage = 'Personagem salvo com sucesso!';
-        this.loadCharacter(this.character!.id);
-        setTimeout(() => (this.successMessage = ''), 3000);
+        this.cdr.detectChanges();
+        setTimeout(() => { this.successMessage = ''; this.cdr.detectChanges(); }, 3000);
       },
       error: (err) => {
         this.isSaving = false;
@@ -216,6 +216,7 @@ export class CharacterEditor implements OnInit {
         this.errorMessage =
           (body?.errors ? (Object.values(body.errors).flat() as string[])[0] : null)
           ?? body?.message ?? body?.title ?? 'Erro ao salvar.';
+        this.cdr.detectChanges();
       },
     });
   }
@@ -228,11 +229,10 @@ export class CharacterEditor implements OnInit {
     });
   }
 
-  goBack(): void { this.router.navigate(['/personagens']); }
-
-  private parseError(err: any): string | null {
-    const body = err?.error;
-    if (body?.errors) return (Object.values(body.errors).flat() as string[])[0] ?? null;
-    return body?.message ?? body?.title ?? null;
+  goBack(): void {
+    if (this.isEditing && this.hasUnsavedChanges) {
+      if (!confirm('Você tem alterações não salvas. Deseja sair mesmo assim?')) return;
+    }
+    this.router.navigate(['/personagens']);
   }
 }
