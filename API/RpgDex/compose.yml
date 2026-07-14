@@ -1,7 +1,16 @@
 ﻿services:
   app:
     image: mcr.microsoft.com/dotnet/sdk:10.0
-    command: ["dotnet", "watch", "run","--project", "RpgDex.WebApi/RpgDex.WebApi.csproj", "--urls","http://0.0.0.0:8080"]
+    command:
+      [
+        "dotnet",
+        "watch",
+        "run",
+        "--project",
+        "RpgDex.WebApi/RpgDex.WebApi.csproj",
+        "--urls",
+        "http://0.0.0.0:8080",
+      ]
     ports:
       - 8080:8080
     volumes:
@@ -18,6 +27,10 @@
       - JWT__Audience=${JWT_AUDIENCE}
       - Jwt__TokenValidityInMinutes=30
       - Jwt__RefreshTokenValidityInMinutes=60
+      - EmailSettings__SmtpServer=${EMAIL_SMTP_SERVER}
+      - EmailSettings__SmtpPort=${EMAIL_SMTP_PORT}
+      - EmailSettings__SmtpUsername=${EMAIL_SMTP_USERNAME}
+      - EmailSettings__SmtpPassword=${EMAIL_SMTP_PASSWORD}
   mongo:
     image: mongo:latest
     ports:
