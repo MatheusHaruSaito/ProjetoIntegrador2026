@@ -1,14 +1,13 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
 using RpgDex.Application.Interfaces;
 using RpgDex.Domain.Entities;
+using RpgDex.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
@@ -44,7 +43,7 @@ namespace RpgDex.Application.Services
                 AccessToken = accessToken,
     
             };
-            await _tokenService.StoreRefreshTokenAsync(newRefreshToken, user.Id);
+            await _tokenService.StoreRefreshTokenAsync(newRefreshToken.AccessToken, newRefreshToken.RefreshToken, user.Id);
 
             return Result<RefreshTokenModel>.Success(newRefreshToken);
         }
@@ -58,25 +57,29 @@ namespace RpgDex.Application.Services
             var token = await _tokenService.GetRefreshTokenByToken(tokenModel.RefreshToken);
             if(token is null)
             {
-                Result<RefreshTokenModel>.Failure("o token atual é invalido");
+                return Result<RefreshTokenModel>.Failure("o token atual é invalido");
             }
 
-            var principal = GetPrincipalFromExpiredToken(tokenModel.AccessToken);
+            var principal = _tokenService.GetPrincipalFromExpiredToken(tokenModel.AccessToken);
             if(principal is null)
             {
                 return Result<RefreshTokenModel>.Failure("o token atual é invalido");
 
             }
 
-            string userName = principal.Identity.Name;
-            var user = await _userManager.FindByNameAsync(userName);
+            string userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if(user is null|| tokenModel.RefreshToken != token.Token)
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null|| tokenModel.RefreshToken != token.Token)
             {
                 return Result<RefreshTokenModel>.Failure("o token do usuario é invalido");
             }
 
-            await _tokenService.RovokeTokenFromUserId(user.Id);
+            var tokenRevoked = await _tokenService.RevokeTokenByValue(tokenModel.RefreshToken);
+            if (!tokenRevoked) { 
+                return Result<RefreshTokenModel>.Failure("Token Invalido");
+            }
+
 
             var newAcessToken = await _tokenService.GenerateTokenAsync(user);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
@@ -86,7 +89,7 @@ namespace RpgDex.Application.Services
                 AccessToken = newAcessToken,
                 RefreshToken = newRefreshToken
             };
-            var savedToken = await _tokenService.StoreRefreshTokenAsync(newTokenModel,user.Id);
+            var savedToken = await _tokenService.StoreRefreshTokenAsync(newTokenModel.AccessToken, newTokenModel.RefreshToken, user.Id);
 
             if (!savedToken)
             {
@@ -107,25 +110,6 @@ namespace RpgDex.Application.Services
 
         }
 
-        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
-        {
-            var TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var principal = tokenHandler.ValidateToken(token, TokenValidationParameters, out SecurityToken securityToken);
-
-            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
-                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                    StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("Invalid Token");
-
-            return principal;
-        }
+   
     }
 }

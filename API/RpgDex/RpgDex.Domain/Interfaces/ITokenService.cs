@@ -1,10 +1,10 @@
-﻿using RpgDex.Application.Dto;
-using RpgDex.Domain.Entities;
+﻿using RpgDex.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 
-namespace RpgDex.Application.Interfaces
+namespace RpgDex.Domain.Interfaces
 {
     public interface ITokenService
     {
@@ -12,10 +12,9 @@ namespace RpgDex.Application.Interfaces
         string GenerateRefreshToken();
         Task<RefreshToken> GetRefreshTokenByToken(string Token);
         Task<RefreshToken> GetRefreshTokenByUserId(Guid userId);
-        Task<bool> StoreRefreshTokenAsync(RefreshTokenModel refreshTokenModel, Guid userId);
-        Task<bool> RovokeTokenFromUserId(Guid userId);
-
-
+        Task<bool> StoreRefreshTokenAsync(string accessToken, string refreshToken, Guid userId);
+        Task<bool> RevokeTokenByValue(string token);
+        ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token);
 
     }
 }

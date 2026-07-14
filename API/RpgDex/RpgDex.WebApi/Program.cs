@@ -17,6 +17,7 @@ using System.IdentityModel.Tokens.Jwt;
 using RpgDex.Infrastructure.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
+using RpgDex.Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
@@ -53,8 +54,12 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
 builder.Services.AddScoped<ICampaignService, CampaignService>();
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+//builder.Services.AddScoped<IEmailService, EmailService>();
 
-
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()
+    ?? throw new InvalidOperationException("Jwt Settings Not Found");
 MappingConfig.Configure();
 
 
@@ -100,8 +105,8 @@ builder.Services.AddAuthentication(option =>
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
             ClockSkew = TimeSpan.Zero,
             NameClaimType = JwtRegisteredClaimNames.UniqueName

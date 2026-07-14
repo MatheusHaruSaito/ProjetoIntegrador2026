@@ -2,27 +2,27 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver.Linq;
-using RpgDex.Application.Dto;
-using RpgDex.Application.Interfaces;
-using RpgDex.Domain.Entities;
 using RpgDex.Domain.Interfaces;
+using RpgDex.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using RpgDex.Infrastructure.Settings;
+using Microsoft.Extensions.Options;
 
-namespace RpgDex.Application.Services
+namespace RpgDex.Infrastructure.Services
 {
     public class TokenService : ITokenService
     {
-        private readonly IConfiguration _config;
+        private readonly JwtSettings _settings;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITokenRepository _tokenRepository;
-        public TokenService(IConfiguration config, UserManager<ApplicationUser> userManager, ITokenRepository tokenRepository)
+        public TokenService(IOptions<JwtSettings> settings, UserManager<ApplicationUser> userManager, ITokenRepository tokenRepository)
         {
-            _config = config;
+            _settings = settings.Value;
             _userManager = userManager;
             _tokenRepository = tokenRepository;
         }
@@ -39,16 +39,15 @@ namespace RpgDex.Application.Services
             {
                 claims.Add( new Claim(ClaimTypes.Role, role));
             }
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            _ = int.TryParse(_config["Jwt:TokenValidityInMinutes"],out int tokenExpiryDate);
             var tokenConfig = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
+                issuer: _settings.Issuer,
+                audience: _settings.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(tokenExpiryDate),
+                expires: DateTime.UtcNow.AddMinutes(_settings.TokenValidityInMinutes),
                 signingCredentials: credentials
+                
                 );
            return new JwtSecurityTokenHandler().WriteToken(tokenConfig);
         }
@@ -59,28 +58,24 @@ namespace RpgDex.Application.Services
         }
         public async Task<RefreshToken> GetRefreshTokenByUserId(Guid userId)
         {
-            var user = _userManager.FindByIdAsync(userId.ToString());
+            var user = await _userManager.FindByIdAsync(userId.ToString());
             if(user is null)
             {
                 return null;
             }
             return await _tokenRepository.GetRefreshTokenByUserIdAsync(userId);
         }
-        public async Task<bool> StoreRefreshTokenAsync(RefreshTokenModel refreshTokenModel, Guid userId)
+        public async Task<bool> StoreRefreshTokenAsync(string accessToken, string refreshToken, Guid userId)
         {
-            _ = int.TryParse(_config["Jwt:RefreshTokenValidityInMinutes"], out int expiryDate);
-            var refreshToken = new RefreshToken
+            var newRefreshToken = new RefreshToken
             {
-                Token = refreshTokenModel.RefreshToken,
-                ExpiryDate = DateTime.UtcNow.AddMinutes(expiryDate),
+                Token = refreshToken,
+                ExpiryDate = DateTime.UtcNow.AddMinutes(_settings.RefreshTokenValidityInMinutes),
                 UserId = userId
             };
-            var token = await _tokenRepository.StoreTokenAsync(refreshToken);
-            if(token is null)
-            {
-                return false;
-            }
-            return true;
+            var token = await _tokenRepository.StoreTokenAsync(newRefreshToken);
+
+            return token is not null;
         }
         public string GenerateRefreshToken()
         {
@@ -90,9 +85,29 @@ namespace RpgDex.Application.Services
             return Convert.ToBase64String(randomNumber);
         }
 
-        public Task<bool> RovokeTokenFromUserId(Guid userId)
+        public Task<bool> RevokeTokenByValue(string token)
         {
-            return _tokenRepository.DeleteTokenByUserId(userId);
+            return _tokenRepository.DeleteTokenByValueAsync(token);
+        }
+        public ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        {
+            var TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key)),
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var principal = tokenHandler.ValidateToken(token, TokenValidationParameters, out SecurityToken securityToken);
+
+            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                    StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid Token");
+
+            return principal;
         }
     }
 }
