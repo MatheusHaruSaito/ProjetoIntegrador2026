@@ -16,7 +16,8 @@ namespace RpgDex.Infrastructure.Services
         {
             _settings = options.Value;
         }
-        public async Task<(bool isEmailSent, string message)> SendEmail(string receiverEmail,string receiverName, string subject, string htmlBody)
+
+        public async Task<(bool isEmailSent, string message)> SendEmailAsync(string receiverEmail,string receiverName, string subject, string htmlBody)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("RpgDex", _settings.Username));
@@ -45,5 +46,23 @@ namespace RpgDex.Infrastructure.Services
 
             return (true, "Email sent successfully.");
         }
+
+        public string GenerateEmailVerificationHTMLTemplate(string verificationLink, string userName)
+        {
+            return $@"<!DOCTYPE html>
+                    <html lang=""en"">
+                    <head>
+                        <meta charset=""UTF-8"">
+                        <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+                        <title>Document</title>
+                    </head>
+                    <body>
+                        Template Temporario
+                        Bem Vindo {userName}!
+                       <a href='{verificationLink}'> Verificar E-mail</a>
+                    </body>
+                    </html>";
+        }
+
     }
 }

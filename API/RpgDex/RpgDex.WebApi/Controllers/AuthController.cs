@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
 using RpgDex.Application.Interfaces;
+using RpgDex.WebApi.Extensions;
 namespace RpgDex.WebApi.Controllers
 {
     [Route("api/[controller]")]
@@ -75,6 +76,20 @@ namespace RpgDex.WebApi.Controllers
                     data = result.Value,
                 });
 
-            }
+        }
+
+        [HttpPut("ValidateEmail/")]
+        public async Task<IActionResult> ValidateEmailByToken(ValidateEmailByTokenRequest request)
+        {
+            var result = await _authSerice.ValidateEmailByTokenAsync(request);
+            return result.ToIActionResult();
+        }
+
+        [HttpPost("ResendEmailVerification")]
+        public async Task<IActionResult> ResendEmailVerification(ResendEmailVerificationRequest request)
+        {
+            var result = await _authSerice.ResendEmailVerificationAsync(request);
+            return result.ToIActionResult();
+        }
     }
 }

@@ -15,6 +15,10 @@ namespace RpgDex.Domain.Interfaces
         Task<bool> StoreRefreshTokenAsync(string accessToken, string refreshToken, Guid userId);
         Task<bool> RevokeTokenByValue(string token);
         ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token);
+        Task<string>? GenerateEmailTokenVerificationAsync(Guid id);
+        Task<bool> ValidateEmailToken(string userId, string token);
+
+
 
     }
 }

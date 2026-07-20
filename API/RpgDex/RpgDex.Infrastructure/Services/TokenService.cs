@@ -12,7 +12,7 @@ using System.Security.Cryptography;
 using System.Text;
 using RpgDex.Infrastructure.Settings;
 using Microsoft.Extensions.Options;
-
+using Microsoft.AspNetCore.WebUtilities;
 namespace RpgDex.Infrastructure.Services
 {
     public class TokenService : ITokenService
@@ -93,8 +93,10 @@ namespace RpgDex.Infrastructure.Services
         {
             var TokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = false,
-                ValidateAudience = false,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidIssuer = _settings.Issuer,
+                ValidAudience = _settings.Audience,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key)),
             };
@@ -108,6 +110,34 @@ namespace RpgDex.Infrastructure.Services
                 throw new SecurityTokenException("Invalid Token");
 
             return principal;
+        }
+
+        public async Task<string>? GenerateEmailTokenVerificationAsync(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user is null)
+            {
+                return null;
+            }
+            var result = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var resultBytes = Encoding.UTF8.GetBytes(result);
+            var token  = WebEncoders.Base64UrlEncode(resultBytes);
+
+            return token;
+        }
+        public async Task<bool> ValidateEmailToken(string userId,string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                return false;
+            }
+
+            var decodedTokenBytes = WebEncoders.Base64UrlDecode(token);
+            var originalToken = Encoding.UTF8.GetString(decodedTokenBytes);
+
+            var result = await _userManager.ConfirmEmailAsync(user, originalToken);
+            return result.Succeeded;
         }
     }
 }

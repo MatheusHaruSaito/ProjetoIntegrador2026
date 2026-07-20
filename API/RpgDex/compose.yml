@@ -29,8 +29,8 @@
       - Jwt__RefreshTokenValidityInMinutes=60
       - EmailSettings__SmtpServer=${EMAIL_SMTP_SERVER}
       - EmailSettings__SmtpPort=${EMAIL_SMTP_PORT}
-      - EmailSettings__SmtpUsername=${EMAIL_SMTP_USERNAME}
-      - EmailSettings__SmtpPassword=${EMAIL_SMTP_PASSWORD}
+      - EmailSettings__Username=${EMAIL_SMTP_USERNAME}
+      - EmailSettings__Password=${EMAIL_SMTP_PASSWORD}
   mongo:
     image: mongo:latest
     ports:
