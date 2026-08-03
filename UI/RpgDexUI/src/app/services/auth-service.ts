@@ -111,12 +111,14 @@ export class AuthService {
     this.cookieService.delete(this.REFRESH_Token, '/');
     this.currentUserSubject.next(null);
   }
-  public ValidateEmailByToken(): Observable<ApiResponse<ValidateEmailByTokenRequest>> {
-    return this.http.get<ApiResponse<ValidateEmailByTokenRequest>>(`${this.env}/ValidateEmail`);
+  public ValidateEmailByToken(
+    request: ValidateEmailByTokenRequest,
+  ): Observable<ApiResponse<string>> {
+    return this.http.put<ApiResponse<string>>(`${this.env}/ValidateEmail`, request);
   }
-  public ResendEmailVerification(): Observable<ApiResponse<ResendEmailVerificationRequest>> {
-    return this.http.get<ApiResponse<ResendEmailVerificationRequest>>(
-      `${this.env}/ResendEmailVerification`,
-    );
+  public ResendEmailVerification(
+    request: ResendEmailVerificationRequest,
+  ): Observable<ApiResponse<string>> {
+    return this.http.post<ApiResponse<string>>(`${this.env}/ResendEmailVerification`, request);
   }
 }
