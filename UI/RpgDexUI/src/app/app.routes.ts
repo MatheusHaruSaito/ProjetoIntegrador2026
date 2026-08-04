@@ -8,6 +8,7 @@ import { ProfileComponent } from './pages/profile/profile';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile';
 import { authGuard } from './guards/auth.guard';
 import { EmailConfirmation } from './pages/email-confirmation/email-confirmation';
+import { EmailPending } from './pages/email-pending/email-pending';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -38,5 +39,10 @@ export const routes: Routes = [
     path: 'emailConfirmation',
     component: EmailConfirmation,
   },
+  { 
+    path: 'verificar-email',
+    component: EmailPending 
+  },
+
   { path: '**', redirectTo: '/home' },
 ];

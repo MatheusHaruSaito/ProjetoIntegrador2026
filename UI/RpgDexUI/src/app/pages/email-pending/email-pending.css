@@ -1,4 +1,4 @@
-.ec-wrapper {
+.ep-wrapper {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -10,7 +10,7 @@
   padding: 40px 20px;
 }
 
-.ec-card {
+.ep-card {
   background: var(--rpg-surface);
   border-radius: 24px;
   box-shadow: var(--rpg-shadow-lg);
@@ -22,76 +22,80 @@
   align-items: center;
   text-align: center;
   gap: 0;
-  position: relative;
 }
 
-/* ── ESTADOS ── */
-.ec-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-}
-
-/* ── ÍCONE CIRCULAR ── */
-.ec-icon-ring {
+/* ── ÍCONE ── */
+.ep-icon-ring {
   width: 88px;
   height: 88px;
   border-radius: 50%;
+  background: var(--rpg-purple-tint);
+  border: 3px solid var(--rpg-purple);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2.4rem;
-  margin-bottom: 8px;
-}
-
-.ec-icon-ring--purple {
-  background: var(--rpg-purple-tint);
   color: var(--rpg-purple);
-  border: 3px solid var(--rpg-purple);
-}
-
-.ec-icon-ring--success {
-  background: var(--rpg-success-bg);
-  color: var(--rpg-success);
-  border: 3px solid var(--rpg-success-border);
-}
-
-.ec-icon-ring--error {
-  background: var(--rpg-error-bg);
-  color: var(--rpg-error);
-  border: 3px solid var(--rpg-error-border);
+  margin-bottom: 24px;
 }
 
 /* ── TEXTOS ── */
-.ec-title {
+.ep-title {
   font-family: 'Exo 2', sans-serif;
   font-weight: 800;
   font-size: 1.8rem;
   color: var(--rpg-text-dark);
-  margin: 0;
+  margin: 0 0 12px;
 }
 
-.ec-sub {
+.ep-sub {
   font-family: 'Nunito', sans-serif;
   font-size: 1rem;
   color: var(--rpg-text-body);
-  line-height: 1.6;
-  margin: 0;
-  max-width: 340px;
+  line-height: 1.65;
+  margin: 0 0 20px;
+  max-width: 360px;
+}
+
+.ep-email {
+  color: var(--rpg-purple);
+  font-weight: 700;
+  word-break: break-all;
+}
+
+/* ── DICA SPAM ── */
+.ep-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: var(--rpg-surface-2, #f7f5ff);
+  border: 1px solid var(--rpg-border-light);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  color: var(--rpg-text-muted);
+  text-align: left;
+  width: 100%;
+  margin-bottom: 28px;
+  box-sizing: border-box;
+}
+
+.ep-hint i {
+  color: var(--rpg-purple);
+  margin-top: 2px;
+  flex-shrink: 0;
 }
 
 /* ── AÇÕES ── */
-.ec-actions {
+.ep-actions {
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 100%;
-  margin-top: 8px;
 }
 
-.ec-btn {
+.ep-btn {
   font-family: 'Exo 2', sans-serif;
   font-weight: 800;
   font-size: 0.95rem;
@@ -105,34 +109,69 @@
   gap: 8px;
   transition: all 0.25s ease;
   border: none;
-  margin-top: 8px;
+  width: 100%;
 }
 
-.ec-btn--primary {
+.ep-btn--outline {
   background: var(--rpg-purple);
   color: white;
   box-shadow: var(--rpg-shadow-btn);
 }
 
-.ec-btn--primary:hover {
+.ep-btn--outline:hover:not(:disabled) {
   filter: brightness(1.1);
   transform: translateY(-2px);
   box-shadow: var(--rpg-shadow-btn-hov);
 }
 
-.ec-btn--outline {
+.ep-btn--outline:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+
+.ep-btn--ghost {
   background: transparent;
   color: var(--rpg-text-body);
   border: 2px solid var(--rpg-border);
 }
 
-.ec-btn--outline:hover {
+.ep-btn--ghost:hover {
   border-color: var(--rpg-purple);
   color: var(--rpg-purple);
 }
 
+/* ── FEEDBACK ── */
+.ep-feedback {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 14px;
+}
+
+.ep-feedback--success {
+  color: var(--rpg-success);
+  background: var(--rpg-success-bg);
+  border: 1px solid var(--rpg-success-border);
+}
+
+.ep-feedback--error {
+  color: var(--rpg-error);
+  background: var(--rpg-error-bg);
+  border: 1px solid var(--rpg-error-border);
+}
+
 /* ── LOGO ── */
-.ec-logo {
+.ep-logo {
   font-family: 'Nunito', sans-serif;
   font-weight: 900;
   font-size: 1.1rem;
@@ -143,9 +182,9 @@
   transition: color 0.2s;
 }
 
-.ec-logo:hover { color: var(--rpg-purple); }
+.ep-logo:hover { color: var(--rpg-purple); }
 
 @media (max-width: 520px) {
-  .ec-card { padding: 44px 24px 32px; }
-  .ec-title { font-size: 1.5rem; }
+  .ep-card { padding: 44px 24px 32px; }
+  .ep-title { font-size: 1.5rem; }
 }

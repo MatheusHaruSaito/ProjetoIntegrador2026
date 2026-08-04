@@ -1,0 +1,40 @@
+<div class="ep-wrapper">
+  <div class="ep-card">
+
+    <div class="ep-icon-ring">
+      <i class="fa fa-envelope-circle-check"></i>
+    </div>
+
+    <h1 class="ep-title">Verifique seu email</h1>
+    <p class="ep-sub">
+      Enviamos um link de confirmação para
+      <strong class="ep-email">{{ email || 'seu email' }}</strong>.
+      Clique no link para ativar sua conta.
+    </p>
+
+    <div class="ep-hint">
+      <i class="fa fa-circle-info"></i>
+      <span>Não encontrou? Verifique a pasta de spam ou lixo eletrônico.</span>
+    </div>
+
+    <div class="ep-actions">
+      <button class="ep-btn ep-btn--outline" (click)="resend()" [disabled]="resendCooldown > 0">
+        <i class="fa fa-rotate-right"></i>
+        <span *ngIf="resendCooldown === 0">Reenviar email</span>
+        <span *ngIf="resendCooldown > 0">Reenviar em {{ resendCooldown }}s</span>
+      </button>
+      <button class="ep-btn ep-btn--ghost" routerLink="/login">
+        <i class="fa fa-arrow-left"></i> Voltar ao login
+      </button>
+    </div>
+
+    <div class="ep-feedback ep-feedback--success" *ngIf="resendSuccess">
+      <i class="fa fa-circle-check"></i> Email reenviado com sucesso!
+    </div>
+    <div class="ep-feedback ep-feedback--error" *ngIf="resendError">
+      <i class="fa fa-circle-exclamation"></i> {{ resendError }}
+    </div>
+
+    <div class="ep-logo" routerLink="/home">RPGDex</div>
+  </div>
+</div>
