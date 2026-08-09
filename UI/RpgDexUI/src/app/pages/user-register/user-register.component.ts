@@ -4,22 +4,24 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { RegisterUser } from '../../../models/registerUser';
 import { CommonModule } from '@angular/common';
+import { GoogleAuthService } from '../../services/google-auth-service';
 
 @Component({
   selector: 'app-user-register',
   standalone: true,
   imports: [FormsModule, RouterModule, CommonModule],
   templateUrl: './user-register.component.html',
-  styleUrl: './user-register.component.css'
+  styleUrl: './user-register.component.css',
 })
 export class UserRegisterComponent {
   authService = inject(AuthService);
+  private googleAuth = inject(GoogleAuthService);
   private router = inject(Router);
 
   registerForm: RegisterUser = {
     userName: '',
     email: '',
-    password: ''
+    password: '',
   };
 
   confirmPassword = '';
@@ -29,6 +31,26 @@ export class UserRegisterComponent {
   isLoading = false;
   errorMessage = '';
   successMessage = '';
+
+  ngOnInit(): void {
+    this.googleAuth.initLogin((response: any) => {
+      const token = response.credential;
+
+      this.authService.GoogleSingUp(token).subscribe({
+        next: () => {
+          this.router.navigate(['/home']);
+        },
+        error: () => {
+          alert('Falha ao entrar com o Google. Verifique seu email e senha.');
+        },
+      });
+    });
+
+    const btn = document.getElementById('google-btn');
+    if (btn) {
+      this.googleAuth.renderButton('google-btn');
+    }
+  }
 
   get passwordTooShort(): boolean {
     return this.registerForm.password.length > 0 && this.registerForm.password.length < 8;
@@ -55,7 +77,12 @@ export class UserRegisterComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (!this.registerForm.userName || !this.registerForm.email || !this.registerForm.password || !this.confirmPassword) {
+    if (
+      !this.registerForm.userName ||
+      !this.registerForm.email ||
+      !this.registerForm.password ||
+      !this.confirmPassword
+    ) {
       this.errorMessage = 'Preencha todos os campos.';
       return;
     }
@@ -85,7 +112,9 @@ export class UserRegisterComponent {
     this.authService.Register(this.registerForm).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/verificar-email'], { queryParams: { email: this.registerForm.email } });
+        this.router.navigate(['/verificar-email'], {
+          queryParams: { email: this.registerForm.email },
+        });
       },
       error: (err) => {
         this.isLoading = false;
@@ -98,7 +127,7 @@ export class UserRegisterComponent {
         } else {
           this.errorMessage = 'Ocorreu um erro ao criar a conta. Tente novamente.';
         }
-      }
+      },
     });
   }
 }
