@@ -1,6 +1,5 @@
 <div class="login-wrapper">
   <div class="login-card">
-
     <div class="login-side">
       <div class="login-logo" routerLink="/home">RPGDex</div>
       <div class="login-side__content">
@@ -24,7 +23,13 @@
       <form class="login-form" (ngSubmit)="Login()">
         <div class="input-group">
           <i class="fa fa-envelope icon-field"></i>
-          <input type="email" placeholder="Email" name="email" [(ngModel)]="authUserForm.email" autocomplete="username">
+          <input
+            type="email"
+            placeholder="Email"
+            name="email"
+            [(ngModel)]="authUserForm.email"
+            autocomplete="username"
+          />
         </div>
 
         <div class="input-group">
@@ -34,13 +39,15 @@
             placeholder="Senha"
             name="password"
             [(ngModel)]="authUserForm.password"
-            autocomplete="current-password">
+            autocomplete="current-password"
+          />
           <button
             type="button"
             class="password-hint-btn"
             (click)="togglePasswordHint()"
             [class.active]="showPasswordHint"
-            aria-label="Dicas de senha">
+            aria-label="Dicas de senha"
+          >
             ?
           </button>
           <div class="password-hint-box" *ngIf="showPasswordHint">
@@ -66,13 +73,14 @@
       </div>
 
       <div class="social-logins">
-        <button class="social-btn"><i class="fa-brands fa-google"></i></button>
+        <div id="google-btn">aaa</div>
         <button class="social-btn"><i class="fa-brands fa-discord"></i></button>
         <button class="social-btn"><i class="fa-brands fa-apple"></i></button>
       </div>
 
-      <p class="login-footer mobile-only">Novo por aqui? <a routerLink="/cadastro">Crie uma conta</a></p>
-
+      <p class="login-footer mobile-only">
+        Novo por aqui? <a routerLink="/cadastro">Crie uma conta</a>
+      </p>
     </div>
   </div>
 </div>

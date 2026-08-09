@@ -50,5 +50,12 @@ namespace RpgDex.WebApi.Controllers
             var result = await _authSerice.ResendEmailVerificationAsync(request);
             return result.ToIActionResult();
         }
+        [HttpPost("Google/SignUp")]
+        public async Task<IActionResult> GoogleSingUp(GoogleLoginRequest request)
+        {
+            var result = await _authSerice.GoogleSignUp(request);
+            return result.ToIActionResult();
+
+        }
     }
 }

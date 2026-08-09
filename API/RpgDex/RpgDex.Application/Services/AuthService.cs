@@ -17,16 +17,20 @@ namespace RpgDex.Application.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _rolemanager;
+
         private readonly ITokenService _tokenService;
         private readonly IEmailService _emailService;
+        private readonly IGoogleAuthService _googleAuthService;
 
+        private const string GoogleProvider = "Google";
 
         private readonly IConfiguration _configuration;
-        public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService, IEmailService emailService, RoleManager<ApplicationRole> rolemanager, IConfiguration configuration)
+        public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService, IEmailService emailService, IGoogleAuthService googleAuthService, RoleManager<ApplicationRole> rolemanager, IConfiguration configuration)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _emailService = emailService;
+            _googleAuthService = googleAuthService;
             _rolemanager = rolemanager;
             _configuration = configuration;
             
@@ -45,14 +49,7 @@ namespace RpgDex.Application.Services
 
             var accessToken = await _tokenService.GenerateTokenAsync(user);
 
-            var newRefreshToken = new RefreshTokenModel
-            {
-                RefreshToken = _tokenService.GenerateRefreshToken(),
-                AccessToken = accessToken,
-    
-            };
-            await _tokenService.StoreRefreshTokenAsync(newRefreshToken.AccessToken, newRefreshToken.RefreshToken, user.Id);
-
+            var newRefreshToken = await GenerateRefreshTokenModelAsync(user);
             return Result<RefreshTokenModel>.Success(newRefreshToken);
         }
 
@@ -88,18 +85,9 @@ namespace RpgDex.Application.Services
                 return Result<RefreshTokenModel>.Failure("Token Invalido");
             }
 
+            var newTokenModel = await GenerateRefreshTokenModelAsync(user);
 
-            var newAcessToken = await _tokenService.GenerateTokenAsync(user);
-            var newRefreshToken = _tokenService.GenerateRefreshToken();
-
-            var newTokenModel = new RefreshTokenModel
-            {
-                AccessToken = newAcessToken,
-                RefreshToken = newRefreshToken
-            };
-            var savedToken = await _tokenService.StoreRefreshTokenAsync(newTokenModel.AccessToken, newTokenModel.RefreshToken, user.Id);
-
-            if (!savedToken)
+            if (newTokenModel is null)
             {
                 return Result<RefreshTokenModel>.Failure("Não foi possivel cadastrar o token");
             }
@@ -152,27 +140,86 @@ namespace RpgDex.Application.Services
 
         public async Task<Result<string>> ResendEmailVerificationAsync(ResendEmailVerificationRequest request)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user is null)
+          return await SendEmailVerificationAsync(request.Email);
+        }
+
+        public async Task<Result<RefreshTokenModel>> GoogleSignUp(GoogleLoginRequest request)
+        {
+            var googleUser = await _googleAuthService.ValidateTokenAsync(request.Token);
+            if (googleUser is null)
             {
-                return Result<string>.Failure("Usuario não encontrado");
+                return Result<RefreshTokenModel>.Failure("Token do Google inválido");
+            }
+            var userDb = await _userManager.FindByEmailAsync(googleUser.email);
+            if (userDb is not null) {
+                //User Exists, but is the user already linked with Google?
+                var userLogins = await _userManager.GetLoginsAsync(userDb);
+
+                var googleLoginInfo = userLogins.FirstOrDefault(l => l.LoginProvider == GoogleProvider && l.ProviderKey == googleUser.googleId);
+                
+                if (googleLoginInfo is null)
+                {
+                    // User exists but is not linked with Google
+                    var userDbLoginInfo = new UserLoginInfo(GoogleProvider, googleUser.googleId, GoogleProvider);
+                    var addLoginResult =await _userManager.AddLoginAsync(userDb, userDbLoginInfo);
+                    if (!addLoginResult.Succeeded)
+                    {
+                        return Result<RefreshTokenModel>.Failure("Erro ao vincular conta Google");
+                    }
+                }
+
+                return await GoogleLogIn(userDb);
             }
 
-            var token = await _tokenService.GenerateEmailTokenVerificationAsync(user.Id);
-            if (token is null)
+            //User does not exist, create a new user and link with Google
+            var user = new ApplicationUser
             {
-                return Result<string>.Failure("Não foi possivel gerar o token de verificação");
+                UserName = googleUser.email,
+                Email = googleUser.email,
+                EmailConfirmed = true
+            };
+            var createResult = await _userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
+            {
+                //var errors = string.Join(" | ", createResult.Errors.Select(e => e.Description));
+                //return Result<RefreshTokenModel>.Failure(errors);
+                return Result<RefreshTokenModel>.Failure("Erro ao Criar Usuario");
+            }
+            var userLoginInfo = new UserLoginInfo(GoogleProvider, googleUser.googleId, GoogleProvider);
+            await _userManager.AddLoginAsync(user, userLoginInfo);
+
+
+            return await GoogleLogIn(user);
+        }
+        private async Task<Result<RefreshTokenModel>> GoogleLogIn(ApplicationUser user)
+        {
+
+            var newRefreshToken = await GenerateRefreshTokenModelAsync(user);
+            if (newRefreshToken is null)
+            {
+                return Result<RefreshTokenModel>.Failure("Não foi possivel cadastrar o token");
+            }
+            return Result<RefreshTokenModel>.Success(newRefreshToken);
+        }
+
+        private async Task<RefreshTokenModel> GenerateRefreshTokenModelAsync(ApplicationUser user)
+        {
+            var accessToken = await _tokenService.GenerateTokenAsync(user);
+            var refreshToken = _tokenService.GenerateRefreshToken();
+            var newRefreshToken = new RefreshTokenModel
+            {
+                RefreshToken = refreshToken,
+                AccessToken = accessToken,
+
+            };
+            var result = await _tokenService.StoreRefreshTokenAsync(newRefreshToken.AccessToken, newRefreshToken.RefreshToken, user.Id);
+
+            if (!result)
+            {
+                return null;
             }
 
-            //Quando a pagina no front Estiver pronta, colocar o link correto
-            string verificationLink = $"http://localhost:4200/emailConfirmation?userid={user.Id}&token={token}";
-            var htmlBody = _emailService.GenerateEmailVerificationHTMLTemplate(verificationLink, user.UserName);
-            var (isEmailSent, message) = await _emailService.SendEmailAsync(user.Email, user.UserName, "Verificação de Email", htmlBody);
-            if (!isEmailSent)
-            {
-                return Result<string>.Failure(message);
-            }
-            return Result<string>.Success(message);
+            return newRefreshToken;
         }
     }
 }

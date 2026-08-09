@@ -12,6 +12,7 @@ import { ApiResponse } from '../../models/apiResponse';
 import { UserResponse } from '../../models/userResponse';
 import { ValidateEmailByTokenRequest } from '../../models/validateEmailByTokenRequest';
 import { ResendEmailVerificationRequest } from '../../models/resendEmailVerificationRequest';
+import { request } from 'https';
 
 @Injectable({
   providedIn: 'root',
@@ -120,5 +121,17 @@ export class AuthService {
     request: ResendEmailVerificationRequest,
   ): Observable<ApiResponse<string>> {
     return this.http.post<ApiResponse<string>>(`${this.env}/ResendEmailVerification`, request);
+  }
+  public GoogleSingUp(Token: string): Observable<ApiResponse<tokenModel>> {
+    return this.http.post<ApiResponse<tokenModel>>(`${this.env}/Google/SignUp`, { Token }).pipe(
+      map((response: ApiResponse<tokenModel>) => {
+        if (response.success && response.data) {
+          this.cookieService.set(this.JWT_Token, response.data!.accessToken);
+          this.cookieService.set(this.REFRESH_Token, response.data!.refreshToken);
+          this.currentUserSubject.next(response.data);
+        }
+        return response;
+      }),
+    );
   }
 }

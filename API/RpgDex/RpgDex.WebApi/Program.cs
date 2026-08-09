@@ -53,6 +53,8 @@ builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
 builder.Services.AddScoped<ICampaignService, CampaignService>();
+builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
+
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -62,6 +64,7 @@ var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()
     ?? throw new InvalidOperationException("Jwt Settings Not Found");
 MappingConfig.Configure();
 
+builder.Services.Configure<GoogleAuthSettings>(builder.Configuration.GetSection("Google"));
 
 
 builder.Services.AddCors(options => {

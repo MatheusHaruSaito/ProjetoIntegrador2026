@@ -27,6 +27,7 @@
       - JWT__Audience=${JWT_AUDIENCE}
       - Jwt__TokenValidityInMinutes=30
       - Jwt__RefreshTokenValidityInMinutes=60
+      - Google__ClientId=${GOOGLE_CLIENTID}
       - EmailSettings__SmtpServer=${EMAIL_SMTP_SERVER}
       - EmailSettings__SmtpPort=${EMAIL_SMTP_PORT}
       - EmailSettings__Username=${EMAIL_SMTP_USERNAME}
