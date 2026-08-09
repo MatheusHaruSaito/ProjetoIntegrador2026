@@ -17,65 +17,24 @@ namespace RpgDex.WebApi.Controllers
             _authSerice = authSerice;
         }
         [HttpPost]
-        public async Task<ActionResult<bool>> Register(CreateUserDTO user)
+        public async Task<IActionResult> Register(CreateUserDTO user)
         {
             var result = await _authSerice.RegisterUser(user);
-            if (result.IsFailure)
-            {
-                return NotFound(new
-                {
-                    success = result.IsSuccess,
-                    message = result.Error,
-                    data = result.Value
-                });
-            }
-            return Ok(new
-            {
-                success= result.IsSuccess,
-                data = result.Value,
-            });
+            return result.ToIActionResult();
         }
         [HttpPost("Login")]
-        public async Task<ActionResult<RefreshTokenModel>> LogIn(AuthUserDTO user)
+        public async Task<IActionResult> LogIn(AuthUserDTO user)
         {
             var result = await _authSerice.LogIn(user);
-
-            if (result.IsFailure)
-            {
-                return NotFound(new
-                {
-                    success = result.IsSuccess,
-                    message = result.Error,
-                    data = result.Value
-                });
-            }
-            return Ok(new
-            {
-                success = result.IsSuccess,
-                data = result.Value,
-            });
+            return result.ToIActionResult();
 
         }
         [HttpPost("RefreshToken")]
-        public async Task<ActionResult<RefreshTokenModel>> RefreshToken(RefreshTokenModel refreshToken)
+        public async Task<IActionResult> RefreshToken(RefreshTokenModel refreshToken)
         {
 
-                var result = await _authSerice.RefreshTokenAsync(refreshToken);
-                if (result.IsFailure)
-                {
-                    return NotFound(new
-                    {
-                        success = result.IsSuccess,
-                        message = result.Error,
-                        data = result.Value
-                    });
-                }
-                return Ok(new
-                {
-                    success = result.IsSuccess,
-                    data = result.Value,
-                });
-
+            var result = await _authSerice.RefreshTokenAsync(refreshToken);
+            return result.ToIActionResult();
         }
 
         [HttpPut("ValidateEmail/")]

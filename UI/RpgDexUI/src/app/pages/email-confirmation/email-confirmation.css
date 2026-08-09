@@ -1,0 +1,151 @@
+.ec-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--rpg-bg);
+  background-image:
+    repeating-linear-gradient(0deg, var(--rpg-purple-15) 0, var(--rpg-purple-15) 1px, transparent 1px, transparent 40px),
+    repeating-linear-gradient(90deg, var(--rpg-purple-15) 0, var(--rpg-purple-15) 1px, transparent 1px, transparent 40px);
+  padding: 40px 20px;
+}
+
+.ec-card {
+  background: var(--rpg-surface);
+  border-radius: 24px;
+  box-shadow: var(--rpg-shadow-lg);
+  padding: 56px 48px 40px;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+  position: relative;
+}
+
+/* ── ESTADOS ── */
+.ec-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+/* ── ÍCONE CIRCULAR ── */
+.ec-icon-ring {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  margin-bottom: 8px;
+}
+
+.ec-icon-ring--purple {
+  background: var(--rpg-purple-tint);
+  color: var(--rpg-purple);
+  border: 3px solid var(--rpg-purple);
+}
+
+.ec-icon-ring--success {
+  background: var(--rpg-success-bg);
+  color: var(--rpg-success);
+  border: 3px solid var(--rpg-success-border);
+}
+
+.ec-icon-ring--error {
+  background: var(--rpg-error-bg);
+  color: var(--rpg-error);
+  border: 3px solid var(--rpg-error-border);
+}
+
+/* ── TEXTOS ── */
+.ec-title {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: var(--rpg-text-dark);
+  margin: 0;
+}
+
+.ec-sub {
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  color: var(--rpg-text-body);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 340px;
+}
+
+/* ── AÇÕES ── */
+.ec-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.ec-btn {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 14px 28px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  border: none;
+  margin-top: 8px;
+}
+
+.ec-btn--primary {
+  background: var(--rpg-purple);
+  color: white;
+  box-shadow: var(--rpg-shadow-btn);
+}
+
+.ec-btn--primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: var(--rpg-shadow-btn-hov);
+}
+
+.ec-btn--outline {
+  background: transparent;
+  color: var(--rpg-text-body);
+  border: 2px solid var(--rpg-border);
+}
+
+.ec-btn--outline:hover {
+  border-color: var(--rpg-purple);
+  color: var(--rpg-purple);
+}
+
+/* ── LOGO ── */
+.ec-logo {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: var(--rpg-text-faint);
+  cursor: pointer;
+  letter-spacing: -0.5px;
+  margin-top: 36px;
+  transition: color 0.2s;
+}
+
+.ec-logo:hover { color: var(--rpg-purple); }
+
+@media (max-width: 520px) {
+  .ec-card { padding: 44px 24px 32px; }
+  .ec-title { font-size: 1.5rem; }
+}

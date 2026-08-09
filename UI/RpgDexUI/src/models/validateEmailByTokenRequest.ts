@@ -1,4 +1,4 @@
 export interface ValidateEmailByTokenRequest {
-  UserId: string;
-  Token: string;
+  userId: string;
+  token: string;
 }

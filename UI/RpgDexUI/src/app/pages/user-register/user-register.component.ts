@@ -85,8 +85,7 @@ export class UserRegisterComponent {
     this.authService.Register(this.registerForm).subscribe({
       next: () => {
         this.isLoading = false;
-        this.successMessage = 'Cadastro realizado com sucesso! Redirecionando...';
-        setTimeout(() => this.router.navigate(['/login']), 2000);
+        this.router.navigate(['/verificar-email'], { queryParams: { email: this.registerForm.email } });
       },
       error: (err) => {
         this.isLoading = false;
