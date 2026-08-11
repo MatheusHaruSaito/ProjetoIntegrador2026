@@ -130,4 +130,7 @@ export class UserRegisterComponent {
       },
     });
   }
+  onDiscordLogin() {
+    this.authService.DiscordSingUp();
+  }
 }

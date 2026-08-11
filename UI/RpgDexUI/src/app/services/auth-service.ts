@@ -134,4 +134,13 @@ export class AuthService {
       }),
     );
   }
+
+  public DiscordSingUp(): void {
+    window.location.href = `${this.env}/discord`;
+  }
+
+  public StoreToken(accessToken: string, refreshToken: string): void {
+    this.cookieService.set(this.JWT_Token, accessToken);
+    this.cookieService.set(this.REFRESH_Token, refreshToken);
+  }
 }

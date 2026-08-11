@@ -11,6 +11,8 @@ namespace RpgDex.Application.Interfaces
     {
         Task<Result<string>> RegisterUser(CreateUserDTO authUser);
         Task<Result<RefreshTokenModel>> LogIn(AuthUserDTO authUser);
+        Task<Result<RefreshTokenModel>> DiscordSignUp();
+
         Task<Result<RefreshTokenModel>> GoogleSignUp(GoogleLoginRequest request);
         Task<Result<RefreshTokenModel>> RefreshTokenAsync(RefreshTokenModel refreshToken);
         Task<Result<string>> ValidateEmailByTokenAsync(ValidateEmailByTokenRequest request);

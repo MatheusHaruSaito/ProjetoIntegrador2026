@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AspNet.Security.OAuth.Discord;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
 using RpgDex.Application.Interfaces;
+using RpgDex.Domain.Entities;
 using RpgDex.WebApi.Extensions;
 namespace RpgDex.WebApi.Controllers
 {
@@ -12,9 +16,12 @@ namespace RpgDex.WebApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authSerice;
-        public AuthController(IAuthService authSerice)
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        public AuthController(IAuthService authSerice, SignInManager<ApplicationUser> signInManager)
         {
             _authSerice = authSerice;
+            _signInManager = signInManager;
         }
         [HttpPost]
         public async Task<IActionResult> Register(CreateUserDTO user)
@@ -56,6 +63,37 @@ namespace RpgDex.WebApi.Controllers
             var result = await _authSerice.GoogleSignUp(request);
             return result.ToIActionResult();
 
+        }
+
+        [HttpGet("discord")]
+        public IActionResult DiscordLogin()
+        {
+            var redirectUrl = Url.Action(nameof(DiscordSignUp), "Auth");
+
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(
+                DiscordAuthenticationDefaults.AuthenticationScheme,
+                redirectUrl
+            );
+
+            return Challenge(
+                properties,
+                DiscordAuthenticationDefaults.AuthenticationScheme
+            );
+        }
+        [HttpGet("DiscordSignUp")]
+        public async Task<IActionResult> DiscordSignUp()
+        {
+            var result = await _authSerice.DiscordSignUp();
+
+            if (result.IsFailure)
+            {
+                return Redirect($"http://localhost:4200/auth/callback?error={result.Error}");
+            }
+
+            var token = result.Value.AccessToken;
+            var refreshToken = result.Value.RefreshToken;
+
+            return Redirect($"http://localhost:4200/auth/callback?token={token}&refreshToken={refreshToken}");
         }
     }
 }

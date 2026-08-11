@@ -21,11 +21,15 @@ namespace RpgDex.Application.Services
         private readonly ITokenService _tokenService;
         private readonly IEmailService _emailService;
         private readonly IGoogleAuthService _googleAuthService;
+        private readonly IDiscordAuthService _discordAuthService;
+
 
         private const string GoogleProvider = "Google";
+        private const string DiscordProvider = "Discord";
+
 
         private readonly IConfiguration _configuration;
-        public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService, IEmailService emailService, IGoogleAuthService googleAuthService, RoleManager<ApplicationRole> rolemanager, IConfiguration configuration)
+        public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService, IEmailService emailService, IGoogleAuthService googleAuthService, RoleManager<ApplicationRole> rolemanager, IConfiguration configuration, IDiscordAuthService discordAuthService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
@@ -33,7 +37,7 @@ namespace RpgDex.Application.Services
             _googleAuthService = googleAuthService;
             _rolemanager = rolemanager;
             _configuration = configuration;
-            
+            _discordAuthService = discordAuthService;
         }
         public async Task<Result<RefreshTokenModel>> LogIn(AuthUserDTO authUser)
         {
@@ -168,7 +172,7 @@ namespace RpgDex.Application.Services
                     }
                 }
 
-                return await GoogleLogIn(userDb);
+                return await LogInAsync(userDb);
             }
 
             //User does not exist, create a new user and link with Google
@@ -189,9 +193,9 @@ namespace RpgDex.Application.Services
             await _userManager.AddLoginAsync(user, userLoginInfo);
 
 
-            return await GoogleLogIn(user);
+            return await LogInAsync(user);
         }
-        private async Task<Result<RefreshTokenModel>> GoogleLogIn(ApplicationUser user)
+        private async Task<Result<RefreshTokenModel>> LogInAsync(ApplicationUser user)
         {
 
             var newRefreshToken = await GenerateRefreshTokenModelAsync(user);
@@ -220,6 +224,48 @@ namespace RpgDex.Application.Services
             }
 
             return newRefreshToken;
+        }
+
+        public async Task<Result<RefreshTokenModel>> DiscordSignUp()
+        {
+            var discorduser = await _discordAuthService.GetDiscordUserAsync();
+            Console.WriteLine(discorduser.Id);
+            Console.WriteLine(discorduser.Username);
+            Console.WriteLine(discorduser.Email);
+            var userLoginInfo = new UserLoginInfo(DiscordProvider, discorduser.Id, DiscordProvider);
+            //Verify if user exists in the database
+            var userDb = await _userManager.FindByEmailAsync(discorduser.Email);
+            if (userDb is not null)
+            {
+                //User Exists, but is the user already linked with Discord?
+                var userLogins = await _userManager.GetLoginsAsync(userDb);
+                if (!userLogins.Any(x => x.LoginProvider == DiscordProvider))
+                {
+                    //Account exists but is not linked with Discord, link the account
+                    await _userManager.AddLoginAsync(userDb, userLoginInfo);
+                }
+                //User Login with Discord already exists, proceed to login
+                return await LogInAsync(userDb);
+            }
+            //User does not exist, create a new user and link with Discord
+            var user = new ApplicationUser
+            {
+                //Change this later when DisplayName is available
+                UserName = discorduser.Email,
+                Email = discorduser.Email,
+                EmailConfirmed = true
+            };
+
+            var createdResult =  await _userManager.CreateAsync(user);
+            if(!createdResult.Succeeded)
+            {
+                return Result<RefreshTokenModel>.Failure("Erro ao criar usuário");
+            }
+            await _userManager.AddLoginAsync(user, userLoginInfo);
+
+
+
+            return await LogInAsync(user);
         }
     }
 }
