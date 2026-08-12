@@ -178,6 +178,7 @@ namespace RpgDex.Application.Services
             //User does not exist, create a new user and link with Google
             var user = new ApplicationUser
             {
+                DisplayName = googleUser.displayName,
                 UserName = googleUser.email,
                 Email = googleUser.email,
                 EmailConfirmed = true

@@ -8,6 +8,6 @@ namespace RpgDex.Domain.Interfaces
     {
         Task<GoogleUserInfo> ValidateTokenAsync(string token);
     }
-    public record GoogleUserInfo(string googleId, string email);
+    public record GoogleUserInfo(string googleId, string email, string displayName);
 
 }

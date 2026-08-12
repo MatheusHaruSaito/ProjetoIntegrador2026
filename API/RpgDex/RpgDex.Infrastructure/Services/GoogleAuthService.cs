@@ -26,8 +26,8 @@ namespace RpgDex.Infrastructure.Services
                     Audience = new[] { _settings.ClientId }
                 };
                 var payload = await GoogleJsonWebSignature.ValidateAsync(token, validationSettings);
-
-                return new GoogleUserInfo(payload.Subject, payload.Email);
+                var displayName = payload.Name ?? payload.Email; 
+                return new GoogleUserInfo(payload.Subject, payload.Email, displayName);
             }
             catch
             {
