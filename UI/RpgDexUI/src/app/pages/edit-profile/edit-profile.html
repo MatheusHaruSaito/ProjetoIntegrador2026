@@ -1,6 +1,5 @@
 <div class="edit-profile-wrapper">
   <div class="edit-profile-card">
-
     <!-- Lado esquerdo: visual/identidade -->
     <div class="edit-side">
       <div class="edit-logo" routerLink="/home">RPGDex</div>
@@ -8,9 +7,17 @@
       <div class="edit-side__content">
         <!-- Preview do avatar -->
         <div class="avatar-preview-wrapper">
-          <label class="avatar-preview" [style.background-image]="avatarPreviewUrl ? 'url(' + avatarPreviewUrl + ')' : ''" style="cursor:pointer;">
+          <label
+            class="avatar-preview"
+            [style.background-image]="avatarPreviewUrl ? 'url(' + avatarPreviewUrl + ')' : ''"
+            style="cursor: pointer"
+          >
             <span *ngIf="!avatarPreviewUrl">
-              {{ (editForm.userName || currentUser?.userName || '??').substring(0, 2).toUpperCase() }}
+              {{
+                (editForm.userName || currentUser?.DisplayName || '??')
+                  .substring(0, 2)
+                  .toUpperCase()
+              }}
             </span>
             <div class="avatar-overlay">
               <i class="fa-solid fa-camera"></i>
@@ -20,11 +27,14 @@
               type="file"
               accept="image/*"
               class="file-input-hidden"
-              (change)="onFileSelected($event)">
+              (change)="onFileSelected($event)"
+            />
           </label>
         </div>
 
-        <p class="edit-side__name">{{ editForm.userName || currentUser?.userName || 'Aventureiro' }}</p>
+        <p class="edit-side__name">
+          {{ editForm.userName || currentUser?.DisplayName || 'Aventureiro' }}
+        </p>
         <p class="edit-side__email">{{ currentUser?.email }}</p>
         <span class="edit-side__badge">Aventureiro</span>
       </div>
@@ -43,12 +53,9 @@
       </div>
 
       <form class="edit-form" (ngSubmit)="saveChanges()">
-
         <!-- Nome de usuário -->
         <div class="field-section">
-          <label class="field-label">
-            <i class="fa fa-user"></i> Nome de usuário
-          </label>
+          <label class="field-label"> <i class="fa fa-user"></i> Nome de usuário </label>
           <div class="input-group">
             <i class="fa fa-user icon-field"></i>
             <input
@@ -57,15 +64,14 @@
               name="userName"
               [(ngModel)]="editForm.userName"
               autocomplete="username"
-              maxlength="30">
+              maxlength="30"
+            />
           </div>
         </div>
 
         <!-- Foto de perfil por upload -->
         <div class="field-section">
-          <label class="field-label">
-            <i class="fa fa-image"></i> Foto de perfil
-          </label>
+          <label class="field-label"> <i class="fa fa-image"></i> Foto de perfil </label>
           <label class="upload-zone">
             <i class="fa fa-cloud-arrow-up"></i>
             <span>Clique para selecionar uma imagem</span>
@@ -74,7 +80,8 @@
               type="file"
               accept="image/*"
               class="file-input-hidden"
-              (change)="onFileSelected($event)">
+              (change)="onFileSelected($event)"
+            />
           </label>
         </div>
 
@@ -88,21 +95,17 @@
 
         <!-- Ações -->
         <div class="form-actions">
-          <button type="button" class="btn-cancel" routerLink="/perfil">
-            Cancelar
-          </button>
+          <button type="button" class="btn-cancel" routerLink="/perfil">Cancelar</button>
           <button type="submit" class="btn-save" [disabled]="isLoading">
             <span *ngIf="!isLoading"><i class="fa fa-floppy-disk"></i> Salvar Alterações</span>
             <span *ngIf="isLoading"><i class="fa fa-spinner fa-spin"></i> Salvando...</span>
           </button>
         </div>
-
       </form>
 
       <p class="edit-footer mobile-only">
         <a routerLink="/perfil"><i class="fa fa-arrow-left"></i> Voltar ao perfil</a>
       </p>
     </div>
-
   </div>
 </div>
