@@ -42,13 +42,13 @@ namespace RpgDex.Application.Services
         public async Task<Result<RefreshTokenModel>> LogIn(AuthUserDTO authUser)
         {
             var user = await _userManager.FindByEmailAsync(authUser.Email);
-            if (user is null) return Result<RefreshTokenModel>.Failure("Credenciais Invalidas");
+            if (user is null) return Result<RefreshTokenModel>.Failure("Invalid Credentials");
 
             var validUser = await _userManager.CheckPasswordAsync(user, authUser.Password);
-            if (!validUser) return Result<RefreshTokenModel>.Failure("Credenciais Invalidas");
+            if (!validUser) return Result<RefreshTokenModel>.Failure("Invalid Credentials");
 
             var IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
-            if(!IsEmailConfirmed) return Result<RefreshTokenModel>.Failure("Email não confirmado");
+            if(!IsEmailConfirmed) return Result<RefreshTokenModel>.Failure("Email not confirmed");
 
 
             var accessToken = await _tokenService.GenerateTokenAsync(user);
@@ -61,18 +61,18 @@ namespace RpgDex.Application.Services
         {
             if (tokenModel is null)
             {
-                return Result<RefreshTokenModel>.Failure("o token atual é invalido");
+                return Result<RefreshTokenModel>.Failure("Invalid token");
             }
             var token = await _tokenService.GetRefreshTokenByToken(tokenModel.RefreshToken);
             if(token is null)
             {
-                return Result<RefreshTokenModel>.Failure("o token atual é invalido");
+                return Result<RefreshTokenModel>.Failure("Invalid token");
             }
 
             var principal = _tokenService.GetPrincipalFromExpiredToken(tokenModel.AccessToken);
             if(principal is null)
             {
-                return Result<RefreshTokenModel>.Failure("o token atual é invalido");
+                return Result<RefreshTokenModel>.Failure("Invalid token");
 
             }
 
@@ -81,19 +81,19 @@ namespace RpgDex.Application.Services
             var user = await _userManager.FindByIdAsync(userId);
             if (user is null|| tokenModel.RefreshToken != token.Token)
             {
-                return Result<RefreshTokenModel>.Failure("o token do usuario é invalido");
+                return Result<RefreshTokenModel>.Failure("Invalid user token");
             }
 
             var tokenRevoked = await _tokenService.RevokeTokenByValue(tokenModel.RefreshToken);
             if (!tokenRevoked) { 
-                return Result<RefreshTokenModel>.Failure("Token Invalido");
+                return Result<RefreshTokenModel>.Failure("Invalid token");
             }
 
             var newTokenModel = await GenerateRefreshTokenModelAsync(user);
 
             if (newTokenModel is null)
             {
-                return Result<RefreshTokenModel>.Failure("Não foi possivel cadastrar o token");
+                return Result<RefreshTokenModel>.Failure("It was not possible to generate a new token");
             }
             return Result<RefreshTokenModel>.Success(newTokenModel);
         }
@@ -103,7 +103,7 @@ namespace RpgDex.Application.Services
             var result = await _userManager.CreateAsync(user, authUser.Password);
             if (!result.Succeeded)
             {
-                return Result<string>.Failure("Não foi possivel Registrar o usuario");
+                return Result<string>.Failure("It was not possible to register the user");
             }
             return await SendEmailVerificationAsync(authUser.Email);
 
@@ -114,18 +114,18 @@ namespace RpgDex.Application.Services
             var user = await _userManager.FindByEmailAsync(email);
             if(user is null)
             {
-                return Result<string>.Failure("Usuario não encontrado");
+                return Result<string>.Failure("User not found");
             }
 
             var token = await _tokenService.GenerateEmailTokenVerificationAsync(user.Id);
             if (token is null)
             {
-                return Result<string>.Failure("Não foi possivel gerar o token de verificação");
+                return Result<string>.Failure("It was not possible to generate the verification token");
             }
             //Quando a pagina no front Estiver pronta, colocar o link correto
             string verificationLink = $"http://localhost:4200/emailConfirmation?userid={user.Id}&token={token}";
             var htmlBody = _emailService.GenerateEmailVerificationHTMLTemplate(verificationLink, user.UserName);
-            var (isEmailSent, message) = await _emailService.SendEmailAsync(user.Email, user.UserName, "Verificação de Email", htmlBody);
+            var (isEmailSent, message) = await _emailService.SendEmailAsync(user.Email, user.UserName, "Email Verification", htmlBody);
             if (!isEmailSent)
             {
                 return Result<string>.Failure(message);
@@ -137,9 +137,9 @@ namespace RpgDex.Application.Services
             var isValid = await _tokenService.ValidateEmailToken(request.UserId, request.Token);
             if(isValid)
             {
-                return Result<string>.Success("Email verificado com sucesso");
+                return Result<string>.Success("Email verified successfully");
             }
-            return Result<string>.Failure("Token inválido ou expirado");
+            return Result<string>.Failure("Invalid or expired token");
         }
 
         public async Task<Result<string>> ResendEmailVerificationAsync(ResendEmailVerificationRequest request)
@@ -152,7 +152,7 @@ namespace RpgDex.Application.Services
             var googleUser = await _googleAuthService.ValidateTokenAsync(request.Token);
             if (googleUser is null)
             {
-                return Result<RefreshTokenModel>.Failure("Token do Google inválido");
+                return Result<RefreshTokenModel>.Failure("Invalid Google token");
             }
             var userDb = await _userManager.FindByEmailAsync(googleUser.email);
             if (userDb is not null) {
@@ -168,7 +168,7 @@ namespace RpgDex.Application.Services
                     var addLoginResult =await _userManager.AddLoginAsync(userDb, userDbLoginInfo);
                     if (!addLoginResult.Succeeded)
                     {
-                        return Result<RefreshTokenModel>.Failure("Erro ao vincular conta Google");
+                        return Result<RefreshTokenModel>.Failure("An error occurred while linking the Google account");
                     }
                 }
 
@@ -189,7 +189,7 @@ namespace RpgDex.Application.Services
             {
                 //var errors = string.Join(" | ", createResult.Errors.Select(e => e.Description));
                 //return Result<RefreshTokenModel>.Failure(errors);
-                return Result<RefreshTokenModel>.Failure("Erro ao Criar Usuario");
+                return Result<RefreshTokenModel>.Failure("An error occurred while creating the user");
             }
             var userLoginInfo = new UserLoginInfo(GoogleProvider, googleUser.googleId, GoogleProvider);
             await _userManager.AddLoginAsync(user, userLoginInfo);
@@ -203,7 +203,7 @@ namespace RpgDex.Application.Services
             var newRefreshToken = await GenerateRefreshTokenModelAsync(user);
             if (newRefreshToken is null)
             {
-                return Result<RefreshTokenModel>.Failure("Não foi possivel cadastrar o token");
+                return Result<RefreshTokenModel>.Failure("It was not possible to generate a new token");
             }
             return Result<RefreshTokenModel>.Success(newRefreshToken);
         }
@@ -260,7 +260,7 @@ namespace RpgDex.Application.Services
             var createdResult =  await _userManager.CreateAsync(user);
             if(!createdResult.Succeeded)
             {
-                return Result<RefreshTokenModel>.Failure("Erro ao criar usuário");
+                return Result<RefreshTokenModel>.Failure("An error occurred while creating the user");
             }
             await _userManager.AddLoginAsync(user, userLoginInfo);
 
