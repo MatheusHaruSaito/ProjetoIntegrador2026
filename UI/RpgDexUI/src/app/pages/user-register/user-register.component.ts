@@ -46,10 +46,8 @@ export class UserRegisterComponent {
       });
     });
 
-    const btn = document.getElementById('google-btn');
-    if (btn) {
-      this.googleAuth.renderButton('google-btn');
-    }
+    // Necessário para o SDK registrar a origem — mantém div#google-btn oculta no HTML
+    this.googleAuth.renderButton('google-btn');
   }
 
   get passwordTooShort(): boolean {
@@ -73,6 +71,14 @@ export class UserRegisterComponent {
     this.showPasswordHint = !this.showPasswordHint;
   }
 
+  loginComGoogle(): void {
+    const googleBtn = document.querySelector('#google-btn div[role="button"]') as HTMLElement;
+    if (googleBtn) {
+      googleBtn.click();
+    } else {
+      this.googleAuth.prompt();
+    }
+  }
   Register() {
     this.errorMessage = '';
     this.successMessage = '';

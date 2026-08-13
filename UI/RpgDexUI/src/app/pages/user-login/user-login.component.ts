@@ -39,14 +39,20 @@ export class UserLoginComponent implements OnInit {
       });
     });
 
-    const btn = document.getElementById('google-btn');
-    if (btn) {
-      this.googleAuth.renderButton('google-btn');
-    }
+    this.googleAuth.renderButton('google-btn');
   }
 
   togglePasswordHint() {
     this.showPasswordHint = !this.showPasswordHint;
+  }
+
+  loginComGoogle(): void {
+    const googleBtn = document.querySelector('#google-btn div[role="button"]') as HTMLElement;
+    if (googleBtn) {
+      googleBtn.click();
+    } else {
+      this.googleAuth.prompt();
+    }
   }
 
   Login() {

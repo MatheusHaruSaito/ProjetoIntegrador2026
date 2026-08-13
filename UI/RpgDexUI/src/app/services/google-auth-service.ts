@@ -24,6 +24,10 @@ export class GoogleAuthService {
   }
 
   prompt() {
-    google.accounts.id.prompt();
+    google.accounts.id.prompt((notification: any) => {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        console.log('Prompt do Google não foi exibido:', notification.getNotDisplayedReason());
+      }
+    });
   }
 }
