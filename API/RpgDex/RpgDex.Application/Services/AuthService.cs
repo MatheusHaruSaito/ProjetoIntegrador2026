@@ -176,13 +176,12 @@ namespace RpgDex.Application.Services
             }
 
             //User does not exist, create a new user and link with Google
-            var googleInconUrl = googleUser.iconUrl.Replace("http://localhost:8080/api/File/", "");
             var user = new ApplicationUser
             {
                 DisplayName = googleUser.displayName,
                 UserName = googleUser.email,
                 Email = googleUser.email,
-                IconPath = googleInconUrl,
+                IconPath = googleUser.iconUrl,
                 EmailConfirmed = true
             };
             var createResult = await _userManager.CreateAsync(user);
@@ -254,6 +253,7 @@ namespace RpgDex.Application.Services
                 DisplayName = discorduser.DisplayName,
                 UserName = discorduser.Email,
                 Email = discorduser.Email,
+                IconPath = discorduser.IconUrl,
                 EmailConfirmed = true
             };
 

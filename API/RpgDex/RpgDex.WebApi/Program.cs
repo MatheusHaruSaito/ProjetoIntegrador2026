@@ -11,6 +11,7 @@ using RpgDex.Domain.Entities;
 using AspNetCore.Identity.MongoDbCore.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
@@ -128,6 +129,8 @@ builder.Services.AddAuthentication(option =>
         
         o.Scope.Add("identify");
         o.Scope.Add("email");
+
+        o.ClaimActions.MapJsonKey("urn:discord:avatar", "avatar");
 
         o.SignInScheme = IdentityConstants.ExternalScheme;
     });

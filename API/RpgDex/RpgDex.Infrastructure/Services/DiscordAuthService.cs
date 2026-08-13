@@ -27,7 +27,20 @@ namespace RpgDex.Infrastructure.Services
             var nameClaim = info.Principal.FindFirstValue(ClaimTypes.Name);
             var discordId = info.ProviderKey;
 
-            return new DiscordUser(discordId, nameClaim, emailClaim);
+            var avatarHash = info.Principal.FindFirstValue("urn:discord:avatar");
+
+            string IconUrl;
+            if (!string.IsNullOrEmpty(avatarHash))
+            {
+                string extension = avatarHash.StartsWith("a_") ? "gif" : "png";
+                IconUrl = $"https://cdn.discordapp.com/avatars/{discordId}/{avatarHash}.{extension}";
+            }
+            else
+            {
+                IconUrl = "";
+            }
+
+            return new DiscordUser(discordId, nameClaim, emailClaim, IconUrl);
         }
     }
 }

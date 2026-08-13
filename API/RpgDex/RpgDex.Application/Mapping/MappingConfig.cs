@@ -75,20 +75,22 @@ namespace RpgDex.Application.Mapping
         }
         private static string GetApiUrlIfNotFromGoogle(string iconPath)
         {
-            if (isImageFromGoogle(iconPath))
+            if (VerifyImageUrl(iconPath))
             {
                 return "";
             }
             return $"http://localhost:8080/api/File/";
         }
-        private static bool isImageFromGoogle(string imageUrl)
+        //Verifies if the image URL is from Google or Discord, if not, it will return false
+        private static bool VerifyImageUrl(string imageUrl)
         {
             if (string.IsNullOrEmpty(imageUrl))
             {
                 return false;
             }
             // Verifica se a URL contém "googleusercontent.com"
-            if (imageUrl.Contains("googleusercontent.com"))
+            if (imageUrl.Contains("googleusercontent.com") 
+                || imageUrl.Contains("discordapp.com"))
             {
                 return true;
             }

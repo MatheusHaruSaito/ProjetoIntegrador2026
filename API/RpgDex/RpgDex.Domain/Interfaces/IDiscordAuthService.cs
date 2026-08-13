@@ -8,5 +8,5 @@ namespace RpgDex.Domain.Interfaces
     {
         Task<DiscordUser> GetDiscordUserAsync();
     }
-    public record DiscordUser(string Id, string DisplayName, string Email);
+    public record DiscordUser(string Id, string DisplayName, string Email, string IconUrl);
 }
