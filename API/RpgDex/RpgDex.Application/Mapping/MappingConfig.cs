@@ -43,12 +43,12 @@ namespace RpgDex.Application.Mapping
             TypeAdapterConfig<CreateUserDTO, ApplicationUser>
                  .NewConfig()
                  .Ignore(dest => dest.PasswordHash)
-                 .Map(dest => dest.UserName, src => src.UserName)
+                 .Map(dest => dest.UserName, src => src.Email)
                  .Map(dest => dest.Email, src => src.Email);
 
             TypeAdapterConfig<ApplicationUser, UserResponse>
                  .NewConfig()
-                 .Map(dest => dest.UserName, src => src.UserName)
+                 .Map(dest => dest.DisplayName, src => src.DisplayName)
                  .Map(dest => dest.Email, src => src.Email)
                  .Map(dest => dest.IconPath, src => string.IsNullOrEmpty(src.IconPath)
                  ? null

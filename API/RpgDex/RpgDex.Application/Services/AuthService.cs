@@ -178,6 +178,7 @@ namespace RpgDex.Application.Services
             //User does not exist, create a new user and link with Google
             var user = new ApplicationUser
             {
+                DisplayName = googleUser.displayName,
                 UserName = googleUser.email,
                 Email = googleUser.email,
                 EmailConfirmed = true
@@ -229,9 +230,6 @@ namespace RpgDex.Application.Services
         public async Task<Result<RefreshTokenModel>> DiscordSignUp()
         {
             var discorduser = await _discordAuthService.GetDiscordUserAsync();
-            Console.WriteLine(discorduser.Id);
-            Console.WriteLine(discorduser.Username);
-            Console.WriteLine(discorduser.Email);
             var userLoginInfo = new UserLoginInfo(DiscordProvider, discorduser.Id, DiscordProvider);
             //Verify if user exists in the database
             var userDb = await _userManager.FindByEmailAsync(discorduser.Email);
@@ -251,6 +249,7 @@ namespace RpgDex.Application.Services
             var user = new ApplicationUser
             {
                 //Change this later when DisplayName is available
+                DisplayName = discorduser.DisplayName,
                 UserName = discorduser.Email,
                 Email = discorduser.Email,
                 EmailConfirmed = true

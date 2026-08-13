@@ -3,15 +3,15 @@
     <div class="user-main-info">
       <div class="avatar-wrapper">
         <div class="avatar-placeholder avatar-placeholder--image" *ngIf="user?.iconPath">
-          <img class="avatar-img" [src]="user!.iconPath" alt="Foto de perfil">
+          <img class="avatar-img" [src]="user!.iconPath" alt="Foto de perfil" />
         </div>
         <div class="avatar-placeholder" *ngIf="!user?.iconPath">
-          {{ user?.userName?.substring(0, 2)?.toUpperCase() || '??' }}
+          {{ user?.displayName?.substring(0, 2)?.toUpperCase() || '??' }}
         </div>
       </div>
 
       <div class="user-text">
-        <h1 class="username">{{ user?.userName || 'Viajante' }}</h1>
+        <h1 class="username">{{ user?.displayName || 'Viajante' }}</h1>
         <p class="email">{{ user?.email }}</p>
         <span class="badge">Aventureiro</span>
       </div>
@@ -94,8 +94,11 @@
         routerLink="/personagens"
       >
         <!-- Com ícone -->
-        <div class="card-image-placeholder character-avatar character-avatar--image" *ngIf="char.iconPath">
-          <img class="character-avatar-img" [src]="char.iconPath" [alt]="char.name">
+        <div
+          class="card-image-placeholder character-avatar character-avatar--image"
+          *ngIf="char.iconPath"
+        >
+          <img class="character-avatar-img" [src]="char.iconPath" [alt]="char.name" />
         </div>
         <!-- Sem ícone: ícone padrão -->
         <div class="card-image-placeholder character-avatar" *ngIf="!char.iconPath">

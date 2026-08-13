@@ -19,7 +19,7 @@ export class UserRegisterComponent {
   private router = inject(Router);
 
   registerForm: RegisterUser = {
-    userName: '',
+    displayName: '',
     email: '',
     password: '',
   };
@@ -84,7 +84,7 @@ export class UserRegisterComponent {
     this.successMessage = '';
 
     if (
-      !this.registerForm.userName ||
+      !this.registerForm.displayName ||
       !this.registerForm.email ||
       !this.registerForm.password ||
       !this.confirmPassword
