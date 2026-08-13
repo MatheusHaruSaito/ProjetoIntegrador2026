@@ -30,7 +30,15 @@ export class AuthService {
     private http: HttpClient,
     private cookieService: CookieService,
   ) {
-    this.currentUserSubject = new BehaviorSubject<any>(this.cookieService.get(this.JWT_Token));
+    const token = this.cookieService.get(this.JWT_Token);
+    const refreshToken = this.cookieService.get(this.REFRESH_Token);
+
+    const initialValue: tokenModel | null = token
+      ? { accessToken: token, refreshToken: refreshToken }
+      : null;
+
+    console.log('Initial token value:', initialValue); // Log the initial token value
+    this.currentUserSubject = new BehaviorSubject<tokenModel | null>(initialValue);
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -46,8 +54,8 @@ export class AuthService {
     return this.http.post<ApiResponse<tokenModel>>(`${this.env}/Login`, user).pipe(
       map((response: ApiResponse<tokenModel>) => {
         if (response.success && response.data) {
-          this.cookieService.set(this.JWT_Token, response.data!.accessToken);
-          this.cookieService.set(this.REFRESH_Token, response.data!.refreshToken);
+          this.cookieService.set(this.JWT_Token, response.data!.accessToken, { path: '/' });
+          this.cookieService.set(this.REFRESH_Token, response.data!.refreshToken, { path: '/' });
           this.currentUserSubject.next(response.data);
         }
         return response;
@@ -126,8 +134,8 @@ export class AuthService {
     return this.http.post<ApiResponse<tokenModel>>(`${this.env}/Google/SignUp`, { Token }).pipe(
       map((response: ApiResponse<tokenModel>) => {
         if (response.success && response.data) {
-          this.cookieService.set(this.JWT_Token, response.data!.accessToken);
-          this.cookieService.set(this.REFRESH_Token, response.data!.refreshToken);
+          this.cookieService.set(this.JWT_Token, response.data!.accessToken, { path: '/' });
+          this.cookieService.set(this.REFRESH_Token, response.data!.refreshToken, { path: '/' });
           this.currentUserSubject.next(response.data);
         }
         return response;
@@ -140,7 +148,7 @@ export class AuthService {
   }
 
   public StoreToken(accessToken: string, refreshToken: string): void {
-    this.cookieService.set(this.JWT_Token, accessToken);
-    this.cookieService.set(this.REFRESH_Token, refreshToken);
+    this.cookieService.set(this.JWT_Token, accessToken, { path: '/' });
+    this.cookieService.set(this.REFRESH_Token, refreshToken, { path: '/' });
   }
 }
