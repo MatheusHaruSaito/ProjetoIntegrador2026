@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using static System.Net.WebRequestMethods;
 namespace RpgDex.Application.Mapping
 {
     public class MappingConfig
@@ -52,7 +53,7 @@ namespace RpgDex.Application.Mapping
                  .Map(dest => dest.Email, src => src.Email)
                  .Map(dest => dest.IconPath, src => string.IsNullOrEmpty(src.IconPath)
                  ? null
-                 : $"http://localhost:8080/api/File/{src.IconPath}"); //Tirar isso quando Implementar o uso  do cloudflare r2 / Solução Temporaria para mostrar a imagem
+                 : $"{GetApiUrlIfNotFromGoogle(src.IconPath)}{src.IconPath}"); //Tirar isso quando Implementar o uso  do cloudflare r2 / Solução Temporaria para mostrar a imagem
 
 
             //Mapeamentos para Campaign podem ser adicionados aqui, se necessário
@@ -72,7 +73,28 @@ namespace RpgDex.Application.Mapping
                  ? null
                  : $"http://localhost:8080/api/File/{src.IconPath}");
         }
-
+        private static string GetApiUrlIfNotFromGoogle(string iconPath)
+        {
+            if (isImageFromGoogle(iconPath))
+            {
+                return "";
+            }
+            return $"http://localhost:8080/api/File/";
+        }
+        private static bool isImageFromGoogle(string imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl))
+            {
+                return false;
+            }
+            // Verifica se a URL contém "googleusercontent.com"
+            if (imageUrl.Contains("googleusercontent.com"))
+            {
+                return true;
+            }
+            // Se não for uma imagem do Google, retorna null
+            return false;
+        }
 
         // Metodos para converter Dictionary<string, object> em BsonDocument
 

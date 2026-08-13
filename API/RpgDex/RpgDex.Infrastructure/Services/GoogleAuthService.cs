@@ -27,7 +27,8 @@ namespace RpgDex.Infrastructure.Services
                 };
                 var payload = await GoogleJsonWebSignature.ValidateAsync(token, validationSettings);
                 var displayName = payload.Name ?? payload.Email; 
-                return new GoogleUserInfo(payload.Subject, payload.Email, displayName);
+                payload.Picture = payload.Picture ?? String.Empty;
+                return new GoogleUserInfo(payload.Subject, payload.Email, displayName, payload.Picture);
             }
             catch
             {

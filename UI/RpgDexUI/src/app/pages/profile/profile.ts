@@ -1,105 +1,106 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth-service';
-import { CharacterService } from '../../services/character-service';
-import { UserResponse } from '../../../models/userResponse';
-import { Character } from '../../../models/character';
+  import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+  import { CommonModule } from '@angular/common';
+  import { Router, RouterModule } from '@angular/router';
+  import { AuthService } from '../../services/auth-service';
+  import { CharacterService } from '../../services/character-service';
+  import { UserResponse } from '../../../models/userResponse';
+  import { Character } from '../../../models/character';
 
-const THEME_KEY = 'rpgdex-theme';
+  const THEME_KEY = 'rpgdex-theme';
 
-@Component({
-  selector: 'app-profile',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './profile.html',
-  styleUrl: './profile.css',
-})
-export class ProfileComponent implements OnInit {
-  private authService = inject(AuthService);
-  private characterService = inject(CharacterService);
-  private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
+  @Component({
+    selector: 'app-profile',
+    standalone: true,
+    imports: [CommonModule, RouterModule],
+    templateUrl: './profile.html',
+    styleUrl: './profile.css',
+  })
+  export class ProfileComponent implements OnInit {
+    private authService = inject(AuthService);
+    private characterService = inject(CharacterService);
+    private router = inject(Router);
+    private cdr = inject(ChangeDetectorRef);
 
-  user: UserResponse | null = null;
-  isDarkMode = false;
+    user: UserResponse | null = null;
+    isDarkMode = false;
 
-  characterPreview: Character[] = [];
-  characterTotal = 0;
+    characterPreview: Character[] = [];
+    characterTotal = 0;
 
-  campaigns = [
-    { id: 1, name: 'Crônicas de Arton', role: 'Mestre' },
-    { id: 2, name: 'O Chamado de Cthulhu', role: 'Jogador' },
-    { id: 3, name: 'Mundo de Ferro', role: 'Mestre' },
-  ];
-  http: any;
+    campaigns = [
+      { id: 1, name: 'Crônicas de Arton', role: 'Mestre' },
+      { id: 2, name: 'O Chamado de Cthulhu', role: 'Jogador' },
+      { id: 3, name: 'Mundo de Ferro', role: 'Mestre' },
+    ];
+    http: any;
 
-  ngOnInit(): void {
-    this.initTheme();
-    this.loadUser();
-  }
-
-  private initTheme(): void {
-    const saved = localStorage.getItem(THEME_KEY);
-    this.isDarkMode = saved === 'dark';
-    this.applyTheme();
-  }
-
-  private applyTheme(): void {
-    if (this.isDarkMode) {
-      document.documentElement.classList.add('dark-theme');
-    } else {
-      document.documentElement.classList.remove('dark-theme');
+    ngOnInit(): void {
+      this.initTheme();
+      this.loadUser();
     }
-  }
 
-  toggleTheme(): void {
-    this.isDarkMode = !this.isDarkMode;
-    localStorage.setItem(THEME_KEY, this.isDarkMode ? 'dark' : 'light');
-    this.applyTheme();
-  }
+    private initTheme(): void {
+      const saved = localStorage.getItem(THEME_KEY);
+      this.isDarkMode = saved === 'dark';
+      this.applyTheme();
+    }
 
-  private loadUser(): void {
-    if (!this.authService.isLoggedIn()) {
+    private applyTheme(): void {
+      if (this.isDarkMode) {
+        document.documentElement.classList.add('dark-theme');
+      } else {
+        document.documentElement.classList.remove('dark-theme');
+      }
+    }
+
+    toggleTheme(): void {
+      this.isDarkMode = !this.isDarkMode;
+      localStorage.setItem(THEME_KEY, this.isDarkMode ? 'dark' : 'light');
+      this.applyTheme();
+    }
+
+    private loadUser(): void {
+      if (!this.authService.isLoggedIn()) {
+        this.router.navigate(['/login']);
+        return;
+      }
+
+      this.authService.GetLoggedUser().subscribe({
+        next: (response) => {
+          this.user = response.data ?? null;
+          this.cdr.detectChanges();
+          // Carrega personagens só depois de ter o userId
+          this.loadCharacterPreview();
+          console.log(response.data?.iconPath);
+        },
+        error: (err) => {
+          console.error('Erro ao carregar usuário', err);
+          this.logout();
+        },
+      });
+    }
+
+    private loadCharacterPreview(): void {
+      const userId = this.authService.getLoggedUserId();
+
+      this.characterService.GetAll(userId!).subscribe({
+        next: (response) => {
+          const all: Character[] = response.data ?? [];
+          this.characterTotal = all.length;
+          this.characterPreview = all.slice(0, 3);
+          this.cdr.detectChanges();
+          document.getElementById('user-avatar')?.setAttribute('src', this.user?.iconPath || '');
+        },
+        error: (err) => console.error('Erro ao carregar personagens', err),
+      });
+    }
+
+    editProfile() {
+      this.router.navigate(['/perfil/editar']);
+    }
+
+    logout(): void {
+      this.authService.Logout();
       this.router.navigate(['/login']);
-      return;
     }
-
-    this.authService.GetLoggedUser().subscribe({
-      next: (response) => {
-        this.user = response.data ?? null;
-        this.cdr.detectChanges();
-        // Carrega personagens só depois de ter o userId
-        this.loadCharacterPreview();
-      },
-      error: (err) => {
-        console.error('Erro ao carregar usuário', err);
-        this.logout();
-      },
-    });
   }
-
-  private loadCharacterPreview(): void {
-    const userId = this.authService.getLoggedUserId();
-
-    this.characterService.GetAll(userId!).subscribe({
-      next: (response) => {
-        const all: Character[] = response.data ?? [];
-        this.characterTotal = all.length;
-        this.characterPreview = all.slice(0, 3);
-        this.cdr.detectChanges();
-        document.getElementById('user-avatar')?.setAttribute('src', this.user?.iconPath || '');
-      },
-      error: (err) => console.error('Erro ao carregar personagens', err),
-    });
-  }
-
-  editProfile() {
-    this.router.navigate(['/perfil/editar']);
-  }
-
-  logout(): void {
-    this.authService.Logout();
-    this.router.navigate(['/login']);
-  }
-}
