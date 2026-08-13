@@ -37,7 +37,6 @@ export class AuthService {
       ? { accessToken: token, refreshToken: refreshToken }
       : null;
 
-    console.log('Initial token value:', initialValue); // Log the initial token value
     this.currentUserSubject = new BehaviorSubject<tokenModel | null>(initialValue);
     this.currentUser = this.currentUserSubject.asObservable();
   }

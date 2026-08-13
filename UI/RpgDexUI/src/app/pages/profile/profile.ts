@@ -71,7 +71,6 @@ export class ProfileComponent implements OnInit {
         this.cdr.detectChanges();
         // Carrega personagens só depois de ter o userId
         this.loadCharacterPreview();
-        console.log(response.data?.iconPath);
       },
       error: (err) => {
         console.error('Erro ao carregar usuário', err);
