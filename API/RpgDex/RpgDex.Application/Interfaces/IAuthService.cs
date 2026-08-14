@@ -9,9 +9,15 @@ namespace RpgDex.Application.Interfaces
 {
     public interface IAuthService
     {
-        Task<Result<bool>> RegisterUser(CreateUserDTO authUser);
+        Task<Result<string>> RegisterUser(CreateUserDTO authUser);
         Task<Result<RefreshTokenModel>> LogIn(AuthUserDTO authUser);
+        Task<Result<RefreshTokenModel>> DiscordSignUp();
+
+        Task<Result<RefreshTokenModel>> GoogleSignUp(GoogleLoginRequest request);
         Task<Result<RefreshTokenModel>> RefreshTokenAsync(RefreshTokenModel refreshToken);
+        Task<Result<string>> ValidateEmailByTokenAsync(ValidateEmailByTokenRequest request);
+        Task<Result<string>> ResendEmailVerificationAsync(ResendEmailVerificationRequest request);
+
 
     }
 }

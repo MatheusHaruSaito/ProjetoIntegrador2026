@@ -1,14 +1,13 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
 using RpgDex.Application.Interfaces;
 using RpgDex.Domain.Entities;
+using RpgDex.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
@@ -18,34 +17,43 @@ namespace RpgDex.Application.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _rolemanager;
+
         private readonly ITokenService _tokenService;
+        private readonly IEmailService _emailService;
+        private readonly IGoogleAuthService _googleAuthService;
+        private readonly IDiscordAuthService _discordAuthService;
+
+
+        private const string GoogleProvider = "Google";
+        private const string DiscordProvider = "Discord";
+
 
         private readonly IConfiguration _configuration;
-        public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService,RoleManager<ApplicationRole> rolemanager, IConfiguration configuration)
+        public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService, IEmailService emailService, IGoogleAuthService googleAuthService, RoleManager<ApplicationRole> rolemanager, IConfiguration configuration, IDiscordAuthService discordAuthService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
+            _emailService = emailService;
+            _googleAuthService = googleAuthService;
             _rolemanager = rolemanager;
             _configuration = configuration;
+            _discordAuthService = discordAuthService;
         }
         public async Task<Result<RefreshTokenModel>> LogIn(AuthUserDTO authUser)
         {
             var user = await _userManager.FindByEmailAsync(authUser.Email);
-            if (user is null) throw new Exception("User Not Found");
+            if (user is null) return Result<RefreshTokenModel>.Failure("Invalid Credentials");
 
             var validUser = await _userManager.CheckPasswordAsync(user, authUser.Password);
-            if (!validUser) throw new Exception("Wrong Credentials");
+            if (!validUser) return Result<RefreshTokenModel>.Failure("Invalid Credentials");
+
+            var IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+            if(!IsEmailConfirmed) return Result<RefreshTokenModel>.Failure("Email not confirmed");
+
 
             var accessToken = await _tokenService.GenerateTokenAsync(user);
 
-            var newRefreshToken = new RefreshTokenModel
-            {
-                RefreshToken = _tokenService.GenerateRefreshToken(),
-                AccessToken = accessToken,
-    
-            };
-            await _tokenService.StoreRefreshTokenAsync(newRefreshToken, user.Id);
-
+            var newRefreshToken = await GenerateRefreshTokenModelAsync(user);
             return Result<RefreshTokenModel>.Success(newRefreshToken);
         }
 
@@ -53,79 +61,212 @@ namespace RpgDex.Application.Services
         {
             if (tokenModel is null)
             {
-                return Result<RefreshTokenModel>.Failure("o token atual é invalido");
+                return Result<RefreshTokenModel>.Failure("Invalid token");
             }
             var token = await _tokenService.GetRefreshTokenByToken(tokenModel.RefreshToken);
             if(token is null)
             {
-                Result<RefreshTokenModel>.Failure("o token atual é invalido");
+                return Result<RefreshTokenModel>.Failure("Invalid token");
             }
 
-            var principal = GetPrincipalFromExpiredToken(tokenModel.AccessToken);
+            var principal = _tokenService.GetPrincipalFromExpiredToken(tokenModel.AccessToken);
             if(principal is null)
             {
-                return Result<RefreshTokenModel>.Failure("o token atual é invalido");
+                return Result<RefreshTokenModel>.Failure("Invalid token");
 
             }
 
-            string userName = principal.Identity.Name;
-            var user = await _userManager.FindByNameAsync(userName);
+            string userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if(user is null|| tokenModel.RefreshToken != token.Token)
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null|| tokenModel.RefreshToken != token.Token)
             {
-                return Result<RefreshTokenModel>.Failure("o token do usuario é invalido");
+                return Result<RefreshTokenModel>.Failure("Invalid user token");
             }
 
-            await _tokenService.RovokeTokenFromUserId(user.Id);
+            var tokenRevoked = await _tokenService.RevokeTokenByValue(tokenModel.RefreshToken);
+            if (!tokenRevoked) { 
+                return Result<RefreshTokenModel>.Failure("Invalid token");
+            }
 
-            var newAcessToken = await _tokenService.GenerateTokenAsync(user);
-            var newRefreshToken = _tokenService.GenerateRefreshToken();
+            var newTokenModel = await GenerateRefreshTokenModelAsync(user);
 
-            var newTokenModel = new RefreshTokenModel
+            if (newTokenModel is null)
             {
-                AccessToken = newAcessToken,
-                RefreshToken = newRefreshToken
-            };
-            var savedToken = await _tokenService.StoreRefreshTokenAsync(newTokenModel,user.Id);
-
-            if (!savedToken)
-            {
-                return Result<RefreshTokenModel>.Failure("Não foi possivel cadastrar o token");
+                return Result<RefreshTokenModel>.Failure("It was not possible to generate a new token");
             }
             return Result<RefreshTokenModel>.Success(newTokenModel);
         }
 
-        public async Task<Result<bool>> RegisterUser(CreateUserDTO authUser) {
+        public async Task<Result<string>> RegisterUser(CreateUserDTO authUser) {
             var user = authUser.Adapt<ApplicationUser>();
             var result = await _userManager.CreateAsync(user, authUser.Password);
             if (!result.Succeeded)
             {
-                return Result<bool>.Failure("Não foi possivel Registrar o usuario");
+                return Result<string>.Failure("It was not possible to register the user");
             }
-
-            return Result<bool>.Success(true);
+            return await SendEmailVerificationAsync(authUser.Email);
 
         }
 
-        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        private async Task<Result<string>> SendEmailVerificationAsync(string email)
         {
-            var TokenValidationParameters = new TokenValidationParameters
+            var user = await _userManager.FindByEmailAsync(email);
+            if(user is null)
             {
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
+                return Result<string>.Failure("User not found");
+            }
+
+            var token = await _tokenService.GenerateEmailTokenVerificationAsync(user.Id);
+            if (token is null)
+            {
+                return Result<string>.Failure("It was not possible to generate the verification token");
+            }
+            //Quando a pagina no front Estiver pronta, colocar o link correto
+            string verificationLink = $"http://localhost:4200/emailConfirmation?userid={user.Id}&token={token}";
+            var htmlBody = _emailService.GenerateEmailVerificationHTMLTemplate(verificationLink, user.UserName);
+            var (isEmailSent, message) = await _emailService.SendEmailAsync(user.Email, user.UserName, "Email Verification", htmlBody);
+            if (!isEmailSent)
+            {
+                return Result<string>.Failure(message);
+            }
+            return Result<string>.Success(message);
+        }
+        public async Task<Result<string>> ValidateEmailByTokenAsync(ValidateEmailByTokenRequest request)
+        {
+            var isValid = await _tokenService.ValidateEmailToken(request.UserId, request.Token);
+            if(isValid)
+            {
+                return Result<string>.Success("Email verified successfully");
+            }
+            return Result<string>.Failure("Invalid or expired token");
+        }
+
+        public async Task<Result<string>> ResendEmailVerificationAsync(ResendEmailVerificationRequest request)
+        {
+          return await SendEmailVerificationAsync(request.Email);
+        }
+
+        public async Task<Result<RefreshTokenModel>> GoogleSignUp(GoogleLoginRequest request)
+        {
+            var googleUser = await _googleAuthService.ValidateTokenAsync(request.Token);
+            if (googleUser is null)
+            {
+                return Result<RefreshTokenModel>.Failure("Invalid Google token");
+            }
+            var userDb = await _userManager.FindByEmailAsync(googleUser.email);
+            if (userDb is not null) {
+                //User Exists, but is the user already linked with Google?
+                var userLogins = await _userManager.GetLoginsAsync(userDb);
+
+                var googleLoginInfo = userLogins.FirstOrDefault(l => l.LoginProvider == GoogleProvider && l.ProviderKey == googleUser.googleId);
+                
+                if (googleLoginInfo is null)
+                {
+                    // User exists but is not linked with Google
+                    var userDbLoginInfo = new UserLoginInfo(GoogleProvider, googleUser.googleId, GoogleProvider);
+                    var addLoginResult =await _userManager.AddLoginAsync(userDb, userDbLoginInfo);
+                    if (!addLoginResult.Succeeded)
+                    {
+                        return Result<RefreshTokenModel>.Failure("An error occurred while linking the Google account");
+                    }
+                }
+
+                return await LogInAsync(userDb);
+            }
+
+            //User does not exist, create a new user and link with Google
+            var user = new ApplicationUser
+            {
+                DisplayName = googleUser.displayName,
+                UserName = googleUser.email,
+                Email = googleUser.email,
+                IconPath = googleUser.iconUrl,
+                EmailConfirmed = true
             };
-            var tokenHandler = new JwtSecurityTokenHandler();
+            var createResult = await _userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
+            {
+                //var errors = string.Join(" | ", createResult.Errors.Select(e => e.Description));
+                //return Result<RefreshTokenModel>.Failure(errors);
+                return Result<RefreshTokenModel>.Failure("An error occurred while creating the user");
+            }
+            var userLoginInfo = new UserLoginInfo(GoogleProvider, googleUser.googleId, GoogleProvider);
+            await _userManager.AddLoginAsync(user, userLoginInfo);
 
-            var principal = tokenHandler.ValidateToken(token, TokenValidationParameters, out SecurityToken securityToken);
 
-            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
-                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                    StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("Invalid Token");
+            return await LogInAsync(user);
+        }
+        private async Task<Result<RefreshTokenModel>> LogInAsync(ApplicationUser user)
+        {
 
-            return principal;
+            var newRefreshToken = await GenerateRefreshTokenModelAsync(user);
+            if (newRefreshToken is null)
+            {
+                return Result<RefreshTokenModel>.Failure("It was not possible to generate a new token");
+            }
+            return Result<RefreshTokenModel>.Success(newRefreshToken);
+        }
+
+        private async Task<RefreshTokenModel> GenerateRefreshTokenModelAsync(ApplicationUser user)
+        {
+            var accessToken = await _tokenService.GenerateTokenAsync(user);
+            var refreshToken = _tokenService.GenerateRefreshToken();
+            var newRefreshToken = new RefreshTokenModel
+            {
+                RefreshToken = refreshToken,
+                AccessToken = accessToken,
+
+            };
+            var result = await _tokenService.StoreRefreshTokenAsync(newRefreshToken.AccessToken, newRefreshToken.RefreshToken, user.Id);
+
+            if (!result)
+            {
+                return null;
+            }
+
+            return newRefreshToken;
+        }
+
+        public async Task<Result<RefreshTokenModel>> DiscordSignUp()
+        {
+            var discorduser = await _discordAuthService.GetDiscordUserAsync();
+            var userLoginInfo = new UserLoginInfo(DiscordProvider, discorduser.Id, DiscordProvider);
+            //Verify if user exists in the database
+            var userDb = await _userManager.FindByEmailAsync(discorduser.Email);
+            if (userDb is not null)
+            {
+                //User Exists, but is the user already linked with Discord?
+                var userLogins = await _userManager.GetLoginsAsync(userDb);
+                if (!userLogins.Any(x => x.LoginProvider == DiscordProvider))
+                {
+                    //Account exists but is not linked with Discord, link the account
+                    await _userManager.AddLoginAsync(userDb, userLoginInfo);
+                }
+                //User Login with Discord already exists, proceed to login
+                return await LogInAsync(userDb);
+            }
+            //User does not exist, create a new user and link with Discord
+            var user = new ApplicationUser
+            {
+                //Change this later when DisplayName is available
+                DisplayName = discorduser.DisplayName,
+                UserName = discorduser.Email,
+                Email = discorduser.Email,
+                IconPath = discorduser.IconUrl,
+                EmailConfirmed = true
+            };
+
+            var createdResult =  await _userManager.CreateAsync(user);
+            if(!createdResult.Succeeded)
+            {
+                return Result<RefreshTokenModel>.Failure("An error occurred while creating the user");
+            }
+            await _userManager.AddLoginAsync(user, userLoginInfo);
+
+
+
+            return await LogInAsync(user);
         }
     }
 }

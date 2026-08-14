@@ -9,7 +9,7 @@ namespace RpgDex.Domain.Interfaces
     {
         Task<Character> InsertAsync(Character character);
         Task<IEnumerable<Character>> GetAllByUserIdAsync(Guid userId);
-        Task<Character> GetByIdAsync(Guid Id);
+        Task<Character> GetByIdAsync(Guid id);
         Task<bool> UpdateAsync(Character NewCharacter);
         Task<bool> SetActiveState(Guid Id,bool ActiveState);
 

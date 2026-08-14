@@ -13,7 +13,7 @@ const THEME_KEY = 'rpgdex-theme';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './profile.html',
-  styleUrl: './profile.css'
+  styleUrl: './profile.css',
 })
 export class ProfileComponent implements OnInit {
   private authService = inject(AuthService);
@@ -30,9 +30,9 @@ export class ProfileComponent implements OnInit {
   campaigns = [
     { id: 1, name: 'Crônicas de Arton', role: 'Mestre' },
     { id: 2, name: 'O Chamado de Cthulhu', role: 'Jogador' },
-    { id: 3, name: 'Mundo de Ferro', role: 'Mestre' }
+    { id: 3, name: 'Mundo de Ferro', role: 'Mestre' },
   ];
-http: any;
+  http: any;
 
   ngOnInit(): void {
     this.initTheme();
@@ -71,12 +71,11 @@ http: any;
         this.cdr.detectChanges();
         // Carrega personagens só depois de ter o userId
         this.loadCharacterPreview();
-
       },
       error: (err) => {
         console.error('Erro ao carregar usuário', err);
         this.logout();
-      }
+      },
     });
   }
 
@@ -91,7 +90,7 @@ http: any;
         this.cdr.detectChanges();
         document.getElementById('user-avatar')?.setAttribute('src', this.user?.iconPath || '');
       },
-      error: (err) => console.error('Erro ao carregar personagens', err)
+      error: (err) => console.error('Erro ao carregar personagens', err),
     });
   }
 
@@ -103,5 +102,4 @@ http: any;
     this.authService.Logout();
     this.router.navigate(['/login']);
   }
-
 }

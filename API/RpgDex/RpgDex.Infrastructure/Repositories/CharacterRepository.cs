@@ -39,14 +39,14 @@ namespace RpgDex.Infrastructure.Services
             return await _entitie.Find(u => u.Id == Id).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> UpdateAsync(Character NewCharacter)
+        public async Task<bool> UpdateAsync(Character newCharacter)
         {
-            var filter = Builders<Character>.Filter.Eq(c => c.Id, NewCharacter.Id);
+            var filter = Builders<Character>.Filter.Eq(c => c.Id, newCharacter.Id);
             var updateCharacter = Builders<Character>.Update
-                .Set(c => c.IconPath, NewCharacter.IconPath)
-                .Set(c => c.Name, NewCharacter.Name)
-                .Set(c => c.Description, NewCharacter.Description)
-                .Set(c => c.Properties, NewCharacter.Properties);
+                .Set(c => c.IconPath, newCharacter.IconPath)
+                .Set(c => c.Name, newCharacter.Name)
+                .Set(c => c.Description, newCharacter.Description)
+                .Set(c => c.Properties, newCharacter.Properties);
             var result = await _entitie.UpdateOneAsync(filter, updateCharacter);
             return result.ModifiedCount > 0;
         }

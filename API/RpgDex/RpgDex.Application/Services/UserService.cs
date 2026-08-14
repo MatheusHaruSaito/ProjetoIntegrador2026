@@ -36,9 +36,9 @@ namespace RpgDex.Application.Services
             var user = await _userManager.FindByIdAsync(Id.ToString());
             if(user is null)
             {
-                return Result<string>.Failure("Usuario Invalido");
+                return Result<string>.Failure("Invalid User");
             }
-            user.UserName = updatedUser.UserName;
+            user.DisplayName = updatedUser.DisplayName;
 
             try
             {
@@ -46,11 +46,15 @@ namespace RpgDex.Application.Services
             }
             catch (Exception ex)
             {
-                return Result<string>.Failure($"Erro ao salvar a imagem: {ex.Message}");
+                return Result<string>.Failure($"Error occurred while saving the image: {ex.Message}");
             }
 
-            await _userManager.UpdateAsync(user);
-            return Result<string>.Success("Perfil atualizado com sucesso!");
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return Result<string>.Failure("Failed to update profile." + string.Join(" ", result.Errors.Select(e => e.Description)));
+            }
+            return Result<string>.Success("Profile updated successfully!");
         }
     }
 }

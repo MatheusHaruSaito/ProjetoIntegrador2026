@@ -1,12 +1,12 @@
 <div class="register-wrapper">
   <div class="register-card">
-
     <div class="register-side">
       <div class="register-logo" routerLink="/home">RPGDex</div>
       <div class="register-side__content">
         <h1 class="register-side__title">Junte-se à Aventura!</h1>
         <p class="register-side__text">
-          Crie sua conta para começar a organizar suas campanhas e fichas de personagens em um só lugar.
+          Crie sua conta para começar a organizar suas campanhas e fichas de personagens em um só
+          lugar.
         </p>
       </div>
       <div class="register-side__actions desktop-only">
@@ -22,16 +22,16 @@
       </div>
 
       <form class="register-form" (ngSubmit)="Register()">
-
         <div class="input-group">
           <i class="fa fa-user icon-field"></i>
           <input
             type="text"
             placeholder="Nome de usuário"
-            name="userName"
-            [(ngModel)]="registerForm.userName"
-            autocomplete="username"
-            required>
+            name="displayName"
+            [(ngModel)]="registerForm.displayName"
+            autocomplete="displayName"
+            required
+          />
         </div>
 
         <div class="input-group">
@@ -42,7 +42,8 @@
             name="email"
             [(ngModel)]="registerForm.email"
             autocomplete="email"
-            required>
+            required
+          />
         </div>
 
         <div class="input-group">
@@ -53,13 +54,15 @@
             name="password"
             [(ngModel)]="registerForm.password"
             autocomplete="new-password"
-            required>
+            required
+          />
           <button
             type="button"
             class="password-hint-btn"
             (click)="togglePasswordHint()"
             [class.active]="showPasswordHint"
-            aria-label="Dicas de senha">
+            aria-label="Dicas de senha"
+          >
             ?
           </button>
           <div class="password-hint-box" *ngIf="showPasswordHint">
@@ -72,8 +75,12 @@
             </ul>
           </div>
         </div>
-        <span class="field-hint" *ngIf="passwordTooShort">A senha deve ter pelo menos 8 caracteres.</span>
-        <span class="field-hint" *ngIf="!passwordTooShort && passwordStrengthError">{{ passwordStrengthError }}</span>
+        <span class="field-hint" *ngIf="passwordTooShort"
+          >A senha deve ter pelo menos 8 caracteres.</span
+        >
+        <span class="field-hint" *ngIf="!passwordTooShort && passwordStrengthError">{{
+          passwordStrengthError
+        }}</span>
 
         <div class="input-group">
           <i class="fa fa-lock icon-field"></i>
@@ -83,14 +90,17 @@
             name="confirmPassword"
             [(ngModel)]="confirmPassword"
             autocomplete="new-password"
-            required>
+            required
+          />
         </div>
         <span class="field-hint" *ngIf="passwordsMismatch">As senhas não coincidem.</span>
 
         <div class="form-options">
           <label class="checkbox-container">
-            <input type="checkbox" id="terms" name="terms" [(ngModel)]="termsAccepted">
-            <span class="terms-text" style="margin-left: 8px;">Eu aceito os <a href="#" class="forgot-link">Termos de Uso</a></span>
+            <input type="checkbox" id="terms" name="terms" [(ngModel)]="termsAccepted" />
+            <span class="terms-text" style="margin-left: 8px"
+              >Eu aceito os <a href="#" class="forgot-link">Termos de Uso</a></span
+            >
           </label>
         </div>
 
@@ -113,13 +123,17 @@
       </div>
 
       <div class="social-registers">
-        <button class="social-btn"><i class="fa-brands fa-google"></i></button>
-        <button class="social-btn"><i class="fa-brands fa-discord"></i></button>
-        <button class="social-btn"><i class="fa-brands fa-apple"></i></button>
+        <button type="button" class="social-btn" (click)="loginComGoogle()" title="Cadastrar com Google">
+          <i class="fa-brands fa-google"></i>
+        </button>
+        <div id="google-btn" style="display:none;position:absolute;"></div>
+
+        <button type="button" (click)="onDiscordLogin()" class="social-btn" title="Cadastrar com Discord">
+          <i class="fa-brands fa-discord"></i>
+        </button>
       </div>
 
       <p class="register-footer mobile-only">Já tem conta? <a routerLink="/login">Entrar</a></p>
-
     </div>
   </div>
 </div>

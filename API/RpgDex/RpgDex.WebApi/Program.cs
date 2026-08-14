@@ -11,17 +11,18 @@ using RpgDex.Domain.Entities;
 using AspNetCore.Identity.MongoDbCore.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using RpgDex.Infrastructure.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
+using RpgDex.Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
-
-MappingConfig.Configure();
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
 // Add services to the container.
 
 builder.Services.AddSingleton<MongoDbContext>();
@@ -41,7 +42,6 @@ builder.Services.AddScoped<IGridFSBucket>(sp =>
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
 builder.Services.AddScoped<ICharacterSevice,CharacterService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -51,12 +51,25 @@ builder.Services.AddScoped<ITokenRepository,TokenRepository>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
+builder.Services.AddScoped<ICampaignService, CampaignService>();
+builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
+builder.Services.AddScoped<IDiscordAuthService, DiscordAuthService>();
 
 
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
 
-MappingConfig.Configure();
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()
+    ?? throw new InvalidOperationException("Jwt Settings Not Found");
 
+var baseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:8080";
+MappingConfig.Configure(baseUrl);
+
+builder.Services.Configure<GoogleAuthSettings>(builder.Configuration.GetSection("Google"));
+builder.Services.Configure<DiscordSettings>(builder.Configuration.GetSection("Discord"));
 
 
 builder.Services.AddCors(options => {
@@ -100,12 +113,28 @@ builder.Services.AddAuthentication(option =>
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
             ClockSkew = TimeSpan.Zero,
             NameClaimType = JwtRegisteredClaimNames.UniqueName
         };
+    })
+    .AddDiscord(o =>
+    {
+        o.ClientId = builder.Configuration["Discord:ClientId"]
+            ?? throw new InvalidOperationException("Discord ClientId Not Found");
+        o.ClientSecret = builder.Configuration["Discord:ClientSecret"]
+            ?? throw new InvalidOperationException("Discord ClientSecret Not Found");
+
+        o.CallbackPath = "/signin-discord";
+        
+        o.Scope.Add("identify");
+        o.Scope.Add("email");
+
+        o.ClaimActions.MapJsonKey("urn:discord:avatar", "avatar");
+
+        o.SignInScheme = IdentityConstants.ExternalScheme;
     });
 
 

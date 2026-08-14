@@ -7,11 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using static System.Net.WebRequestMethods;
 namespace RpgDex.Application.Mapping
 {
     public class MappingConfig
     {
-        public static void Configure()
+        public static void Configure(string baseUrl = "http://localhost:8080")
         {
             //Mapeamentos para Character podem ser adicionados aqui, se necessário
             TypeAdapterConfig<CreateCharacterRequest, Character>
@@ -24,7 +25,7 @@ namespace RpgDex.Application.Mapping
                 .Map(dest => dest.Properties, src => ConvertToDictionary(src.Properties))
                     .Map(dest => dest.IconPath, src => string.IsNullOrEmpty(src.IconPath) 
                     ? null 
-                    :$"http://localhost:8080/api/File/{src.IconPath}"); //Tirar isso quando Implementar o uso  do cloudflare r2 / Solução Temporaria para mostrar a imagem
+                    :$"{baseUrl}/api/File/{src.IconPath}"); //Tirar isso quando Implementar o uso  do cloudflare r2 / Solução Temporaria para mostrar a imagem
 
             TypeAdapterConfig<UpdateCharacterRequest, Character>
                 .NewConfig()
@@ -43,19 +44,61 @@ namespace RpgDex.Application.Mapping
             TypeAdapterConfig<CreateUserDTO, ApplicationUser>
                  .NewConfig()
                  .Ignore(dest => dest.PasswordHash)
-                 .Map(dest => dest.UserName, src => src.UserName)
+                 .Map(dest => dest.UserName, src => src.Email)
                  .Map(dest => dest.Email, src => src.Email);
 
             TypeAdapterConfig<ApplicationUser, UserResponse>
                  .NewConfig()
-                 .Map(dest => dest.UserName, src => src.UserName)
+                 .Map(dest => dest.DisplayName, src => src.DisplayName)
                  .Map(dest => dest.Email, src => src.Email)
                  .Map(dest => dest.IconPath, src => string.IsNullOrEmpty(src.IconPath)
                  ? null
-                 : $"http://localhost:8080/api/File/{src.IconPath}"); //Tirar isso quando Implementar o uso  do cloudflare r2 / Solução Temporaria para mostrar a imagem
+                 : $"{GetApiUrlIfNotFromGoogle(src.IconPath, baseUrl)}{src.IconPath}"); //Tirar isso quando Implementar o uso  do cloudflare r2 / Solução Temporaria para mostrar a imagem
 
 
+            //Mapeamentos para Campaign podem ser adicionados aqui, se necessário
+            TypeAdapterConfig<CreateCampaignRequest, Campaign>
+                .NewConfig()
+                .Ignore(dest => dest.Id);
+            TypeAdapterConfig<Campaign, CampaignResponse>
+                .NewConfig()
+                .Map(dest => dest.Id, src => src.Id)
+                .Map(dest => dest.Title, src => src.Title)
+                .Map(dest => dest.Description, src => src.Description)
+                .Map(dest => dest.MaxPlayers, src => src.MaxPlayers)
+                .Map(dest => dest.PlayerIds, src => src.PlayerIds)
+                .Map(dest => dest.CharacterIds, src => src.CharacterIds)
+                .Map(dest => dest.CharacterRequests, src => src.CharacterRequests)
+                .Map(dest => dest.IconPath, src => string.IsNullOrEmpty(src.IconPath)
+                 ? null
+                 : $"{baseUrl}/api/File/{src.IconPath}");
         }
+        private static string GetApiUrlIfNotFromGoogle(string iconPath, string baseUrl)
+        {
+            if (VerifyImageUrl(iconPath))
+            {
+                return "";
+            }
+            return $"{baseUrl}/api/File/";
+        }
+        //Verifies if the image URL is from Google or Discord, if not, it will return false
+        private static bool VerifyImageUrl(string imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl))
+            {
+                return false;
+            }
+            // Verifica se a URL contém "googleusercontent.com"
+            if (imageUrl.Contains("googleusercontent.com") 
+                || imageUrl.Contains("discordapp.com"))
+            {
+                return true;
+            }
+            // Se não for uma imagem do Google, retorna null
+            return false;
+        }
+
+        // Metodos para converter Dictionary<string, object> em BsonDocument
 
         private static BsonDocument ConvertToBsonDocument(string source)
         {
