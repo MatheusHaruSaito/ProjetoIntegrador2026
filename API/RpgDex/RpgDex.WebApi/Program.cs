@@ -70,6 +70,8 @@ MappingConfig.Configure(baseUrl);
 
 builder.Services.Configure<GoogleAuthSettings>(builder.Configuration.GetSection("Google"));
 builder.Services.Configure<DiscordSettings>(builder.Configuration.GetSection("Discord"));
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+
 
 builder.Services.AddOptions();
 builder.Services.AddHttpClient<IResend, ResendClient>();

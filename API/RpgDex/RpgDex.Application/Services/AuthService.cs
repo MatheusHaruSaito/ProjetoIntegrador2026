@@ -122,8 +122,7 @@ namespace RpgDex.Application.Services
             {
                 return Result<string>.Failure("It was not possible to generate the verification token");
             }
-            //Quando a pagina no front Estiver pronta, colocar o link correto
-            string verificationLink = $"http://localhost:4200/emailConfirmation?userid={user.Id}&token={token}";
+            string verificationLink = $"/emailConfirmation?userid={user.Id}&token={token}";
             var htmlBody = _emailService.GenerateEmailVerificationHTMLTemplate(verificationLink, user.UserName);
             var (isEmailSent, message) = await _emailService.SendEmailAsync(user.Email, user.UserName, "Email Verification", htmlBody);
             if (!isEmailSent)

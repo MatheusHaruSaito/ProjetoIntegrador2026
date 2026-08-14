@@ -8,10 +8,13 @@ namespace RpgDex.Infrastructure.Services
     public class EmailService : IEmailService
     {
         private readonly EmailSettings _settings;
+        private readonly ApiSettings _apiSettings;
+
         private readonly IResend _resend;
-        public EmailService(IOptions<EmailSettings> options, IResend resend)
+        public EmailService(IOptions<EmailSettings> options, IOptions<ApiSettings> apiSettings, IResend resend)
         {
             _settings = options.Value;
+            _apiSettings = apiSettings.Value;
             _resend = resend;
         }
 
@@ -44,6 +47,7 @@ namespace RpgDex.Infrastructure.Services
 
         public string GenerateEmailVerificationHTMLTemplate(string verificationLink, string userName)
         {
+            
             return $@"<!DOCTYPE html>
 <html lang=""pt-BR"">
 <head>
@@ -100,7 +104,7 @@ namespace RpgDex.Infrastructure.Services
 
               <!-- Botão CTA -->
               <div style=""text-align:center;margin:32px 0;"">
-                <a href=""{verificationLink}""
+                <a href=""{_apiSettings.UIBaseUrl}{verificationLink}""
                    style=""display:inline-block;padding:16px 40px;
                            background:linear-gradient(135deg,#7c3aed,#a855f7);
                            color:#ffffff;font-size:1rem;font-weight:800;
