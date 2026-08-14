@@ -1,4 +1,5 @@
 ﻿using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using RpgDex.Domain.Interfaces;
@@ -32,7 +33,7 @@ namespace RpgDex.Infrastructure.Services
             {
                 using (var client = new SmtpClient())
                 {
-                    await client.ConnectAsync(_settings.SmtpServer, _settings.SmtpPort, true);
+                    await client.ConnectAsync(_settings.SmtpServer, _settings.SmtpPort, SecureSocketOptions.Auto);
                     await client.AuthenticateAsync(_settings.Username, _settings.Password);
                     await client.SendAsync(message);
                     await client.DisconnectAsync(true);
