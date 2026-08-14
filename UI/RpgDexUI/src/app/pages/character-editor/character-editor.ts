@@ -1,0 +1,238 @@
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CharacterService } from '../../services/character-service';
+import { Character } from '../../../models/character';
+
+export interface AttrEntry { key: string; value: string; }
+export interface AttrGroup  { title: string; entries: AttrEntry[]; }
+
+@Component({
+  selector: 'app-character-editor',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './character-editor.html',
+  styleUrl: './character-editor.css',
+})
+export class CharacterEditor implements OnInit {
+  private route            = inject(ActivatedRoute);
+  private router           = inject(Router);
+  private characterService = inject(CharacterService);
+  private cdr              = inject(ChangeDetectorRef);
+
+  character: Character | null = null;
+  editForm = { name: '', description: '' };
+  groups: AttrGroup[] = [];
+
+  private savedState: { editForm: { name: string; description: string }; groups: AttrGroup[] } = {
+    editForm: { name: '', description: '' },
+    groups: [],
+  };
+
+  private captureSavedState(): void {
+    this.savedState = JSON.parse(JSON.stringify({ editForm: this.editForm, groups: this.groups }));
+  }
+
+  selectedIconFile: File | null = null;
+  iconPreviewUrl = '';
+  isSaving       = false;
+  errorMessage   = '';
+  successMessage = '';
+  isEditing      = false;
+
+  private readonly GUID_RE =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) { this.router.navigate(['/personagens']); return; }
+    this.loadCharacter(id);
+  }
+
+  private loadCharacter(id: string): void {
+    this.characterService.GetById(id).subscribe({
+      next: (res) => {
+        this.character = res.data ?? null;
+        if (!this.character) { this.router.navigate(['/personagens']); return; }
+        this.editForm = { name: this.character.name, description: this.character.description ?? '' };
+        this.groups = this.buildGroups((this.character as any).properties);
+        this.selectedIconFile = null;
+        this.iconPreviewUrl = '';
+        this.captureSavedState();
+        this.cdr.detectChanges();
+      },
+      error: () => this.router.navigate(['/personagens']),
+    });
+  }
+
+  get hasUnsavedChanges(): boolean {
+    const current = JSON.stringify({ editForm: this.editForm, groups: this.groups });
+    const saved = JSON.stringify(this.savedState);
+    return current !== saved || !!this.selectedIconFile;
+  }
+
+  toggleEditMode(): void {
+    if (this.isEditing) {
+      if (this.hasUnsavedChanges) {
+        const confirmed = confirm('Você tem alterações não salvas. Deseja descartar?');
+        if (!confirmed) return;
+      }
+
+      this.editForm = JSON.parse(JSON.stringify(this.savedState.editForm));
+      this.groups = JSON.parse(JSON.stringify(this.savedState.groups));
+      this.selectedIconFile = null;
+      this.iconPreviewUrl = '';
+      this.errorMessage = '';
+    }
+    this.isEditing = !this.isEditing;
+  }
+
+  private buildGroups(props: any): AttrGroup[] {
+    if (!props || typeof props !== 'object') return [];
+    return Object.entries(props).map(([rawKey, val]) => ({
+      title: this.cleanKey(rawKey, val),
+      entries: this.extractEntries(val),
+    }));
+  }
+
+  private cleanKey(rawKey: string, node: any): string {
+    if (node && typeof node === 'object' && !Array.isArray(node) && node.title)
+      return String(node.title);
+    if (this.GUID_RE.test(rawKey)) return 'Grupo';
+    return rawKey.replace(/_[0-9a-f-]{36}$/i, '').trim() || rawKey;
+  }
+
+  private extractEntries(val: any): AttrEntry[] {
+    const out: AttrEntry[] = [];
+    this.walkNode(val, '', out);
+    return out;
+  }
+
+  private walkNode(node: any, parentKey: string, out: AttrEntry[]): void {
+    if (node === null || node === undefined) return;
+    if (typeof node !== 'object') {
+      if (parentKey) out.push({ key: parentKey, value: String(node) });
+      return;
+    }
+    if (Array.isArray(node)) { for (const i of node) this.walkNode(i, parentKey, out); return; }
+    if ('Name' in node || 'Value' in node) {
+      out.push({
+        key: String((node.Name ?? node.name ?? parentKey) || 'Atributo'),
+        value: String(node.Value ?? node.value ?? ''),
+      });
+      return;
+    }
+    if ('data' in node) {
+      const childKey = node.title ? String(node.title) : parentKey;
+      const data = node.data;
+      if (Array.isArray(data) && data.length > 0) {
+        for (const c of data) this.walkNode(c, childKey, out);
+        return;
+      }
+      if (data && typeof data === 'object' && 'value' in data) {
+        out.push({ key: childKey, value: String(data['value'] ?? '') });
+        return;
+      }
+      if (childKey) out.push({ key: childKey, value: '' });
+      return;
+    }
+    for (const [k, v] of Object.entries(node)) this.walkNode(v, k, out);
+  }
+
+  // ── Grupos ─────────────────────────────────────────────
+  addGroup(): void              { this.groups.push({ title: '', entries: [] }); }
+  removeGroup(i: number): void  { this.groups.splice(i, 1); }
+  addEntry(g: AttrGroup): void  { g.entries.push({ key: '', value: '' }); }
+  removeEntry(g: AttrGroup, i: number): void { g.entries.splice(i, 1); }
+
+  // ── Ícone ──────────────────────────────────────────────
+  onIconSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) { this.errorMessage = 'A imagem deve ter no máximo 2MB.'; return; }
+    this.selectedIconFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.iconPreviewUrl = e.target?.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ── Salvar ─────────────────────────────────────────────
+  Save(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    if (!this.editForm.name.trim()) {
+      this.errorMessage = 'O nome do personagem é obrigatório.';
+      return;
+    }
+
+    const propertiesObj: Record<string, any> = {};
+    for (const group of this.groups) {
+      const key = group.title.trim() || 'Grupo';
+      propertiesObj[key] = group.entries
+        .filter(e => e.key.trim())
+        .map(e => ({ Name: e.key.trim(), Value: e.value }));
+    }
+
+    const form = new FormData();
+    form.append('id',          this.character!.id);
+    form.append('name',        this.editForm.name.trim());
+    form.append('description', this.editForm.description ?? '');
+    form.append('properties',  JSON.stringify(propertiesObj));
+    if (this.selectedIconFile) {
+      form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
+    }
+
+    this.isSaving = true;
+
+    this.characterService.Update(form as any).subscribe({
+      next: () => {
+        this.isSaving = false;
+
+        // Atualiza o objeto local sem fazer novo request
+        this.character = {
+          ...this.character!,
+          name: this.editForm.name.trim(),
+          description: this.editForm.description,
+          iconPath: this.iconPreviewUrl || this.character!.iconPath,
+        };
+
+        this.captureSavedState();
+        this.selectedIconFile = null;
+
+        // Volta para visualização e mostra feedback
+        this.isEditing = false;
+        this.successMessage = 'Personagem salvo com sucesso!';
+        this.cdr.detectChanges();
+        setTimeout(() => { this.successMessage = ''; this.cdr.detectChanges(); }, 3000);
+      },
+      error: (err) => {
+        this.isSaving = false;
+        const body = err?.error;
+        this.errorMessage =
+          (body?.errors ? (Object.values(body.errors).flat() as string[])[0] : null)
+          ?? body?.message ?? body?.title ?? 'Erro ao salvar.';
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  confirmDelete(): void {
+    if (!confirm('Tem certeza que deseja excluir este personagem? Esta ação é irreversível.')) return;
+    this.characterService.Delete(this.character!.id).subscribe({
+      next:  () => this.router.navigate(['/personagens']),
+      error: () => { this.errorMessage = 'Erro ao excluir personagem.'; },
+    });
+  }
+
+  goBack(): void {
+    if (this.isEditing && this.hasUnsavedChanges) {
+      if (!confirm('Você tem alterações não salvas. Deseja sair mesmo assim?')) return;
+    }
+    this.router.navigate(['/personagens']);
+  }
+}

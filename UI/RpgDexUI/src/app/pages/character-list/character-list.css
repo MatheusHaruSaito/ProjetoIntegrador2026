@@ -791,3 +791,58 @@ table td:nth-child(3) {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+/* --- BARRA DE BUSCA --- */
+.cl-search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    background: var(--rpg-surface);
+    border: 2px solid var(--rpg-border);
+    border-radius: 12px;
+    padding: 0 16px;
+    transition: border-color 0.2s;
+}
+
+.cl-search-bar:focus-within {
+    border-color: var(--rpg-purple);
+}
+
+.cl-search-bar > i {
+    color: var(--rpg-text-faint);
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.cl-search-bar input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 13px 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    color: var(--rpg-text-strong);
+    outline: none;
+}
+
+.cl-search-bar input::placeholder {
+    color: var(--rpg-text-faint);
+}
+
+.cl-search-clear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--rpg-text-faint);
+    font-size: 0.85rem;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.cl-search-clear:hover {
+    color: var(--rpg-error);
+    background: var(--rpg-error-bg);
+}
