@@ -133,7 +133,7 @@ namespace RpgDex.Infrastructure.Services
                 <p style=""margin:0;font-size:0.8rem;color:#666;
                            word-break:break-all;line-height:1.5;"">
                   Copie e cole o endereço abaixo no seu navegador:<br>
-                  <span style=""color:#7c3aed;"">{verificationLink}</span>
+                  <span style=""color:#7c3aed;"">{_apiSettings.UIBaseUrl}{verificationLink}</span>
                 </p>
               </div>
 
