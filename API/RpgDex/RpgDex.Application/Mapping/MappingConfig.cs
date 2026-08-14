@@ -12,7 +12,7 @@ namespace RpgDex.Application.Mapping
 {
     public class MappingConfig
     {
-        public static void Configure()
+        public static void Configure(string baseUrl = "http://localhost:8080")
         {
             //Mapeamentos para Character podem ser adicionados aqui, se necessário
             TypeAdapterConfig<CreateCharacterRequest, Character>
@@ -53,7 +53,7 @@ namespace RpgDex.Application.Mapping
                  .Map(dest => dest.Email, src => src.Email)
                  .Map(dest => dest.IconPath, src => string.IsNullOrEmpty(src.IconPath)
                  ? null
-                 : $"{GetApiUrlIfNotFromGoogle(src.IconPath)}{src.IconPath}"); //Tirar isso quando Implementar o uso  do cloudflare r2 / Solução Temporaria para mostrar a imagem
+                 : $"{GetApiUrlIfNotFromGoogle(src.IconPath, baseUrl)}{src.IconPath}"); //Tirar isso quando Implementar o uso  do cloudflare r2 / Solução Temporaria para mostrar a imagem
 
 
             //Mapeamentos para Campaign podem ser adicionados aqui, se necessário
@@ -71,15 +71,15 @@ namespace RpgDex.Application.Mapping
                 .Map(dest => dest.CharacterRequests, src => src.CharacterRequests)
                 .Map(dest => dest.IconPath, src => string.IsNullOrEmpty(src.IconPath)
                  ? null
-                 : $"http://localhost:8080/api/File/{src.IconPath}");
+                 : $"{baseUrl}/api/File/{src.IconPath}");
         }
-        private static string GetApiUrlIfNotFromGoogle(string iconPath)
+        private static string GetApiUrlIfNotFromGoogle(string iconPath, string baseUrl)
         {
             if (VerifyImageUrl(iconPath))
             {
                 return "";
             }
-            return $"http://localhost:8080/api/File/";
+            return $"{baseUrl}/api/File/";
         }
         //Verifies if the image URL is from Google or Discord, if not, it will return false
         private static bool VerifyImageUrl(string imageUrl)
