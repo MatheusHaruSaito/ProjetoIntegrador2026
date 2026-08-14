@@ -25,7 +25,7 @@ namespace RpgDex.Application.Mapping
                 .Map(dest => dest.Properties, src => ConvertToDictionary(src.Properties))
                     .Map(dest => dest.IconPath, src => string.IsNullOrEmpty(src.IconPath) 
                     ? null 
-                    :$"http://localhost:8080/api/File/{src.IconPath}"); //Tirar isso quando Implementar o uso  do cloudflare r2 / Solução Temporaria para mostrar a imagem
+                    :$"{baseUrl}/api/File/{src.IconPath}"); //Tirar isso quando Implementar o uso  do cloudflare r2 / Solução Temporaria para mostrar a imagem
 
             TypeAdapterConfig<UpdateCharacterRequest, Character>
                 .NewConfig()
