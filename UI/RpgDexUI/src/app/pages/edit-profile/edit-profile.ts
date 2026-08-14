@@ -7,7 +7,7 @@ import { UserService } from '../../services/user-service';
 import { UserResponse } from '../../../models/userResponse';
 
 interface EditProfileForm {
-  userName: string;
+  displayName: string;
 }
 
 @Component({
@@ -26,7 +26,7 @@ export class EditProfileComponent implements OnInit {
   currentUser: UserResponse | null = null;
 
   editForm: EditProfileForm = {
-    userName: '',
+    displayName: '',
   };
 
   avatarPreviewUrl: string = '';
@@ -44,7 +44,7 @@ export class EditProfileComponent implements OnInit {
     this.authService.GetLoggedUser().subscribe({
       next: (response) => {
         this.currentUser = response.data ?? null;
-        this.editForm.userName = this.currentUser?.displayName ?? '';
+        this.editForm.displayName = this.currentUser?.displayName ?? '';
         // Pré-carrega a foto atual do usuário, se houver
         this.avatarPreviewUrl = this.currentUser?.iconPath ?? '';
         this.cdr.detectChanges();
@@ -82,7 +82,7 @@ export class EditProfileComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (!this.editForm.userName.trim()) {
+    if (!this.editForm.displayName.trim()) {
       this.errorMessage = 'O nome de usuário não pode ficar vazio.';
       return;
     }
@@ -94,14 +94,14 @@ export class EditProfileComponent implements OnInit {
     }
 
     const formData = new FormData();
-    formData.append('userName', this.editForm.userName.trim());
+    formData.append('displayName', this.editForm.displayName.trim());
     if (this.selectedFile) {
       formData.append('icon', this.selectedFile);
     }
 
     this.isLoading = true;
     this.userService.Update(formData, userId).subscribe({
-      next: () => {
+      next: (r) => {
         this.isLoading = false;
         this.successMessage = 'Perfil atualizado com sucesso!';
         this.cdr.detectChanges();

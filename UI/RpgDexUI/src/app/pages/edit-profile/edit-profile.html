@@ -14,7 +14,7 @@
           >
             <span *ngIf="!avatarPreviewUrl">
               {{
-                (editForm.userName || currentUser?.displayName || '??')
+                (editForm.displayName || currentUser?.displayName || '??')
                   .substring(0, 2)
                   .toUpperCase()
               }}
@@ -33,7 +33,7 @@
         </div>
 
         <p class="edit-side__name">
-          {{ editForm.userName || currentUser?.displayName || 'Aventureiro' }}
+          {{ editForm.displayName || currentUser?.displayName || 'Aventureiro' }}
         </p>
         <p class="edit-side__email">{{ currentUser?.email }}</p>
         <span class="edit-side__badge">Aventureiro</span>
@@ -61,8 +61,8 @@
             <input
               type="text"
               placeholder="Seu nome de usuário"
-              name="userName"
-              [(ngModel)]="editForm.userName"
+              name="displayName"
+              [(ngModel)]="editForm.displayName"
               autocomplete="username"
               maxlength="30"
             />
