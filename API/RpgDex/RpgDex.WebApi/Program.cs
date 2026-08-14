@@ -19,6 +19,7 @@ using RpgDex.Infrastructure.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using RpgDex.Infrastructure.Settings;
+using Resend;
 
 var builder = WebApplication.CreateBuilder(args);
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
@@ -57,7 +58,6 @@ builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 builder.Services.AddScoped<IDiscordAuthService, DiscordAuthService>();
 
 
-
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailService, EmailService>();
 
@@ -71,6 +71,12 @@ MappingConfig.Configure(baseUrl);
 builder.Services.Configure<GoogleAuthSettings>(builder.Configuration.GetSection("Google"));
 builder.Services.Configure<DiscordSettings>(builder.Configuration.GetSection("Discord"));
 
+builder.Services.AddOptions();
+builder.Services.AddHttpClient<IResend, ResendClient>();
+builder.Services.Configure<ResendClientOptions>(o =>
+    o.ApiToken = builder.Configuration["EmailSettings:ResendApiKey"]
+);
+builder.Services.AddTransient<IResend, ResendClient>();
 
 builder.Services.AddCors(options => {
     options.AddPolicy("PermitirTudo", policy => {

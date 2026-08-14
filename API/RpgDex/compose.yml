@@ -30,6 +30,7 @@
       - Google__ClientId=${GOOGLE_CLIENTID}
       - Discord__ClientId=${DISCORD_CLIENTID}
       - Discord__ClientSecret=${DISCORD_CLIENTSECRET}
+      - EmailSettings__ResendApiKey=${RESEND_API_KEY}
       - EmailSettings__SmtpServer=${EMAIL_SMTP_SERVER}
       - EmailSettings__SmtpPort=${EMAIL_SMTP_PORT}
       - EmailSettings__Username=${EMAIL_SMTP_USERNAME}

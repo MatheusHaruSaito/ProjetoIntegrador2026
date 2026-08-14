@@ -1,50 +1,45 @@
-﻿using MailKit.Net.Smtp;
-using MailKit.Security;
-using Microsoft.Extensions.Options;
-using MimeKit;
+﻿using Microsoft.Extensions.Options;
+using Resend;
 using RpgDex.Domain.Interfaces;
 using RpgDex.Infrastructure.Settings;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RpgDex.Infrastructure.Services
 {
     public class EmailService : IEmailService
     {
         private readonly EmailSettings _settings;
-        public EmailService(IOptions<EmailSettings> options)
+        private readonly IResend _resend;
+        public EmailService(IOptions<EmailSettings> options, IResend resend)
         {
             _settings = options.Value;
+            _resend = resend;
         }
 
         public async Task<(bool isEmailSent, string message)> SendEmailAsync(string receiverEmail, string receiverName, string subject, string htmlBody)
         {
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("RpgDex", _settings.Username));
-            message.To.Add(new MailboxAddress(receiverName, receiverEmail));
-            message.Subject = subject;
-            message.Body = new TextPart("html")
-            {
-                Text = htmlBody
-            };
-
+            //Resend
             try
             {
-                using (var client = new SmtpClient())
+                var message = new EmailMessage();
+                message.From = $"RpgDex <{_settings.Username}>";
+                message.To.Add(receiverEmail);
+                message.Subject = subject;
+                message.HtmlBody = htmlBody;
+
+                var response = await _resend.EmailSendAsync(message);
+
+                if (response.Success)
                 {
-                    await client.ConnectAsync(_settings.SmtpServer, _settings.SmtpPort, SecureSocketOptions.Auto);
-                    await client.AuthenticateAsync(_settings.Username, _settings.Password);
-                    await client.SendAsync(message);
-                    await client.DisconnectAsync(true);
+                    return (true, "Email sent successfully.");
                 }
+
+                return (false, "Error sending email via Resend.");
             }
             catch (Exception ex)
             {
                 return (false, "Error sending email: " + ex.Message);
             }
 
-            return (true, "Email sent successfully.");
         }
 
         public string GenerateEmailVerificationHTMLTemplate(string verificationLink, string userName)
