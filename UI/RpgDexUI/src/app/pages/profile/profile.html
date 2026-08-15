@@ -42,26 +42,45 @@
 
   <hr class="divider" />
 
+  <!-- SEÇÃO DE CAMPANHAS -->
   <section class="campaigns-section">
     <div class="section-header">
       <div>
         <h2 class="section-title">Minhas Campanhas</h2>
+        <span class="section-count" *ngIf="campaignTotal > 0">
+          {{ campaignTotal }} {{ campaignTotal === 1 ? 'campanha' : 'campanhas' }}
+        </span>
       </div>
+      <a routerLink="/jogar" class="section-link" *ngIf="campaignTotal > 0">
+        Ver todas <i class="fa-solid fa-arrow-right"></i>
+      </a>
     </div>
 
     <div class="campaigns-grid">
-      <div class="campaign-card add-card">
+      <!-- Botão para navegar para criação/listagem -->
+      <div class="campaign-card add-card" routerLink="/campanhas">
         <i class="fa-solid fa-plus"></i>
         <span>Nova Campanha</span>
       </div>
 
-      <div class="campaign-card" *ngFor="let camp of campaigns">
-        <div class="card-image-placeholder">
+      <!-- Cards Dinâmicos de Campanha -->
+      <div
+        class="campaign-card"
+        *ngFor="let camp of campaignPreview"
+        [routerLink]="['/jogar/campanha', camp.id]"
+      >
+        <!-- Com Capa/Ícone -->
+        <div class="card-image-placeholder campaign-avatar--image" *ngIf="camp.iconPath">
+          <img class="campaign-avatar-img" [src]="camp.iconPath" [alt]="camp.title">
+        </div>
+        <!-- Sem Capa: Ícone padrão -->
+        <div class="card-image-placeholder" *ngIf="!camp.iconPath">
           <i class="fa-solid fa-map-location-dot"></i>
         </div>
+
         <div class="card-info">
-          <span class="camp-name">{{ camp.name }}</span>
-          <span class="camp-role">{{ camp.role }}</span>
+          <span class="camp-name">{{ camp.title }}</span>
+          <span class="camp-role" [class.camp-role--gm]="camp.role === 'Mestre'">{{ camp.role }}</span>
         </div>
       </div>
     </div>
@@ -69,6 +88,7 @@
 
   <hr class="divider" />
 
+  <!-- SEÇÃO DE PERSONAGENS -->
   <section class="characters-section">
     <div class="section-header">
       <div>
@@ -93,11 +113,9 @@
         *ngFor="let char of characterPreview"
         routerLink="/personagens"
       >
-        <!-- Com ícone -->
         <div class="card-image-placeholder character-avatar character-avatar--image" *ngIf="char.iconPath">
           <img class="character-avatar-img" [src]="char.iconPath" [alt]="char.name">
         </div>
-        <!-- Sem ícone: ícone padrão -->
         <div class="card-image-placeholder character-avatar" *ngIf="!char.iconPath">
           <i class="fa-solid fa-shield-halved"></i>
         </div>

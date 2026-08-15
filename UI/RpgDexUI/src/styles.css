@@ -198,3 +198,11 @@ main {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.char-counter {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.72rem;
+  color: var(--rpg-text-faint);
+  text-align: right;
+  margin-top: 2px;
+}

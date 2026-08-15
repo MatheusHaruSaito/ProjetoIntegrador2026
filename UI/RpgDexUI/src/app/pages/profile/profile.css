@@ -249,3 +249,20 @@
   border-color: var(--rpg-purple);
   color: var(--rpg-purple);
 }
+
+.campaign-avatar--image {
+  padding: 0;
+  overflow: hidden;
+}
+
+.campaign-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.camp-role--gm {
+  color: var(--rpg-purple-dark, #582191);
+  font-weight: 800;
+}

@@ -7,6 +7,7 @@ import { CampaignsComponent } from './pages/campaigns/campaigns';
 import { ProfileComponent } from './pages/profile/profile';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile';
 import { authGuard } from './guards/auth.guard';
+import { CampaignDetailComponent } from './pages/campaign-detail/campaign-detail';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -33,5 +34,9 @@ export const routes: Routes = [
     component: CampaignsComponent,
     canActivate: [authGuard]
   },
+  {
+  path: 'campanha/:id',
+  loadComponent: () => import('./pages/campaign-detail/campaign-detail').then(m => m.CampaignDetailComponent)
+},
   { path: '**', redirectTo: '/home' }
 ];
