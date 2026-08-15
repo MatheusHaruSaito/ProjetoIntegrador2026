@@ -56,3 +56,8 @@ export const routes: Routes = [
   },
   { path: '**', redirectTo: '/home' },
 ];
+    path: 'campanha/:id',
+    loadComponent: () => import('./pages/campaign-detail/campaign-detail').then(m => m.CampaignDetailComponent)
+  },
+  { path: '**', redirectTo: '/home' },
+];

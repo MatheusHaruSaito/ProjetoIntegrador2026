@@ -20,9 +20,9 @@ export class CampaignService {
 
   http = inject(HttpClient);
 
-  Post(request: CreateCampaignRequest): Observable<ApiResponse<Campaign>> {
+  Post(request: CreateCampaignRequest | FormData): Observable<ApiResponse<Campaign>> {
     return this.http.post<ApiResponse<Campaign>>(`${this.env}`, request);
-  }
+  } 
   GetAll(): Observable<ApiResponse<Campaign[]>> {
     return this.http.get<ApiResponse<Campaign[]>>(`${this.env}`);
   }
@@ -47,10 +47,10 @@ export class CampaignService {
   AcceptCharacter(request: AcceptCharacterToCampaignRequest): Observable<ApiResponse<String>> {
     return this.http.put<ApiResponse<String>>(`${this.env}/AcceptCharacter`, request);
   }
-  RemovePlayer(request:RemovePlayerFromCampaignRequest): Observable<ApiResponse<String>> {
+  RemovePlayer(request: RemovePlayerFromCampaignRequest): Observable<ApiResponse<String>> {
     return this.http.put<ApiResponse<String>>(`${this.env}/RemovePlayer`, request);
   }
-  UpdateSettings(request:UpdateCampaignSettingsRequest): Observable<ApiResponse<String>> {
+  UpdateSettings(request: UpdateCampaignSettingsRequest): Observable<ApiResponse<String>> {
     return this.http.put<ApiResponse<String>>(`${this.env}/UpdateSettings`, request);
   }
 }

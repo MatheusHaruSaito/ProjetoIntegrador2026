@@ -4,63 +4,71 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CharacterService } from '../../services/character-service';
 import { AuthService } from '../../services/auth-service';
+import { CampaignService } from '../../services/campaign-service';
 import { Character } from '../../../models/character';
-
-export interface Campaign {
-  id: number;
-  name: string;
-  imageUrl: string;
-}
+import { Campaign } from '../../../models/campaign';
+import { CreateJoinCampaignModalComponent } from '../../modals/create-join-campaign-modal/create-join-campaign-modal';
 
 const LAST_ACCESSED_KEY = 'rpgdex-last-accessed-chars';
 
 @Component({
   selector: 'app-campaigns',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, RouterModule, CreateJoinCampaignModalComponent],
   templateUrl: './campaigns.html',
   styleUrls: ['./campaigns.css']
 })
 export class CampaignsComponent implements OnInit {
   private characterService = inject(CharacterService);
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
+  private campaignService  = inject(CampaignService);
+  private authService      = inject(AuthService);
+  private router           = inject(Router);
+  private cdr              = inject(ChangeDetectorRef);
 
-  myCampaigns: Campaign[] = [
-    { id: 1, name: 'A Mina Perdida',     imageUrl: 'https://placehold.co/400x400/e0e0e0/9E74D0?text=Campanha+1' },
-    { id: 2, name: 'Maldição de Strahd', imageUrl: 'https://placehold.co/400x400/e0e0e0/9E74D0?text=Campanha+2' }
-  ];
+  myCampaigns: Campaign[] = [];
+  myCharacters: Character[] = [];
+  currentUserId = '';
 
   isModalOpen = false;
-  toggleModal() { this.isModalOpen = !this.isModalOpen; }
-
-  myCharacters: Character[] = [];
+  activeModalTab: 'create' | 'join' = 'create';
 
   ngOnInit(): void {
-    this.loadCharacters();
+    this.currentUserId = this.authService.getLoggedUserId() ?? '';
+    if (this.currentUserId) {
+      this.loadCampaigns();
+      this.loadCharacters();
+    }
   }
 
-  private loadCharacters(): void {
-    const userId = this.authService.getLoggedUserId();
-    this.characterService.GetAll(userId!).subscribe({
-      next: (response) => {
-        const all = response.data ?? [];
-        const filtered = userId ? all.filter(c => c.userId === userId) : all;
-        this.myCharacters = this.sortByLastAccessed(filtered);
-        this.cdr.detectChanges();
+  private loadCampaigns(): void {
+    this.campaignService.GetAllByUserId(this.currentUserId).subscribe({
+      next: (r) => { 
+        this.myCampaigns = r.data ?? []; 
+        this.cdr.detectChanges(); 
       },
       error: () => {}
     });
   }
 
-  // Ordena pelo último acesso registrado no localStorage
+  private loadCharacters(): void {
+    this.characterService.GetAll(this.currentUserId).subscribe({
+      next: (r) => { 
+        const all = r.data ?? [];
+        const filtered = all.filter(c => c.userId === this.currentUserId);
+        this.myCharacters = this.sortByLastAccessed(filtered);
+        this.cdr.detectChanges(); 
+      },
+      error: () => {}
+    });
+  }
+
+  // --- LÓGICA DE ÚLTIMO ACESSO DA MAIN ---
   private sortByLastAccessed(chars: Character[]): Character[] {
     const accessed = this.getLastAccessedMap();
     return [...chars].sort((a, b) => {
       const ta = accessed[a.id] ?? 0;
       const tb = accessed[b.id] ?? 0;
-      return tb - ta; // mais recente primeiro
+      return tb - ta;
     });
   }
 
@@ -73,19 +81,17 @@ export class CampaignsComponent implements OnInit {
   }
 
   openCharacter(id: string): void {
-    // Registra o timestamp de acesso antes de navegar
     const map = this.getLastAccessedMap();
     map[id] = Date.now();
     localStorage.setItem(LAST_ACCESSED_KEY, JSON.stringify(map));
     this.router.navigate(['/personagens', id]);
   }
 
-  // Retorna há quanto tempo o personagem foi acessado (ex: "Agora", "5 min atrás")
   lastAccessedLabel(id: string): string {
     const map = this.getLastAccessedMap();
     const ts = map[id];
     if (!ts) return 'Nunca acessado';
-    const diff = Math.floor((Date.now() - ts) / 1000); // segundos
+    const diff = Math.floor((Date.now() - ts) / 1000);
     if (diff < 60) return 'Agora mesmo';
     if (diff < 3600) return `${Math.floor(diff / 60)} min atrás`;
     if (diff < 86400) return `${Math.floor(diff / 3600)}h atrás`;
@@ -94,5 +100,37 @@ export class CampaignsComponent implements OnInit {
 
   wasAccessed(id: string): boolean {
     return !!this.getLastAccessedMap()[id];
+  }
+
+  // --- MODAL & CAMPANHAS ---
+  openModal(tab: 'create' | 'join'): void {
+    this.activeModalTab = tab;
+    this.isModalOpen = true;
+  }
+
+  handleCreateCampaign(formData: FormData): void {
+    formData.append('gameMasterId', this.currentUserId);
+    this.campaignService.Post(formData as any).subscribe({
+      next: () => this.loadCampaigns(),
+      error: () => {}
+    });
+  }
+
+  handleJoinCampaign(payload: { campaignId: string; password?: string }): void {
+    this.campaignService.AddPlayer({
+      campaignId: payload.campaignId,
+      playerId: this.currentUserId,
+      password: payload.password
+    }).subscribe({
+      next: () => {
+        alert('Você entrou na campanha!');
+        this.loadCampaigns();
+      },
+      error: () => alert('Erro ao entrar na campanha. Verifique o ID e Senha.')
+    });
+  }
+
+  goToCampaignDetail(id: string): void {
+    this.router.navigate(['/campanha', id]);
   }
 }
