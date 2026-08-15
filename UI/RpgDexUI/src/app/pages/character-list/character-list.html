@@ -4,8 +4,22 @@
       <h1 class="cl-title"><span>Meus Personagens</span></h1>
       <p class="cl-subtitle">Gerencie todas as fichas da sua coleção.</p>
     </div>
-    <button class="btn-primary" (click)="OpenModal()">
+    <button class="btn-primary" (click)="showCreateModal = true">
       <i class="fa fa-plus"></i> Novo Personagem
+    </button>
+  </div>
+
+  <!-- Busca -->
+  <div class="cl-search-bar">
+    <i class="fa fa-magnifying-glass"></i>
+    <input
+      type="text"
+      placeholder="Buscar personagem por nome..."
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearch()"
+    />
+    <button class="cl-search-clear" *ngIf="searchQuery" (click)="searchQuery = ''; onSearch()">
+      <i class="fa fa-xmark"></i>
     </button>
   </div>
 
@@ -20,36 +34,23 @@
         </tr>
       </thead>
       <tbody>
-        @for (character of characterList; track character.id) {
-          <tr (click)="OpenViewModal(character.id)" style="cursor: pointer">
-            <td>
-              <span class="char-id">#{{ character.id.substring(0, 4) }}</span>
-            </td>
+        @for (character of filteredList; track character.id) {
+          <tr (click)="navigateToEditor(character.id)" style="cursor: pointer">
+            <td><span class="char-id">#{{ character.id.substring(0, 4) }}</span></td>
             <td>
               <div class="char-name-cell">
                 <div
                   class="char-avatar-thumb"
-                  [style.background-image]="
-                    character.iconPath ? 'url(' + character.iconPath + ')' : ''
-                  "
+                  [style.background-image]="character.iconPath ? 'url(' + character.iconPath + ')' : ''"
                 >
                   <i class="fa fa-shield-halved" *ngIf="!character.iconPath"></i>
                 </div>
                 <span class="char-name">{{ character.name }}</span>
               </div>
             </td>
-            <td>
-              <span class="char-desc">{{ character.description }}</span>
-            </td>
+            <td><span class="char-desc">{{ character.description }}</span></td>
             <td>
               <div class="action-btns">
-                <button
-                  class="btn-icon"
-                  title="Editar"
-                  (click)="$event.stopPropagation(); OpenEditModal()"
-                >
-                  <i class="fa fa-pen"></i>
-                </button>
                 <button
                   class="btn-icon danger"
                   title="Excluir"
@@ -65,9 +66,11 @@
             <td colspan="4">
               <div class="empty-content">
                 <div class="empty-icon"><i class="fa fa-scroll"></i></div>
-                <p class="empty-text">Nenhum personagem encontrado.</p>
-                <p class="empty-sub">Crie seu primeiro personagem para começar a aventura.</p>
-                <button class="btn-primary btn-sm" (click)="OpenModal()">
+                <p class="empty-text">
+                  {{ searchQuery ? 'Nenhum personagem encontrado para "' + searchQuery + '".' : 'Nenhum personagem encontrado.' }}
+                </p>
+                <p class="empty-sub" *ngIf="!searchQuery">Crie seu primeiro personagem para começar a aventura.</p>
+                <button class="btn-primary btn-sm" *ngIf="!searchQuery" (click)="showCreateModal = true">
                   <i class="fa fa-plus"></i> Criar Personagem
                 </button>
               </div>
@@ -84,19 +87,4 @@
   [visible]="showCreateModal"
   (close)="showCreateModal = false"
   (created)="GetAllCharacters()"
-/>
-
-<!-- Modal Editar -->
-<app-edit-character-modal
-  [visible]="showEditModal"
-  (close)="showEditModal = false"
-  (edited)="GetAllCharacters()"
-  [characterId]="selectedCharacterId"
-/>
-
-<!-- Modal Visualizar -->
-<app-show-view-modal
-  [visible]="showViewModal"
-  (close)="showViewModal = false"
-  [characterId]="selectedCharacterId"
 />
