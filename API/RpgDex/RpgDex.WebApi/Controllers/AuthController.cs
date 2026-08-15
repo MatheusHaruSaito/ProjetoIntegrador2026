@@ -98,5 +98,32 @@ namespace RpgDex.WebApi.Controllers
 
             return Redirect($"{_settings.UIBaseUrl}/auth/callback?token={token}&refreshToken={refreshToken}");
         }
+        [HttpGet("AuthOptions/{userId}")]
+        public async Task<IActionResult> GetUserAuthOptions(Guid userId)
+        {
+            var result = await _authSerice.GetUserAuthOptions(userId);
+            return result.ToIActionResult();
+
+        }
+        [HttpPost("ValidateTwoFactor")]
+        public async Task<IActionResult> ValidateTwoFactor(ValidateTwoFactorRequest request)
+        {
+            var result = await _authSerice.ValidateTwoFactor(request);
+            return result.ToIActionResult();
+        }
+
+        [HttpPost("SendTwoFactorAuthEmailRequest")]
+        public async Task<IActionResult> SendTwoFactorAuthEmailRequest(TwoFactorAuthEmailRequest request)
+        {
+            var result = await _authSerice.SendTwoFactorAuthEmailRequest(request);
+            return result.ToIActionResult();
+        }
+
+        [HttpPost("ActiveTwoFactorAuth")]
+        public async Task<IActionResult> RequestTwoFAActivation(ValidateTwoFactorRequest request)
+        {
+            var result = await _authSerice.RequestTwoFAActivation(request);
+            return result.ToIActionResult();
+        }
     }
 }

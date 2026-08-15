@@ -13,6 +13,9 @@ import { UserResponse } from '../../models/userResponse';
 import { ValidateEmailByTokenRequest } from '../../models/validateEmailByTokenRequest';
 import { ResendEmailVerificationRequest } from '../../models/resendEmailVerificationRequest';
 import { request } from 'https';
+import { AuthOptionsResponse } from '../../models/authOptionsResponse';
+import { ValidateTwoFactorRequest } from '../../models/validateTwoFactorRequest';
+import { TwoFactorAuthEmailRequest } from '../../models/twoFactorAuthEmailRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -149,5 +152,27 @@ export class AuthService {
   public StoreToken(accessToken: string, refreshToken: string): void {
     this.cookieService.set(this.JWT_Token, accessToken, { path: '/' });
     this.cookieService.set(this.REFRESH_Token, refreshToken, { path: '/' });
+  }
+
+  //Ainda não implementado no site
+  public GetUserAuthOptions(userId: string): Observable<ApiResponse<AuthOptionsResponse>> {
+    return this.http.get<ApiResponse<AuthOptionsResponse>>(`${this.env}/AuthOptions/${userId}`);
+  }
+  public ValidateTwoFactor(request: ValidateTwoFactorRequest): Observable<ApiResponse<tokenModel>> {
+    return this.http.post<ApiResponse<tokenModel>>(
+      `${this.env}/SendTwoFactorAuthEmailRequest/`,
+      request,
+    );
+  }
+  public SendTwoFactorAuthEmail(
+    request: TwoFactorAuthEmailRequest,
+  ): Observable<ApiResponse<tokenModel>> {
+    return this.http.post<ApiResponse<tokenModel>>(
+      `${this.env}/SendTwoFactorAuthEmailRequest/`,
+      request,
+    );
+  }
+  public TwoFAActivation(request: ValidateTwoFactorRequest): Observable<ApiResponse<tokenModel>> {
+    return this.http.post<ApiResponse<tokenModel>>(`${this.env}/ActiveTwoFactorAuth/`, request);
   }
 }
