@@ -16,6 +16,7 @@ import { request } from 'https';
 import { AuthOptionsResponse } from '../../models/authOptionsResponse';
 import { ValidateTwoFactorRequest } from '../../models/validateTwoFactorRequest';
 import { TwoFactorAuthEmailRequest } from '../../models/twoFactorAuthEmailRequest';
+import { LoginResponse } from '../../models/loginResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -52,12 +53,12 @@ export class AuthService {
     return this.http.post<boolean>(this.env, authUser);
   }
 
-  public Login(user: LoginUser): Observable<ApiResponse<tokenModel>> {
-    return this.http.post<ApiResponse<tokenModel>>(`${this.env}/Login`, user).pipe(
-      map((response: ApiResponse<tokenModel>) => {
+  public Login(user: LoginUser): Observable<ApiResponse<LoginResponse>> {
+    return this.http.post<ApiResponse<LoginResponse>>(`${this.env}/Login`, user).pipe(
+      map((response: ApiResponse<LoginResponse>) => {
         if (response.success && response.data) {
-          this.cookieService.set(this.JWT_Token, response.data!.accessToken, { path: '/' });
-          this.cookieService.set(this.REFRESH_Token, response.data!.refreshToken, { path: '/' });
+          this.cookieService.set(this.JWT_Token, response.data.refreshTokenModel.accessToken, { path: '/' });
+          this.cookieService.set(this.REFRESH_Token, response.data.refreshTokenModel.refreshToken, { path: '/' });
           this.currentUserSubject.next(response.data);
         }
         return response;
