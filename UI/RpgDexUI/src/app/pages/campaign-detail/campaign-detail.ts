@@ -12,6 +12,7 @@ import { AddCharacterToCampaignRequest } from '../../../models/AddCharacterToCam
 import { AcceptCharacterToCampaignRequest } from '../../../models/AcceptCharacterToCampaignRequest';
 import { RemovePlayerFromCampaignRequest } from '../../../models/removePlayerFromCampaignRequest';
 import { UpdateCampaignSettingsRequest } from '../../../models/updateCampaignSettingsRequest';
+import { EditCampaignModalComponent } from '../../modals/edit-campaign-modal/edit-campaign-modal';
 
 export interface SheetItem { name: string; value: any; }
 export interface SheetSection { title: string; items: SheetItem[]; }
@@ -20,7 +21,7 @@ export interface SheetColumn { key: string; sections: SheetSection[]; scalar?: s
 @Component({
   selector: 'app-campaign-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, EditCampaignModalComponent],
   templateUrl: './campaign-detail.html',
   styleUrls: ['./campaign-detail.css']
 })
@@ -39,26 +40,16 @@ export class CampaignDetailComponent implements OnInit {
   isGameMaster = false;
   isPlayerInCampaign = false;
 
-  // Personagens Aprovados
   approvedCharacters: Character[] = [];
   expandedCharacterId: string | null = null;
 
-  // Modal edição
   isEditModalOpen = false;
-  editTitle = '';
-  editDescription = '';
-  editMaxPlayers = 4;
-  editNextSession = '';
-  editIconFile: File | null = null;
-  editCoverPreview = '';
-
-  // Painel do mestre
   requireApproval = true;
 
-  // Entrada / vínculo
   joinPassword = '';
   myCharacters: Character[] = [];
   selectedCharacterId = '';
+  selectedGmCharacterId = '';
   copiedFeedback = false;
 
   ngOnInit(): void {
@@ -77,14 +68,6 @@ export class CampaignDetailComponent implements OnInit {
         if (this.campaign) {
           this.isGameMaster = this.campaign.gameMasterId === this.currentUserId;
           this.isPlayerInCampaign = !!this.campaign.playerIds?.includes(this.currentUserId);
-          this.editTitle = this.campaign.title;
-          this.editDescription = this.campaign.description ?? '';
-          this.editMaxPlayers = this.campaign.maxPlayers;
-          if (this.campaign.nextSession) {
-            this.editNextSession = new Date(this.campaign.nextSession).toISOString().slice(0, 16);
-          } else {
-            this.editNextSession = '';
-          }
           this.loadApprovedCharacters();
         }
         this.cdr.detectChanges();
@@ -110,7 +93,6 @@ export class CampaignDetailComponent implements OnInit {
       return;
     }
 
-    // Carrega detalhes dos personagens que já foram aceitos
     this.approvedCharacters = [];
     this.campaign.characterIds.forEach(charId => {
       this.characterService.GetById(charId).subscribe({
@@ -134,13 +116,6 @@ export class CampaignDetailComponent implements OnInit {
     }, 2000);
   }
 
-  // ── Validação ──
-  validateEditMaxPlayers(): void {
-    if (this.editMaxPlayers < 1) this.editMaxPlayers = 1;
-    if (this.editMaxPlayers > 20) this.editMaxPlayers = 20;
-  }
-
-  // ── Configurações ──
   toggleRequireApproval(): void {
     if (!this.campaign) return;
     const request: UpdateCampaignSettingsRequest = {
@@ -150,50 +125,13 @@ export class CampaignDetailComponent implements OnInit {
     this.campaignService.UpdateSettings(request).subscribe({ error: () => { } });
   }
 
-  // ── Editar campanha ──
-  onEditFileSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    this.editIconFile = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.editCoverPreview = e.target?.result as string;
-      this.cdr.detectChanges();
-    };
-    reader.readAsDataURL(file);
-  }
-
-  saveCampaignChanges(): void {
-    if (!this.campaign) return;
-
-    const title = this.editTitle.substring(0, 60);
-    const description = this.editDescription ? this.editDescription.substring(0, 1000) : '';
-
-    const form = new FormData();
-    form.append('id', this.campaign.id);
-    form.append('title', title);
-    form.append('description', description);
-    form.append('maxPlayers', this.editMaxPlayers.toString());
-    if (this.editNextSession) {
-      form.append('nextSession', new Date(this.editNextSession).toISOString());
-    } else {
-      form.append('nextSession', '');
-    } 
-    if (this.editIconFile)
-      form.append('icon', this.editIconFile, this.editIconFile.name);
-
-    this.campaignService.Update(form as any).subscribe({
-      next: () => {
-        this.isEditModalOpen = false;
-        this.editCoverPreview = '';
-        this.editIconFile = null;
-        this.loadCampaign();
-      },
+  saveCampaignChanges(formData: FormData): void {
+    this.campaignService.Update(formData as any).subscribe({
+      next: () => this.loadCampaign(),
       error: () => { }
     });
   }
 
-  // ── Ativar/desativar ──
   toggleActiveState(): void {
     if (!this.campaign || !confirm('Deseja alterar o estado desta campanha?')) return;
     this.campaignService.Delete(this.campaign.id).subscribe({
@@ -202,7 +140,6 @@ export class CampaignDetailComponent implements OnInit {
     });
   }
 
-  // ── Entrar ──
   joinCampaign(): void {
     if (!this.campaign) return;
     const request: JoinCampaignRequest = {
@@ -216,24 +153,29 @@ export class CampaignDetailComponent implements OnInit {
     });
   }
 
-  // ── Vincular personagem ──
-  submitCharacter(): void {
-    if (!this.campaign || !this.selectedCharacterId) return;
+  submitCharacter(characterIdToSubmit?: string): void {
+    const charId = characterIdToSubmit || this.selectedCharacterId;
+    if (!this.campaign || !charId) return;
+
     const request: AddCharacterToCampaignRequest = {
       campaignId: this.campaign.id,
-      characterId: this.selectedCharacterId
+      characterId: charId
     };
+
     this.campaignService.AddCharacter(request).subscribe({
       next: () => {
-        alert('Personagem enviado para a campanha!');
-        this.selectedCharacterId = '';
+        alert('Personagem adicionado/enviado para a campanha!');
+        if (characterIdToSubmit) {
+          this.selectedGmCharacterId = '';
+        } else {
+          this.selectedCharacterId = '';
+        }
         this.loadCampaign();
       },
       error: () => { }
     });
   }
 
-  // ── Aprovação ──
   handleCharacterApproval(characterId: string, accept: boolean): void {
     if (!this.campaign) return;
     const request: AcceptCharacterToCampaignRequest = {
@@ -248,7 +190,6 @@ export class CampaignDetailComponent implements OnInit {
     });
   }
 
-  // ── Remover/Sair da Jogadores ──
   removePlayer(playerId: string): void {
     if (!this.campaign) return;
     const isSelf = playerId === this.currentUserId;
@@ -273,7 +214,6 @@ export class CampaignDetailComponent implements OnInit {
     });
   }
 
-  // ── Leitura de Atributos da Ficha ──
   toggleCharacter(id: string): void {
     this.expandedCharacterId = this.expandedCharacterId === id ? null : id;
   }

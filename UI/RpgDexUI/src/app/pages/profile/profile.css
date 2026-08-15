@@ -196,7 +196,6 @@
   color: var(--rpg-purple);
 }
 
-/* Personagem com foto */
 .character-avatar--image {
   padding: 0;
   overflow: hidden;
@@ -224,6 +223,11 @@
 .camp-role {
   font-size: 0.85rem;
   color: var(--rpg-purple);
+}
+
+.camp-role--gm {
+  color: var(--rpg-purple-dark, #582191);
+  font-weight: 800;
 }
 
 .char-desc-preview {
@@ -260,9 +264,4 @@
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-.camp-role--gm {
-  color: var(--rpg-purple-dark, #582191);
-  font-weight: 800;
 }

@@ -3,11 +3,10 @@ import { HomeComponent } from './pages/home/home';
 import { UserLoginComponent } from './pages/user-login/user-login.component';
 import { UserRegisterComponent } from './pages/user-register/user-register.component';
 import { CharacterList } from './pages/character-list/character-list';
-import { CampaignsComponent } from './pages/campaigns/campaigns';
-import { ProfileComponent } from './pages/profile/profile';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile';
 import { authGuard } from './guards/auth.guard';
-import { CampaignDetailComponent } from './pages/campaign-detail/campaign-detail';
+import { ProfileComponent } from './pages/profile/profile';
+import { CampaignsComponent } from './pages/campaigns/campaigns';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -17,26 +16,26 @@ export const routes: Routes = [
   {
     path: 'perfil',
     component: ProfileComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'perfil/editar',
     component: EditProfileComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'personagens',
     component: CharacterList,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'campanhas',
     component: CampaignsComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
-  path: 'campanha/:id',
-  loadComponent: () => import('./pages/campaign-detail/campaign-detail').then(m => m.CampaignDetailComponent)
-},
-  { path: '**', redirectTo: '/home' }
+    path: 'campanha/:id',
+    loadComponent: () => import('./pages/campaign-detail/campaign-detail').then(m => m.CampaignDetailComponent)
+  },
+  { path: '**', redirectTo: '/home' },
 ];

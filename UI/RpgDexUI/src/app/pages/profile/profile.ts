@@ -22,7 +22,7 @@ export interface CampaignDisplayItem {
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './profile.html',
-  styleUrl: './profile.css'
+  styleUrls: ['./profile.css'] // 🟢 Corrigido de styleUrl para styleUrls
 })
 export class ProfileComponent implements OnInit {
   private authService      = inject(AuthService);
@@ -108,14 +108,12 @@ export class ProfileComponent implements OnInit {
       next: (response) => {
         const allCampaigns: Campaign[] = response.data ?? [];
         
-        // Filtra campanhas em que o usuário é Mestre ou Jogador
         const userCampaigns = allCampaigns.filter(c => 
           c.gameMasterId === userId || (c.playerIds && c.playerIds.includes(userId))
         );
 
         this.campaignTotal = userCampaigns.length;
 
-        // Mapeia para exibição e limita preview aos primeiros 3 registros
         this.campaignPreview = userCampaigns.slice(0, 3).map(c => ({
           id: c.id,
           title: c.title,

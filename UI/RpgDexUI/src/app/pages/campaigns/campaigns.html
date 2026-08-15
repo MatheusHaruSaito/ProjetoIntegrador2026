@@ -7,22 +7,15 @@
         <h1 class="cmp-page-title">Campanhas</h1>
         <p class="cmp-page-sub">Gerencie suas aventuras e sessões.</p>
       </div>
-      <button class="btn-primary" (click)="toggleModal('create')">
+      <button class="btn-primary" (click)="openModal('create')">
         <i class="fa fa-plus"></i> Nova Campanha
       </button>
     </div>
 
     <!-- ── GRID DE CAMPANHAS ── -->
     <div class="cmp-grid" *ngIf="myCampaigns.length > 0">
-      <div
-        class="cmp-card"
-        *ngFor="let camp of myCampaigns"
-        (click)="goToCampaignDetail(camp.id)"
-      >
-        <div
-          class="cmp-card__cover"
-          [style.background-image]="camp.iconPath ? 'url(' + camp.iconPath + ')' : ''"
-        >
+      <div class="cmp-card" *ngFor="let camp of myCampaigns" (click)="goToCampaignDetail(camp.id)">
+        <div class="cmp-card__cover" [style.background-image]="camp.iconPath ? 'url(' + camp.iconPath + ')' : ''">
           <div class="cmp-card__cover-fallback" *ngIf="!camp.iconPath">
             <i class="fa fa-map-location-dot"></i>
           </div>
@@ -48,18 +41,19 @@
       <div class="cmp-empty__icon"><i class="fa fa-map"></i></div>
       <p class="cmp-empty__title">Nenhuma campanha ainda.</p>
       <p class="cmp-empty__sub">Crie sua própria aventura ou junte-se a uma existente.</p>
-      <button class="btn-primary" (click)="toggleModal('create')">
+      <button class="btn-primary" (click)="openModal('create')">
         <i class="fa fa-plus"></i> Nova Campanha
       </button>
     </div>
 
-    <!-- ── PERSONAGENS DA SESSÃO ── -->
+    <!-- ── ACESSO RÁPIDO AOS PERSONAGENS (PADRÃO MAIN) ── -->
     <div class="cmp-section-divider">
-      <span>Seus Personagens</span>
+      <span>Acesso Rápido aos Personagens</span>
     </div>
-    <p class="cmp-section-sub">Clique para expandir a ficha durante a sessão.</p>
+    <p class="cmp-section-sub">Ordenados por último acesso. Clique para abrir diretamente.</p>
 
     <div class="char-session-list">
+      <!-- Vazio -->
       <div class="char-empty" *ngIf="myCharacters.length === 0">
         <div class="char-empty__icon"><i class="fa fa-scroll"></i></div>
         <p class="char-empty__text">Nenhum personagem encontrado.</p>
@@ -68,47 +62,28 @@
         </a>
       </div>
 
-      <div
-        class="char-session-card"
-        *ngFor="let char of myCharacters"
-        [class.expanded]="expandedCharacterId === char.id"
+      <!-- Item da Lista de Personagens -->
+      <div 
+        class="char-session-card" 
+        *ngFor="let char of myCharacters" 
+        (click)="openCharacter(char.id)"
       >
-        <div class="char-session-card__header" (click)="toggleCharacter(char.id)">
-          <div class="char-session-card__left">
-            <div class="char-session-avatar"
-              [style.background-image]="char.iconPath ? 'url(' + char.iconPath + ')' : ''">
-              <i class="fa fa-shield-halved" *ngIf="!char.iconPath"></i>
-            </div>
-            <div class="char-session-card__info">
-              <span class="char-session-card__name">{{ char.name }}</span>
-              <span class="char-session-card__desc" *ngIf="char.description">{{ char.description }}</span>
-            </div>
+        <div class="char-session-card__left">
+          <div class="char-session-avatar" [style.background-image]="char.iconPath ? 'url(' + char.iconPath + ')' : ''">
+            <i class="fa fa-shield-halved" *ngIf="!char.iconPath"></i>
           </div>
-          <i class="fa char-session-card__toggle"
-            [ngClass]="expandedCharacterId === char.id ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+          <div class="char-session-card__info">
+            <span class="char-session-card__name">{{ char.name }}</span>
+            <span class="char-session-card__desc" *ngIf="char.description">{{ char.description }}</span>
+          </div>
         </div>
 
-        <div class="char-sheet" *ngIf="expandedCharacterId === char.id">
-          <div class="char-sheet__empty" *ngIf="getSheetColumns(char).length === 0">
-            <i class="fa fa-circle-info"></i> Nenhum atributo registrado ainda.
-          </div>
-          <div class="char-sheet__columns" *ngIf="getSheetColumns(char).length > 0">
-            <div class="char-sheet__col" *ngFor="let col of getSheetColumns(char)">
-              <div class="char-sheet__scalar" *ngIf="col.scalar !== undefined">
-                <span class="char-section__title">{{ col.key }}</span>
-                <span class="char-prop__value">{{ col.scalar }}</span>
-              </div>
-              <div class="char-section" *ngFor="let section of col.sections">
-                <h4 class="char-section__title">{{ section.title }}</h4>
-                <div class="char-section__items">
-                  <div class="char-prop" *ngFor="let item of section.items">
-                    <span class="char-prop__key">{{ item.name }}</span>
-                    <span class="char-prop__value">{{ item.value }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="char-quick-meta">
+          <span class="char-quick-time" [class.never]="!wasAccessed(char.id)">
+            <i class="fa fa-clock"></i>
+            {{ lastAccessedLabel(char.id) }}
+          </span>
+          <i class="fa fa-chevron-right char-quick-arrow"></i>
         </div>
       </div>
     </div>
@@ -116,111 +91,10 @@
   </div>
 </div>
 
-<!-- ── MODAL NOVA CAMPANHA (CRIAR / ENTRAR) ── -->
-<div class="modal-backdrop" *ngIf="isModalOpen" (click)="toggleModal()">
-  <div class="modal-card" (click)="$event.stopPropagation()">
-
-    <div class="modal-header">
-      <div class="tab-selector">
-        <button class="tab-btn" [class.active]="activeTab === 'create'" (click)="setTab('create')">
-          <i class="fa fa-plus"></i> Criar Nova
-        </button>
-        <button class="tab-btn" [class.active]="activeTab === 'join'" (click)="setTab('join')">
-          <i class="fa fa-right-to-bracket"></i> Entrar em uma
-        </button>
-      </div>
-      <button class="btn-icon modal-close" (click)="toggleModal()"><i class="fa fa-xmark"></i></button>
-    </div>
-
-    <!-- ABA 1: CRIAR CAMPANHA -->
-    <div class="modal-body" *ngIf="activeTab === 'create'">
-
-      <div class="input-group">
-        <label class="input-label">Imagem de Capa <span class="required">*</span></label>
-        <div class="cover-upload" (click)="coverInput.click()" [class.has-preview]="coverPreviewUrl">
-          <img *ngIf="coverPreviewUrl" [src]="coverPreviewUrl" class="cover-preview-img" alt="Capa">
-          <div class="cover-upload-placeholder" *ngIf="!coverPreviewUrl">
-            <i class="fa fa-image"></i>
-            <span>Clique para selecionar</span>
-            <small>PNG, JPG • Máx. 5MB</small>
-          </div>
-          <div class="cover-upload-overlay" *ngIf="coverPreviewUrl">
-            <i class="fa fa-camera"></i> Alterar
-          </div>
-        </div>
-        <input #coverInput type="file" accept="image/*" class="file-input-hidden" (change)="onFileSelected($event)">
-      </div>
-
-      <div class="input-group">
-        <label class="input-label">Título <span class="required">*</span></label>
-        <div class="input-field-wrapper">
-          <i class="fa fa-scroll icon-field"></i>
-          <input type="text" placeholder="Ex: A Mina Perdida de Phandelver" [(ngModel)]="newCampaignTitle" maxlength="60">
-        </div>
-        <small class="char-counter">{{ newCampaignTitle.length }}/60</small>
-      </div>
-
-      <div class="input-group">
-        <label class="input-label">Descrição</label>
-        <textarea class="input-textarea" placeholder="Fale sobre o cenário, sistema ou tom da campanha..."
-          [(ngModel)]="newCampaignDescription" rows="3" maxlength="1000"></textarea>
-        <small class="char-counter">{{ newCampaignDescription.length }}/1000</small>
-      </div>
-
-      <div class="input-row">
-        <div class="input-group">
-          <label class="input-label">Senha de Entrada</label>
-          <div class="input-field-wrapper">
-            <i class="fa fa-lock icon-field"></i>
-            <input type="password" placeholder="Deixe vazio para pública" [(ngModel)]="newCampaignPassword" maxlength="50">
-          </div>
-        </div>
-        <div class="input-group input-group--sm">
-          <label class="input-label">Máx. Jogadores</label>
-          <div class="input-field-wrapper">
-            <i class="fa fa-users icon-field"></i>
-            <input type="number" [(ngModel)]="newCampaignMaxPlayers" min="1" max="20" (change)="validateMaxPlayers()">
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ABA 2: ENTRAR EM UMA CAMPANHA -->
-    <div class="modal-body" *ngIf="activeTab === 'join'">
-      
-      <div class="input-group">
-        <label class="input-label">Código / ID da Campanha <span class="required">*</span></label>
-        <div class="input-field-wrapper">
-          <i class="fa fa-key icon-field"></i>
-          <input type="text" placeholder="Cole o ID da campanha fornecido pelo Mestre" [(ngModel)]="joinCampaignId" maxlength="100">
-        </div>
-      </div>
-
-      <div class="input-group">
-        <label class="input-label">Senha de Acesso</label>
-        <div class="input-field-wrapper">
-          <i class="fa fa-lock icon-field"></i>
-          <input type="password" placeholder="Digite a senha (se houver)" [(ngModel)]="joinPassword" maxlength="50">
-        </div>
-      </div>
-
-    </div>
-
-    <!-- RODAPÉ DINÂMICO -->
-    <div class="modal-footer">
-      <button class="btn-secondary" (click)="toggleModal()">Cancelar</button>
-      
-      <button *ngIf="activeTab === 'create'" class="btn-primary" (click)="createCampaign()"
-        [disabled]="!newCampaignTitle || !selectedIconFile">
-        <i class="fa fa-plus"></i> Criar Campanha
-      </button>
-
-      <button *ngIf="activeTab === 'join'" class="btn-primary" (click)="joinCampaign()"
-        [disabled]="!joinCampaignId">
-        <i class="fa fa-right-to-bracket"></i> Entrar na Campanha
-      </button>
-    </div>
-
-  </div>
-</div>
+<!-- Modal isolado reutilizável -->
+<app-create-join-campaign-modal
+  [(isOpen)]="isModalOpen"
+  [activeTab]="activeModalTab"
+  (onCreate)="handleCreateCampaign($event)"
+  (onJoin)="handleJoinCampaign($event)">
+</app-create-join-campaign-modal>

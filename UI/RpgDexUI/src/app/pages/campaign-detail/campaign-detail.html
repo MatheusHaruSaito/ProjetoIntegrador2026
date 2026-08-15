@@ -76,6 +76,19 @@
       </div>
     </div>
 
+    <!-- ── MESA VIRTUAL / TABULEIRO (Placeholder) ── -->
+    <div class="cd-card vtt-placeholder-card">
+      <div class="cd-card-header">
+        <h2 class="cd-card-title"><i class="fa fa-dice-d20"></i> Tabuleiro Virtual</h2>
+        <span class="vtt-badge">Em Breve</span>
+      </div>
+      <div class="vtt-placeholder-body">
+        <i class="fa fa-chess-board vtt-icon"></i>
+        <h3>Mesa de Jogo em Desenvolvimento</h3>
+        <p>Em breve você poderá acessar o tabuleiro virtual interativo com mapas, tokens e rolagens de dados em tempo real diretamente por aqui.</p>
+      </div>
+    </div>
+
     <!-- ── GRID DE CONTEÚDO ── -->
     <div class="cd-grid">
 
@@ -116,6 +129,26 @@
             </div>
             <button class="btn-primary" (click)="submitCharacter()" [disabled]="!selectedCharacterId">
               <i class="fa fa-paper-plane"></i> Enviar Ficha
+            </button>
+          </div>
+        </div>
+
+        <!-- Adicionar personagem diretamente (Mestre) -->
+        <div class="cd-card cd-card--gm" *ngIf="isGameMaster">
+          <div class="cd-card-header">
+            <h2 class="cd-card-title"><i class="fa fa-user-plus"></i> Adicionar Personagem à Mesa</h2>
+          </div>
+          <p class="cd-card-sub">Como Mestre, você pode adicionar diretamente um de seus personagens ou PNJ/NPCs.</p>
+          <div class="cd-input-row">
+            <div class="cd-input-wrap cd-input-wrap--select">
+              <i class="fa fa-mask cd-input-icon"></i>
+              <select class="cd-input cd-select" [(ngModel)]="selectedGmCharacterId">
+                <option value="" disabled selected>Selecione um personagem para adicionar</option>
+                <option *ngFor="let char of myCharacters" [value]="char.id">{{ char.name }}</option>
+              </select>
+            </div>
+            <button class="btn-primary" (click)="submitCharacter(selectedGmCharacterId)" [disabled]="!selectedGmCharacterId">
+              <i class="fa fa-plus"></i> Adicionar
             </button>
           </div>
         </div>
@@ -253,81 +286,9 @@
   </div>
 </div>
 
-<!-- ── MODAL EDITAR CAMPANHA ── -->
-<div class="modal-backdrop" *ngIf="isEditModalOpen" (click)="isEditModalOpen = false">
-  <div class="modal-card" (click)="$event.stopPropagation()">
-
-    <div class="modal-header">
-      <h2 class="modal-title">Editar <span>Campanha</span></h2>
-      <button class="btn-icon modal-close" (click)="isEditModalOpen = false">
-        <i class="fa fa-xmark"></i>
-      </button>
-    </div>
-
-    <div class="modal-body">
-
-      <!-- Capa -->
-      <div class="input-group">
-        <label class="input-label">Nova Imagem de Capa <span class="input-optional">(opcional)</span></label>
-        <div class="cover-upload" (click)="coverEditInput.click()" [class.has-preview]="editCoverPreview">
-          <img *ngIf="editCoverPreview" [src]="editCoverPreview" class="cover-preview-img" alt="Capa">
-          <img *ngIf="!editCoverPreview && campaign?.iconPath" [src]="campaign!.iconPath" class="cover-preview-img"
-            alt="Capa atual">
-          <div class="cover-upload-placeholder" *ngIf="!editCoverPreview && !campaign?.iconPath">
-            <i class="fa fa-image"></i>
-            <span>Clique para selecionar</span>
-          </div>
-          <div class="cover-upload-overlay">
-            <i class="fa fa-camera"></i> Alterar
-          </div>
-        </div>
-        <input #coverEditInput type="file" accept="image/*" class="file-input-hidden"
-          (change)="onEditFileSelected($event)">
-      </div>
-
-      <!-- Título -->
-      <div class="input-group">
-        <label class="input-label">Título <span class="required">*</span></label>
-        <div class="input-field-wrapper">
-          <i class="fa fa-scroll icon-field"></i>
-          <input type="text" [(ngModel)]="editTitle" maxlength="60">
-        </div>
-        <small class="char-counter">{{ editTitle.length }}/60</small>
-      </div>
-
-      <!-- Descrição -->
-      <div class="input-group">
-        <label class="input-label">Descrição</label>
-        <textarea class="input-textarea" [(ngModel)]="editDescription" rows="3" maxlength="1000"></textarea>
-        <small class="char-counter">{{ editDescription.length }}/1000</small>
-      </div>
-
-      <!-- Próxima sessão + Máx jogadores -->
-      <div class="input-row">
-        <div class="input-group">
-          <label class="input-label">Próxima Sessão</label>
-          <div class="input-field-wrapper">
-            <i class="fa fa-calendar icon-field"></i>
-            <input type="datetime-local" [(ngModel)]="editNextSession">
-          </div>
-        </div>
-        <div class="input-group input-group--sm">
-          <label class="input-label">Máx. Jogadores</label>
-          <div class="input-field-wrapper">
-            <i class="fa fa-users icon-field"></i>
-            <input type="number" [(ngModel)]="editMaxPlayers" min="1" max="20" (change)="validateEditMaxPlayers()">
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn-secondary" (click)="isEditModalOpen = false">Cancelar</button>
-      <button class="btn-primary" (click)="saveCampaignChanges()" [disabled]="!editTitle">
-        <i class="fa fa-floppy-disk"></i> Salvar
-      </button>
-    </div>
-
-  </div>
-</div>
+<!-- Modal isolado de edição de campanha -->
+<app-edit-campaign-modal
+  [(isOpen)]="isEditModalOpen"
+  [campaign]="campaign"
+  (onSave)="saveCampaignChanges($event)">
+</app-edit-campaign-modal>

@@ -51,29 +51,29 @@
           {{ campaignTotal }} {{ campaignTotal === 1 ? 'campanha' : 'campanhas' }}
         </span>
       </div>
-      <a routerLink="/jogar" class="section-link" *ngIf="campaignTotal > 0">
+      <!-- 🟢 Ajustado de /jogar para /campanhas -->
+      <a routerLink="/campanhas" class="section-link" *ngIf="campaignTotal > 0">
         Ver todas <i class="fa-solid fa-arrow-right"></i>
       </a>
     </div>
 
     <div class="campaigns-grid">
-      <!-- Botão para navegar para criação/listagem -->
+      <!-- 🟢 Ajustado de /jogar para /campanhas -->
       <div class="campaign-card add-card" routerLink="/campanhas">
         <i class="fa-solid fa-plus"></i>
         <span>Nova Campanha</span>
       </div>
 
       <!-- Cards Dinâmicos de Campanha -->
+      <!-- 🟢 Ajustado de /jogar/campanha para /campanha -->
       <div
         class="campaign-card"
         *ngFor="let camp of campaignPreview"
-        [routerLink]="['/jogar/campanha', camp.id]"
+        [routerLink]="['/campanha', camp.id]"
       >
-        <!-- Com Capa/Ícone -->
         <div class="card-image-placeholder campaign-avatar--image" *ngIf="camp.iconPath">
           <img class="campaign-avatar-img" [src]="camp.iconPath" [alt]="camp.title">
         </div>
-        <!-- Sem Capa: Ícone padrão -->
         <div class="card-image-placeholder" *ngIf="!camp.iconPath">
           <i class="fa-solid fa-map-location-dot"></i>
         </div>
