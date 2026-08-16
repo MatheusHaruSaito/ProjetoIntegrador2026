@@ -159,22 +159,101 @@ namespace RpgDex.Infrastructure.Services
 </html>";
         }
 
-        public string GenerateTwoFactorEmailHTMLTemplate(string twoFactorCode, string userName)
-        {
+public string GenerateTwoFactorEmailHTMLTemplate(string twoFactorCode, string userName)
+{
+    return $@"<!DOCTYPE html>
+<html lang=""pt-BR"">
+<head>
+  <meta charset=""UTF-8"">
+  <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+  <title>Código de Segurança 2FA — RPGDex</title>
+</head>
+<body style=""margin:0;padding:0;background-color:#f4f2fb;font-family:'Segoe UI',Arial,sans-serif;"">
 
-            return $@"<!DOCTYPE html>
-                    <html lang=""pt-BR"">
-                    <head>
-                      <meta charset=""UTF-8"">
-                      <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-                      <title>Vericiação 2 fatores — RPGDex</title>
-                    </head>
-                    <body>
-                            <h1> Email para ser formatado </h1><br>
-                               <h2> {userName} aqui esta o codigo  de 2 fatores: {twoFactorCode}</h2>
-                    </body>
-                    </html>";
-        }
+  <table width=""100%"" cellpadding=""0"" cellspacing=""0"" style=""background-color:#f4f2fb;padding:40px 20px;"">
+    <tr>
+      <td align=""center"">
+        <table width=""100%"" cellpadding=""0"" cellspacing=""0""
+               style=""max-width:520px;background:#ffffff;border-radius:20px;
+                       box-shadow:0 8px 40px rgba(100,60,200,0.12);overflow:hidden;"">
+
+          <!-- Header gradiente -->
+          <tr>
+            <td style=""background:linear-gradient(135deg,#7c3aed,#a855f7);
+                        padding:40px 40px 32px;text-align:center;"">
+              <p style=""margin:0;font-family:'Segoe UI',Arial,sans-serif;
+                         font-weight:900;font-size:2rem;color:#ffffff;
+                         letter-spacing:-1px;"">RPGDex</p>
+              <p style=""margin:10px 0 0;font-size:0.9rem;color:rgba(255,255,255,0.8);"">
+                Sua plataforma de campanhas e fichas
+              </p>
+            </td>
+          </tr>
+
+          <!-- Corpo -->
+          <tr>
+            <td style=""padding:40px 40px 32px;"">
+
+              <!-- Ícone de Escudo/Segurança -->
+              <div style=""text-align:center;margin-bottom:24px;"">
+                <div style=""display:inline-block;width:72px;height:72px;
+                             border-radius:50%;background:#f3eeff;
+                             border:3px solid #7c3aed;line-height:72px;
+                             font-size:2rem;color:#7c3aed;text-align:center;"">
+                  🛡️
+                </div>
+              </div>
+
+              <h1 style=""margin:0 0 8px;font-size:1.5rem;font-weight:800;
+                          color:#1a1033;text-align:center;"">
+                Código de Verificação
+              </h1>
+              <p style=""margin:0 0 24px;font-size:1rem;color:#555;
+                         text-align:center;line-height:1.6;"">
+                Olá, <strong style=""color:#7c3aed;"">{userName}</strong>!<br>
+                Utilize o código abaixo para confirmar a ativação do 2FA ou realizar o seu acesso no RPGDex:
+              </p>
+
+              <!-- Caixa Destaque do Código -->
+              <div style=""text-align:center;margin:32px 0;"">
+                <div style=""display:inline-block;padding:16px 36px;
+                            background:#f8f6ff;border:2px dashed #7c3aed;
+                            border-radius:12px;"">
+                  <span style=""font-family:monospace,'Courier New',Courier;
+                               font-size:2.2rem;font-weight:900;
+                               color:#7c3aed;letter-spacing:8px;"">
+                    {twoFactorCode}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Aviso de Segurança/Expiração -->
+              <p style=""margin:0 0 20px;font-size:0.85rem;color:#888;
+                         text-align:center;line-height:1.5;"">
+                Se você não solicitou este código, por favor ignore este e-mail.
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style=""background:#f8f6ff;padding:20px 40px;text-align:center;
+                        border-top:1px solid #ede9f8;"">
+              <p style=""margin:0;font-size:0.8rem;color:#aaa;line-height:1.6;"">
+                © {DateTime.UtcNow.Year} RPGDex · Este é um email automático, não responda.<br>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>";
+}
+
     }
-
 }

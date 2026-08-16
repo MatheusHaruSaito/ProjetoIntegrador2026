@@ -170,11 +170,11 @@ export class AuthService {
     );
   }
   public SendTwoFactorAuthEmail(
-    request: TwoFactorAuthEmailRequest,
+    request: { userId: string }
   ): Observable<ApiResponse<tokenModel>> {
     return this.http.post<ApiResponse<tokenModel>>(
-      `${this.env}/SendTwoFactorAuthEmailRequest/`,
-      request,
+      `${this.env}/SendTwoFactorAuthEmailRequest`, // Removida a barra extra do final
+      { userId: request.userId }
     );
   }
   public TwoFAActivation(request: ValidateTwoFactorRequest): Observable<ApiResponse<tokenModel>> {

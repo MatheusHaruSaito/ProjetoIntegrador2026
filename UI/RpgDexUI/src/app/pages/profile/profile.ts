@@ -5,13 +5,15 @@ import { AuthService } from '../../services/auth-service';
 import { CharacterService } from '../../services/character-service';
 import { UserResponse } from '../../../models/userResponse';
 import { Character } from '../../../models/character';
+import { AuthOptionsResponse } from '../../../models/authOptionsResponse';
+import { SettingsModalComponent } from '../../modals/settings-modal/settings-modal';
 
 const THEME_KEY = 'rpgdex-theme';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SettingsModalComponent],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -22,7 +24,9 @@ export class ProfileComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   user: UserResponse | null = null;
+  authOptions: AuthOptionsResponse | null = null;
   isDarkMode = false;
+  isSettingsModalOpen = false;
 
   characterPreview: Character[] = [];
   characterTotal = 0;
@@ -32,7 +36,6 @@ export class ProfileComponent implements OnInit {
     { id: 2, name: 'O Chamado de Cthulhu', role: 'Jogador' },
     { id: 3, name: 'Mundo de Ferro', role: 'Mestre' },
   ];
-  http: any;
 
   ngOnInit(): void {
     this.initTheme();
@@ -69,13 +72,28 @@ export class ProfileComponent implements OnInit {
       next: (response) => {
         this.user = response.data ?? null;
         this.cdr.detectChanges();
-        // Carrega personagens só depois de ter o userId
-        this.loadCharacterPreview();
+
+        if (this.user?.id) {
+          this.loadAuthOptions(this.user.id);
+          this.loadCharacterPreview();
+        }
       },
       error: (err) => {
         console.error('Erro ao carregar usuário', err);
         this.logout();
       },
+    });
+  }
+
+  private loadAuthOptions(userId: string): void {
+    this.authService.GetUserAuthOptions(userId).subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          this.authOptions = res.data;
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => console.error('Erro ao carregar opções de autenticação', err),
     });
   }
 
@@ -88,13 +106,26 @@ export class ProfileComponent implements OnInit {
         this.characterTotal = all.length;
         this.characterPreview = all.slice(0, 3);
         this.cdr.detectChanges();
-        document.getElementById('user-avatar')?.setAttribute('src', this.user?.iconPath || '');
       },
       error: (err) => console.error('Erro ao carregar personagens', err),
     });
   }
 
-  editProfile() {
+  openSettingsModal(): void {
+    this.isSettingsModalOpen = true;
+  }
+
+  closeSettingsModal(): void {
+    this.isSettingsModalOpen = false;
+  }
+
+  onTwoFactorUpdated(isEnabled: boolean): void {
+    if (this.authOptions) {
+      this.authOptions.isTwoFactorEnabled = isEnabled;
+    }
+  }
+
+  editProfile(): void {
     this.router.navigate(['/perfil/editar']);
   }
 

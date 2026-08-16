@@ -33,7 +33,7 @@
         >
           <i class="fa-solid" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
         </button>
-        <button class="icon-btn" title="Configurações">
+        <button class="icon-btn" title="Configurações" (click)="openSettingsModal()">
           <i class="fa-solid fa-gear"></i>
         </button>
       </div>
@@ -93,14 +93,12 @@
         *ngFor="let char of characterPreview"
         routerLink="/personagens"
       >
-        <!-- Com ícone -->
         <div
           class="card-image-placeholder character-avatar character-avatar--image"
           *ngIf="char.iconPath"
         >
           <img class="character-avatar-img" [src]="char.iconPath" [alt]="char.name" />
         </div>
-        <!-- Sem ícone: ícone padrão -->
         <div class="card-image-placeholder character-avatar" *ngIf="!char.iconPath">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
@@ -113,3 +111,11 @@
     </div>
   </section>
 </div>
+
+<app-settings-modal
+  [isOpen]="isSettingsModalOpen"
+  [user]="user"
+  [authOptions]="authOptions"
+  (closeModal)="isSettingsModalOpen = false"
+  (twoFactorUpdated)="onTwoFactorUpdated($event)">
+</app-settings-modal>
