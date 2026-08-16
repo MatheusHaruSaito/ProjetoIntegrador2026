@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { UserService } from '../../services/user-service';
 import { UserResponse } from '../../../models/userResponse';
+import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 
 interface EditProfileForm {
   displayName: string;
@@ -13,7 +14,7 @@ interface EditProfileForm {
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, ImageCropperComponent],
   templateUrl: './edit-profile.html',
   styleUrl: './edit-profile.css',
 })
@@ -35,6 +36,11 @@ export class EditProfileComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
+  // Controle do Cropper
+  imageChangedEvent: Event | null = null;
+  croppedImageBase64: string = '';
+  showCropperModal = false;
+
   ngOnInit(): void {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
@@ -45,7 +51,6 @@ export class EditProfileComponent implements OnInit {
       next: (response) => {
         this.currentUser = response.data ?? null;
         this.editForm.displayName = this.currentUser?.displayName ?? '';
-        // Pré-carrega a foto atual do usuário, se houver
         this.avatarPreviewUrl = this.currentUser?.iconPath ?? '';
         this.cdr.detectChanges();
       },
@@ -67,15 +72,26 @@ export class EditProfileComponent implements OnInit {
       return;
     }
 
-    this.selectedFile = file;
     this.errorMessage = '';
+    this.imageChangedEvent = event;
+    this.showCropperModal = true;
+  }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.avatarPreviewUrl = e.target?.result as string;
-      this.cdr.detectChanges();
-    };
-    reader.readAsDataURL(file);
+  imageCropped(event: ImageCroppedEvent): void {
+    if (event.objectUrl && event.blob) {
+      this.croppedImageBase64 = event.objectUrl;
+      this.selectedFile = new File([event.blob], 'avatar.png', { type: 'image/png' });
+    }
+  }
+
+  confirmCrop(): void {
+    this.avatarPreviewUrl = this.croppedImageBase64;
+    this.showCropperModal = false;
+  }
+
+  cancelCrop(): void {
+    this.imageChangedEvent = null;
+    this.showCropperModal = false;
   }
 
   saveChanges(): void {
@@ -96,7 +112,7 @@ export class EditProfileComponent implements OnInit {
     const formData = new FormData();
     formData.append('displayName', this.editForm.displayName.trim());
     if (this.selectedFile) {
-      formData.append('icon', this.selectedFile);
+      formData.append('icon', this.selectedFile, this.selectedFile.name);
     }
 
     this.isLoading = true;

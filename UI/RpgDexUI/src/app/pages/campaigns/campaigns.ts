@@ -20,10 +20,10 @@ const LAST_ACCESSED_KEY = 'rpgdex-last-accessed-chars';
 })
 export class CampaignsComponent implements OnInit {
   private characterService = inject(CharacterService);
-  private campaignService  = inject(CampaignService);
-  private authService      = inject(AuthService);
-  private router           = inject(Router);
-  private cdr              = inject(ChangeDetectorRef);
+  private campaignService = inject(CampaignService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   myCampaigns: Campaign[] = [];
   myCharacters: Character[] = [];
@@ -41,28 +41,34 @@ export class CampaignsComponent implements OnInit {
   }
 
   private loadCampaigns(): void {
-    this.campaignService.GetAllByUserId(this.currentUserId).subscribe({
-      next: (r) => { 
-        this.myCampaigns = r.data ?? []; 
-        this.cdr.detectChanges(); 
+    this.campaignService.GetAll().subscribe({
+      next: (r) => {
+        const allCampaigns: Campaign[] = r.data ?? [];
+        this.myCampaigns = allCampaigns.filter(c => 
+          c.gameMasterId === this.currentUserId || (c.playerIds && c.playerIds.includes(this.currentUserId))
+        );
+
+        this.cdr.detectChanges();
       },
-      error: () => {}
+      error: () => { }
     });
   }
 
   private loadCharacters(): void {
     this.characterService.GetAll(this.currentUserId).subscribe({
-      next: (r) => { 
+      next: (r) => {
         const all = r.data ?? [];
         const filtered = all.filter(c => c.userId === this.currentUserId);
-        this.myCharacters = this.sortByLastAccessed(filtered);
-        this.cdr.detectChanges(); 
+        
+        // Ordena por último acesso e limita aos 5 mais recentes
+        this.myCharacters = this.sortByLastAccessed(filtered).slice(0, 5);
+        this.cdr.detectChanges();
       },
-      error: () => {}
+      error: () => { }
     });
   }
 
-  // --- LÓGICA DE ÚLTIMO ACESSO DA MAIN ---
+  // --- LÓGICA DE ÚLTIMO ACESSO ---
   private sortByLastAccessed(chars: Character[]): Character[] {
     const accessed = this.getLastAccessedMap();
     return [...chars].sort((a, b) => {
@@ -112,7 +118,7 @@ export class CampaignsComponent implements OnInit {
     formData.append('gameMasterId', this.currentUserId);
     this.campaignService.Post(formData as any).subscribe({
       next: () => this.loadCampaigns(),
-      error: () => {}
+      error: () => { }
     });
   }
 
@@ -132,5 +138,18 @@ export class CampaignsComponent implements OnInit {
 
   goToCampaignDetail(id: string): void {
     this.router.navigate(['/campanha', id]);
+  }
+
+  formatNextSession(dateValue: any): string {
+    if (!dateValue) return 'A Definir';
+
+    const sessionDate = new Date(dateValue);
+    const now = new Date();
+
+    if (isNaN(sessionDate.getTime()) || sessionDate.getFullYear() <= 2000 || sessionDate < now) {
+      return 'A Definir';
+    }
+
+    return sessionDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
   }
 }

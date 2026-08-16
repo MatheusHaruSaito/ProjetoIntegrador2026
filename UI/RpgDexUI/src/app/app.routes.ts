@@ -43,6 +43,13 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'campanha/:id',
+    loadComponent: () =>
+      import('./pages/campaign-detail/campaign-detail').then(
+        (m) => m.CampaignDetailComponent
+      ),
+  },
+  {
     path: 'emailConfirmation',
     component: EmailConfirmation,
   },
