@@ -1,14 +1,11 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Identity;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
 using RpgDex.Application.Interfaces;
 using RpgDex.Domain.Entities;
-using RpgDex.Domain.Exceptions;
 using RpgDex.Domain.Interfaces;
 using RpgDex.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RpgDex.Application.Services   
 {
@@ -18,25 +15,56 @@ namespace RpgDex.Application.Services
         private readonly IFileService _fileService;
         private readonly IUserRepository _userRepository;
         private readonly ICharacterRepository _characterRepository;
-        public CampaignService(ICampaignRepository campaignRepository, IFileService fileService, IUserRepository userRepository, ICharacterRepository characterRepository)
+        private readonly IPasswordHasher<Campaign> _passwordHasher;
+        public CampaignService(ICampaignRepository campaignRepository, IFileService fileService, IUserRepository userRepository, ICharacterRepository characterRepository, IPasswordHasher<Campaign> passwordHasher)
         {
             _campaignRepository = campaignRepository;
             _fileService = fileService;
             _userRepository = userRepository;
             _characterRepository = characterRepository;
+            _passwordHasher = passwordHasher;
         }
 
+        private string? HashPassword(Campaign campaign, string? password)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                return null;
+            }
+            return _passwordHasher.HashPassword(campaign, password);
+        }
+        private bool ValidatePassword(Campaign campaign,string password)
+        {
+            if (string.IsNullOrEmpty(campaign.PasswordHash))
+                return true;
+
+            if (string.IsNullOrEmpty(password))
+                return false;
+
+            var result = _passwordHasher.VerifyHashedPassword(campaign, campaign.PasswordHash, password);
+
+            if (result == PasswordVerificationResult.Failed) return false;
+
+            if (result == PasswordVerificationResult.SuccessRehashNeeded)
+            {
+               campaign.SetPasswordHash(HashPassword(campaign,password));
+            }
+            return true;
+        }
         public async Task<Result<CampaignResponse>> Create(CreateCampaignRequest request)
         {
-            var user = await _userRepository.GetByIdAsync(request.GameMasterId);
-            if(user is null)
+            var userExisits = await _userRepository.GetByIdAsync(request.GameMasterId);
+            if(userExisits is null)
             {
                 return Result<CampaignResponse>.Failure("Usuario Não Logado");
             }
 
             var campaign = request.Adapt<Campaign>();
+
+            campaign.SetPasswordHash(HashPassword(campaign,request.Password));
+            
             //Temporario, mudar quando definir assinaturas
-            if(request.MaxPlayers > 15)
+            if (request.MaxPlayers > 15)
             {
                 campaign.MaxPlayers = 15;
             }
@@ -161,8 +189,11 @@ namespace RpgDex.Application.Services
                 return Result<string>.Failure("Jogador não encontrado");
             }
             //Jogador Encontrado
-
-            var (message, IsSuccess) = campaign.TryAddPlayer(request.PlayerId, request.Password);
+            var isValid = ValidatePassword(campaign, request.Password);
+            if (!isValid) {
+                return Result<string>.Failure("Invalid Password");
+            }
+            var (message, IsSuccess) = campaign.TryAddPlayer(request.PlayerId);
             if (!IsSuccess)
             {
                 return Result<string>.Failure(message);
