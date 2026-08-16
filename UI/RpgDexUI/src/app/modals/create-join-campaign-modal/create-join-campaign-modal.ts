@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 
 @Component({
   selector: 'app-create-join-campaign-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ImageCropperComponent],
   templateUrl: './create-join-campaign-modal.html',
   styleUrls: ['./create-join-campaign-modal.css']
 })
@@ -31,6 +32,11 @@ export class CreateJoinCampaignModalComponent {
   joinId = '';
   joinPassword = '';
 
+  // Estados do Cropper
+  imageChangedEvent: Event | null = null;
+  croppedImageBlob: Blob | null = null;
+  showCropperModal = false;
+
   close(): void {
     this.isOpen = false;
     this.isOpenChange.emit(false);
@@ -43,15 +49,29 @@ export class CreateJoinCampaignModalComponent {
   }
 
   onFileSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    this.selectedIconFile = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.coverPreviewUrl = e.target?.result as string;
-      this.cdr.detectChanges();
-    };
-    reader.readAsDataURL(file);
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.imageChangedEvent = event;
+      this.showCropperModal = true;
+    }
+  }
+
+  imageCropped(event: ImageCroppedEvent): void {
+    this.croppedImageBlob = event.blob ?? null;
+  }
+
+  confirmCrop(): void {
+    if (this.croppedImageBlob) {
+      this.selectedIconFile = new File([this.croppedImageBlob], 'cover.png', { type: 'image/png' });
+      this.coverPreviewUrl = URL.createObjectURL(this.croppedImageBlob);
+    }
+    this.showCropperModal = false;
+  }
+
+  cancelCrop(): void {
+    this.showCropperModal = false;
+    this.imageChangedEvent = null;
+    this.croppedImageBlob = null;
   }
 
   submitCreate(): void {
@@ -61,6 +81,7 @@ export class CreateJoinCampaignModalComponent {
     form.append('title', this.newTitle.substring(0, 60));
     form.append('maxPlayers', this.newMaxPlayers.toString());
     form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
+    form.append('nextSession', new Date('1999-01-01T00:00:00').toISOString());
     if (this.newDescription) form.append('description', this.newDescription.substring(0, 1000));
     if (this.newPassword) form.append('password', this.newPassword.substring(0, 50));
 
@@ -87,5 +108,6 @@ export class CreateJoinCampaignModalComponent {
     this.coverPreviewUrl = '';
     this.joinId = '';
     this.joinPassword = '';
+    this.showCropperModal = false;
   }
 }

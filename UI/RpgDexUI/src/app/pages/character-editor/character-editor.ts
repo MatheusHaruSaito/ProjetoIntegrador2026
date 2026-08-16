@@ -2,24 +2,25 @@ import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 import { CharacterService } from '../../services/character-service';
 import { Character } from '../../../models/character';
 
 export interface AttrEntry { key: string; value: string; }
-export interface AttrGroup  { title: string; entries: AttrEntry[]; }
+export interface AttrGroup { title: string; entries: AttrEntry[]; }
 
 @Component({
   selector: 'app-character-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ImageCropperComponent],
   templateUrl: './character-editor.html',
   styleUrl: './character-editor.css',
 })
 export class CharacterEditor implements OnInit {
-  private route            = inject(ActivatedRoute);
-  private router           = inject(Router);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private characterService = inject(CharacterService);
-  private cdr              = inject(ChangeDetectorRef);
+  private cdr = inject(ChangeDetectorRef);
 
   character: Character | null = null;
   editForm = { name: '', description: '' };
@@ -34,12 +35,17 @@ export class CharacterEditor implements OnInit {
     this.savedState = JSON.parse(JSON.stringify({ editForm: this.editForm, groups: this.groups }));
   }
 
+  // Estados da imagem e do corte
+  imageChangedEvent: Event | null = null;
+  croppedImageBlob: Blob | null = null;
+  showCropperModal = false;
+
   selectedIconFile: File | null = null;
   iconPreviewUrl = '';
-  isSaving       = false;
-  errorMessage   = '';
+  isSaving = false;
+  errorMessage = '';
   successMessage = '';
-  isEditing      = false;
+  isEditing = false;
 
   private readonly GUID_RE =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -141,23 +147,36 @@ export class CharacterEditor implements OnInit {
   }
 
   // ── Grupos ─────────────────────────────────────────────
-  addGroup(): void              { this.groups.push({ title: '', entries: [] }); }
-  removeGroup(i: number): void  { this.groups.splice(i, 1); }
-  addEntry(g: AttrGroup): void  { g.entries.push({ key: '', value: '' }); }
+  addGroup(): void { this.groups.push({ title: '', entries: [] }); }
+  removeGroup(i: number): void { this.groups.splice(i, 1); }
+  addEntry(g: AttrGroup): void { g.entries.push({ key: '', value: '' }); }
   removeEntry(g: AttrGroup, i: number): void { g.entries.splice(i, 1); }
 
-  // ── Ícone ──────────────────────────────────────────────
+  // ── Ícone e Cropper ──────────────────────────────────────
   onIconSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    if (file.size > 2 * 1024 * 1024) { this.errorMessage = 'A imagem deve ter no máximo 2MB.'; return; }
-    this.selectedIconFile = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.iconPreviewUrl = e.target?.result as string;
-      this.cdr.detectChanges();
-    };
-    reader.readAsDataURL(file);
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.imageChangedEvent = event;
+      this.showCropperModal = true;
+    }
+  }
+
+  imageCropped(event: ImageCroppedEvent): void {
+    this.croppedImageBlob = event.blob ?? null;
+  }
+
+  confirmCrop(): void {
+    if (this.croppedImageBlob) {
+      this.selectedIconFile = new File([this.croppedImageBlob], 'avatar.png', { type: 'image/png' });
+      this.iconPreviewUrl = URL.createObjectURL(this.croppedImageBlob);
+    }
+    this.showCropperModal = false;
+  }
+
+  cancelCrop(): void {
+    this.showCropperModal = false;
+    this.imageChangedEvent = null;
+    this.croppedImageBlob = null;
   }
 
   // ── Salvar ─────────────────────────────────────────────
@@ -179,10 +198,10 @@ export class CharacterEditor implements OnInit {
     }
 
     const form = new FormData();
-    form.append('id',          this.character!.id);
-    form.append('name',        this.editForm.name.trim());
+    form.append('id', this.character!.id);
+    form.append('name', this.editForm.name.trim());
     form.append('description', this.editForm.description ?? '');
-    form.append('properties',  JSON.stringify(propertiesObj));
+    form.append('properties', JSON.stringify(propertiesObj));
     if (this.selectedIconFile) {
       form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
     }
@@ -193,7 +212,6 @@ export class CharacterEditor implements OnInit {
       next: () => {
         this.isSaving = false;
 
-        // Atualiza o objeto local sem fazer novo request
         this.character = {
           ...this.character!,
           name: this.editForm.name.trim(),
@@ -204,7 +222,6 @@ export class CharacterEditor implements OnInit {
         this.captureSavedState();
         this.selectedIconFile = null;
 
-        // Volta para visualização e mostra feedback
         this.isEditing = false;
         this.successMessage = 'Personagem salvo com sucesso!';
         this.cdr.detectChanges();
@@ -224,7 +241,7 @@ export class CharacterEditor implements OnInit {
   confirmDelete(): void {
     if (!confirm('Tem certeza que deseja excluir este personagem? Esta ação é irreversível.')) return;
     this.characterService.Delete(this.character!.id).subscribe({
-      next:  () => this.router.navigate(['/personagens']),
+      next: () => this.router.navigate(['/personagens']),
       error: () => { this.errorMessage = 'Erro ao excluir personagem.'; },
     });
   }

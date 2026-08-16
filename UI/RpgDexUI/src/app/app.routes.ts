@@ -35,12 +35,19 @@ export const routes: Routes = [
   {
     path: 'personagens/:id',
     component: CharacterEditor,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'campanhas',
     component: CampaignsComponent,
     canActivate: [authGuard],
+  },
+  {
+    path: 'campanha/:id',
+    loadComponent: () =>
+      import('./pages/campaign-detail/campaign-detail').then(
+        (m) => m.CampaignDetailComponent
+      ),
   },
   {
     path: 'emailConfirmation',
@@ -54,10 +61,5 @@ export const routes: Routes = [
     path: 'auth/callback',
     component: DiscordAuth,
   },
-  { path: '**', redirectTo: '/home' },
-];
-    path: 'campanha/:id',
-    loadComponent: () => import('./pages/campaign-detail/campaign-detail').then(m => m.CampaignDetailComponent)
-  },
-  { path: '**', redirectTo: '/home' },
+  { path: '**', redirectTo: '/home' }, // Mantido apenas ao final
 ];

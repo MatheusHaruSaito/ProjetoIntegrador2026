@@ -71,3 +71,34 @@
 
   </div>
 </div>
+
+<!-- SUB-MODAL: CORTE DA IMAGEM -->
+@if (showCropperModal) {
+  <div class="modal-backdrop cropper-backdrop" (click)="$event.stopPropagation()">
+    <div class="modal-card cropper-card">
+      <div class="modal-header">
+        <h2 class="modal-title">Ajustar <span>Capa</span></h2>
+        <button class="btn-icon modal-close" (click)="cancelCrop()">
+          <i class="fa fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body cropper-body">
+        <image-cropper
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true"
+          [aspectRatio]="16 / 9"
+          format="png"
+          (imageCropped)="imageCropped($event)"
+        ></image-cropper>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="cancelCrop()">Cancelar</button>
+        <button type="button" class="btn-primary" (click)="confirmCrop()">
+          <i class="fa fa-check"></i> Confirmar Corte
+        </button>
+      </div>
+    </div>
+  </div>
+}

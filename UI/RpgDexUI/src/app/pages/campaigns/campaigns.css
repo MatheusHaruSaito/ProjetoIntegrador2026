@@ -193,12 +193,39 @@
   background: var(--rpg-border-light);
 }
 
+/* ── CABEÇALHO DA SEÇÃO DE PERSONAGENS ── */
+.cmp-section-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 960px;
+  margin: 0 auto 16px;
+  gap: 12px;
+}
+
 .cmp-section-sub {
   font-family: 'Nunito', sans-serif;
   color: var(--rpg-text-muted);
   font-size: 0.88rem;
-  text-align: center;
-  margin: 0 0 20px;
+  margin: 0;
+}
+
+.char-see-all-link {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--rpg-purple);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.char-see-all-link:hover {
+  opacity: 0.8;
+  transform: translateX(2px);
 }
 
 /* ── PERSONAGENS (PADRÃO MAIN) ── */

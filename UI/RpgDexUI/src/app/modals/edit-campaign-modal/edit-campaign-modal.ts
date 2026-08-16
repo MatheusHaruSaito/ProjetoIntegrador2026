@@ -1,12 +1,13 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectorRef, inject, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 import { Campaign } from '../../../models/campaign';
 
 @Component({
   selector: 'app-edit-campaign-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ImageCropperComponent],
   templateUrl: './edit-campaign-modal.html',
   styleUrls: ['./edit-campaign-modal.css']
 })
@@ -27,6 +28,11 @@ export class EditCampaignModalComponent implements OnChanges {
   editCoverPreview = '';
   currentIconPath = '';
 
+  // Estados do Cropper
+  imageChangedEvent: Event | null = null;
+  croppedImageBlob: Blob | null = null;
+  showCropperModal = false;
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['campaign'] && this.campaign) {
       this.editTitle = this.campaign.title;
@@ -44,6 +50,7 @@ export class EditCampaignModalComponent implements OnChanges {
     this.isOpenChange.emit(false);
     this.editCoverPreview = '';
     this.editIconFile = null;
+    this.showCropperModal = false;
   }
 
   validateMaxPlayers(): void {
@@ -52,15 +59,29 @@ export class EditCampaignModalComponent implements OnChanges {
   }
 
   onFileSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    this.editIconFile = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.editCoverPreview = e.target?.result as string;
-      this.cdr.detectChanges();
-    };
-    reader.readAsDataURL(file);
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.imageChangedEvent = event;
+      this.showCropperModal = true;
+    }
+  }
+
+  imageCropped(event: ImageCroppedEvent): void {
+    this.croppedImageBlob = event.blob ?? null;
+  }
+
+  confirmCrop(): void {
+    if (this.croppedImageBlob) {
+      this.editIconFile = new File([this.croppedImageBlob], 'cover.png', { type: 'image/png' });
+      this.editCoverPreview = URL.createObjectURL(this.croppedImageBlob);
+    }
+    this.showCropperModal = false;
+  }
+
+  cancelCrop(): void {
+    this.showCropperModal = false;
+    this.imageChangedEvent = null;
+    this.croppedImageBlob = null;
   }
 
   submitSave(): void {

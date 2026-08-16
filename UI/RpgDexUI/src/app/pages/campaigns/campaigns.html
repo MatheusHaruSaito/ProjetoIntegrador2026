@@ -28,8 +28,8 @@
           <p class="cmp-card__desc" *ngIf="camp.description">{{ camp.description }}</p>
           <div class="cmp-card__meta">
             <span><i class="fa fa-users"></i> {{ camp.playerIds?.length || 0 }}/{{ camp.maxPlayers }}</span>
-            <span *ngIf="camp.nextSession">
-              <i class="fa fa-calendar"></i> {{ camp.nextSession | date:'dd/MM/yy' }}
+            <span>
+              <i class="fa fa-calendar"></i> {{ formatNextSession(camp.nextSession) }}
             </span>
           </div>
         </div>
@@ -46,11 +46,17 @@
       </button>
     </div>
 
-    <!-- ── ACESSO RÁPIDO AOS PERSONAGENS (PADRÃO MAIN) ── -->
+    <!-- ── ACESSO RÁPIDO AOS PERSONAGENS ── -->
     <div class="cmp-section-divider">
       <span>Acesso Rápido aos Personagens</span>
     </div>
-    <p class="cmp-section-sub">Ordenados por último acesso. Clique para abrir diretamente.</p>
+
+    <div class="cmp-section-header-actions">
+      <p class="cmp-section-sub">Exibindo os 5 mais recentes. Clique para abrir diretamente.</p>
+      <a routerLink="/personagens" class="char-see-all-link">
+        Ver todos <i class="fa fa-arrow-right"></i>
+      </a>
+    </div>
 
     <div class="char-session-list">
       <!-- Vazio -->
@@ -62,12 +68,8 @@
         </a>
       </div>
 
-      <!-- Item da Lista de Personagens -->
-      <div 
-        class="char-session-card" 
-        *ngFor="let char of myCharacters" 
-        (click)="openCharacter(char.id)"
-      >
+      <!-- Item da Lista de Personagens (Máx. 5) -->
+      <div class="char-session-card" *ngFor="let char of myCharacters" (click)="openCharacter(char.id)">
         <div class="char-session-card__left">
           <div class="char-session-avatar" [style.background-image]="char.iconPath ? 'url(' + char.iconPath + ')' : ''">
             <i class="fa fa-shield-halved" *ngIf="!char.iconPath"></i>
@@ -92,9 +94,6 @@
 </div>
 
 <!-- Modal isolado reutilizável -->
-<app-create-join-campaign-modal
-  [(isOpen)]="isModalOpen"
-  [activeTab]="activeModalTab"
-  (onCreate)="handleCreateCampaign($event)"
-  (onJoin)="handleJoinCampaign($event)">
+<app-create-join-campaign-modal [(isOpen)]="isModalOpen" [activeTab]="activeModalTab"
+  (onCreate)="handleCreateCampaign($event)" (onJoin)="handleJoinCampaign($event)">
 </app-create-join-campaign-modal>
