@@ -245,6 +245,7 @@ namespace RpgDex.Application.Services
             return Result<string>.Success(message);
         }
 
+
         public async Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request)
         {
             var characterFound = await _characterRepository.GetByIdAsync(request.CharacterId);
@@ -272,25 +273,31 @@ namespace RpgDex.Application.Services
             {
                 return Result<string>.Failure("Apenas o mestre da campanha pode aceitar ou rejeitar personagens");
             }
-            string successMessage;
 
-            var (message, IsSuccess) = campaignFound.TryAcceptCharacter(request.CharacterId);
-            if (IsSuccess)
+            (string message, bool isSuccess) chracterAdded;
+ 
+            if (request.IsAccepted)
             {
-                successMessage = message;
+                chracterAdded = campaignFound.TryAcceptCharacter(request.CharacterId);
             }
-            else
+            else{
+                chracterAdded = campaignFound.TryRejectCharacter(request.CharacterId);
+            }
+
+            if (!chracterAdded.isSuccess)
             {
-                return Result<string>.Failure(message);
+                return Result<string>.Failure(chracterAdded.message);
+
             }
+
             //Personagem aceito na campanha
 
             var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
-            if(updatedCampaign is null)
+            if (updatedCampaign is null)
             {
                 return Result<string>.Failure("Falha ao atualizar campanha");
             }
-            return Result<string>.Success(successMessage);
+            return Result<string>.Success(chracterAdded.message);
         }
 
         public async Task<Result<string>> RemovePlayer(RemovePlayerFromCampaignRequest request)
