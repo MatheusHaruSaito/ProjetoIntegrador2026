@@ -57,8 +57,12 @@ export class AuthService {
     return this.http.post<ApiResponse<LoginResponse>>(`${this.env}/Login`, user).pipe(
       map((response: ApiResponse<LoginResponse>) => {
         if (response.success && response.data) {
-          this.cookieService.set(this.JWT_Token, response.data.refreshTokenModel.accessToken, { path: '/' });
-          this.cookieService.set(this.REFRESH_Token, response.data.refreshTokenModel.refreshToken, { path: '/' });
+          this.cookieService.set(this.JWT_Token, response.data.refreshTokenModel.accessToken, {
+            path: '/',
+          });
+          this.cookieService.set(this.REFRESH_Token, response.data.refreshTokenModel.refreshToken, {
+            path: '/',
+          });
           this.currentUserSubject.next(response.data);
         }
         return response;
@@ -146,8 +150,8 @@ export class AuthService {
     );
   }
 
-  public DiscordSingUp(): void {
-    window.location.href = `${this.env}/discord`;
+  public DiscordSingUp(redirectUri?: string): void {
+    window.location.href = `${this.env}/discord?redirectUri=${redirectUri}`;
   }
 
   public StoreToken(accessToken: string, refreshToken: string): void {
