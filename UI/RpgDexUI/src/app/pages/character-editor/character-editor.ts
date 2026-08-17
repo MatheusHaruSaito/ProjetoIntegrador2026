@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 import { CharacterService } from '../../services/character-service';
 import { Character } from '../../../models/character';
 
@@ -11,7 +12,7 @@ export interface AttrGroup  { title: string; entries: AttrEntry[]; }
 @Component({
   selector: 'app-character-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ImageCropperComponent],
   templateUrl: './character-editor.html',
   styleUrl: './character-editor.css',
 })
@@ -20,10 +21,16 @@ export class CharacterEditor implements OnInit {
   private router           = inject(Router);
   private characterService = inject(CharacterService);
   private cdr              = inject(ChangeDetectorRef);
+  private location         = inject(Location);
 
   character: Character | null = null;
   editForm = { name: '', description: '' };
   groups: AttrGroup[] = [];
+
+  // ── Crop de Imagem ─────────────────────────────────────
+  showCropperModal = false;
+  imageChangedEvent: Event | null = null;
+  croppedBlob: Blob | null = null;
 
   private savedState: { editForm: { name: string; description: string }; groups: AttrGroup[] } = {
     editForm: { name: '', description: '' },
@@ -146,18 +153,46 @@ export class CharacterEditor implements OnInit {
   addEntry(g: AttrGroup): void  { g.entries.push({ key: '', value: '' }); }
   removeEntry(g: AttrGroup, i: number): void { g.entries.splice(i, 1); }
 
-  // ── Ícone ──────────────────────────────────────────────
+  // ── Ícone e Cortador de Imagem ──────────────────────────
   onIconSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
-    if (file.size > 2 * 1024 * 1024) { this.errorMessage = 'A imagem deve ter no máximo 2MB.'; return; }
-    this.selectedIconFile = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.iconPreviewUrl = e.target?.result as string;
-      this.cdr.detectChanges();
-    };
-    reader.readAsDataURL(file);
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      this.errorMessage = 'A imagem deve ter no máximo 5MB.';
+      return;
+    }
+
+    this.errorMessage = '';
+    this.imageChangedEvent = event;
+    this.showCropperModal = true;
+  }
+
+  imageCropped(event: ImageCroppedEvent): void {
+    if (event.blob) {
+      this.croppedBlob = event.blob;
+    }
+    if (event.objectUrl) {
+      this.iconPreviewUrl = event.objectUrl;
+    }
+  }
+
+  confirmCrop(): void {
+    if (this.croppedBlob) {
+      this.selectedIconFile = new File([this.croppedBlob], 'avatar.png', {
+        type: 'image/png',
+      });
+    }
+    this.showCropperModal = false;
+    this.imageChangedEvent = null;
+    this.cdr.detectChanges();
+  }
+
+  cancelCrop(): void {
+    this.showCropperModal = false;
+    this.imageChangedEvent = null;
+    this.croppedBlob = null;
   }
 
   // ── Salvar ─────────────────────────────────────────────
@@ -193,7 +228,6 @@ export class CharacterEditor implements OnInit {
       next: () => {
         this.isSaving = false;
 
-        // Atualiza o objeto local sem fazer novo request
         this.character = {
           ...this.character!,
           name: this.editForm.name.trim(),
@@ -204,7 +238,6 @@ export class CharacterEditor implements OnInit {
         this.captureSavedState();
         this.selectedIconFile = null;
 
-        // Volta para visualização e mostra feedback
         this.isEditing = false;
         this.successMessage = 'Personagem salvo com sucesso!';
         this.cdr.detectChanges();
@@ -233,6 +266,6 @@ export class CharacterEditor implements OnInit {
     if (this.isEditing && this.hasUnsavedChanges) {
       if (!confirm('Você tem alterações não salvas. Deseja sair mesmo assim?')) return;
     }
-    this.router.navigate(['/personagens']);
+    this.location.back();
   }
 }

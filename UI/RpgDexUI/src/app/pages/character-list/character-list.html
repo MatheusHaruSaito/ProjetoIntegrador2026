@@ -12,79 +12,64 @@
   <!-- Busca -->
   <div class="cl-search-bar">
     <i class="fa fa-magnifying-glass"></i>
-    <input
-      type="text"
-      placeholder="Buscar personagem por nome..."
-      [(ngModel)]="searchQuery"
-      (ngModelChange)="onSearch()"
-    />
+    <input type="text" placeholder="Buscar personagem por nome..." [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearch()" />
     <button class="cl-search-clear" *ngIf="searchQuery" (click)="searchQuery = ''; onSearch()">
       <i class="fa fa-xmark"></i>
     </button>
   </div>
 
-  <div class="cl-table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Personagem</th>
-          <th>Descrição</th>
-          <th>Ações</th>
+<div class="cl-table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <!-- REMOVIDO: <th>#</th> -->
+        <th>Personagem</th>
+        <th>Descrição</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (character of filteredList; track character.id) {
+        <tr (click)="navigateToEditor(character.id)" style="cursor: pointer">
+          <!-- REMOVIDO: <td><span class="id-tag">#{{ character.id }}</span></td> -->
+          
+          <td>
+            <div class="char-name-cell">
+              <div
+                class="char-avatar-thumb"
+                [style.background-image]="character.iconPath ? 'url(' + character.iconPath + ')' : ''"
+              >
+                <i class="fa fa-shield-halved" *ngIf="!character.iconPath"></i>
+              </div>
+              <span class="char-name">{{ character.name }}</span>
+            </div>
+          </td>
+          <td><span class="char-desc">{{ character.description }}</span></td>
+          <td>
+            <div class="action-btns">
+              <button
+                class="btn-icon danger"
+                title="Excluir"
+                (click)="$event.stopPropagation(); DeleteCharacter(character.id)"
+              >
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        @for (character of filteredList; track character.id) {
-          <tr (click)="navigateToEditor(character.id)" style="cursor: pointer">
-            <td><span class="char-id">#{{ character.id.substring(0, 4) }}</span></td>
-            <td>
-              <div class="char-name-cell">
-                <div
-                  class="char-avatar-thumb"
-                  [style.background-image]="character.iconPath ? 'url(' + character.iconPath + ')' : ''"
-                >
-                  <i class="fa fa-shield-halved" *ngIf="!character.iconPath"></i>
-                </div>
-                <span class="char-name">{{ character.name }}</span>
-              </div>
-            </td>
-            <td><span class="char-desc">{{ character.description }}</span></td>
-            <td>
-              <div class="action-btns">
-                <button
-                  class="btn-icon danger"
-                  title="Excluir"
-                  (click)="$event.stopPropagation(); DeleteCharacter(character.id)"
-                >
-                  <i class="fa fa-trash"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        } @empty {
-          <tr class="empty-row">
-            <td colspan="4">
-              <div class="empty-content">
-                <div class="empty-icon"><i class="fa fa-scroll"></i></div>
-                <p class="empty-text">
-                  {{ searchQuery ? 'Nenhum personagem encontrado para "' + searchQuery + '".' : 'Nenhum personagem encontrado.' }}
-                </p>
-                <p class="empty-sub" *ngIf="!searchQuery">Crie seu primeiro personagem para começar a aventura.</p>
-                <button class="btn-primary btn-sm" *ngIf="!searchQuery" (click)="showCreateModal = true">
-                  <i class="fa fa-plus"></i> Criar Personagem
-                </button>
-              </div>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+      } @empty {
+        <tr class="empty-row">
+          <td colspan="3"> 
+            <div class="empty-content">
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </div>
 
 <!-- Modal Criar -->
-<app-create-character-modal
-  [visible]="showCreateModal"
-  (close)="showCreateModal = false"
-  (created)="GetAllCharacters()"
-/>
+<app-create-character-modal [visible]="showCreateModal" (close)="showCreateModal = false"
+  (created)="GetAllCharacters()" />

@@ -11,4 +11,5 @@ export interface Campaign {
   playerIds?: string[];
   characterIds?: string[];
   characterRequests?: string[];
+  requireApprovalForCharacters?: boolean; 
 }

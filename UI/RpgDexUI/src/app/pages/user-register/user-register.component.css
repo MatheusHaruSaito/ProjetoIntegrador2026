@@ -379,6 +379,130 @@
 .error-message   { color: var(--rpg-error);   background-color: var(--rpg-error-bg);   border: 1px solid var(--rpg-error-border);   }
 .success-message { color: var(--rpg-success); background-color: var(--rpg-success-bg); border: 1px solid var(--rpg-success-border); }
 
+/* --- TERMOS & MODAL --- */
+.terms-link-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: 'Nunito', sans-serif;
+    color: var(--rpg-purple);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.terms-link-btn:hover {
+    color: var(--rpg-text-dark);
+}
+
+.terms-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+}
+
+.terms-modal {
+    background: var(--rpg-surface);
+    border: 2px solid var(--rpg-border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--rpg-shadow-lg);
+    overflow: hidden;
+}
+
+.terms-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--rpg-border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.terms-modal-header h3 {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 1.2rem;
+    color: var(--rpg-text-strong);
+    margin: 0;
+}
+
+.close-modal-btn {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--rpg-text-faint);
+    cursor: pointer;
+    line-height: 1;
+}
+
+.close-modal-btn:hover {
+    color: var(--rpg-error-text);
+}
+
+.terms-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    font-family: 'Nunito', sans-serif;
+    color: var(--rpg-text-body);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.terms-modal-body h4 {
+    font-family: 'Exo 2', sans-serif;
+    color: var(--rpg-purple);
+    margin: 15px 0 5px 0;
+}
+
+.terms-modal-body h4:first-child {
+    margin-top: 0;
+}
+
+.terms-modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid var(--rpg-border-light);
+    display: flex;
+    justify-content: flex-end;
+    background-color: var(--rpg-surface-2);
+}
+
+.btn-accept-terms {
+    font-family: 'Exo 2', sans-serif;
+    padding: 12px 24px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: white;
+    background: var(--rpg-purple);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+}
+
+.btn-accept-terms:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 /* --- VISIBILITY --- */
 .desktop-only { display: block; }
 .mobile-only  { display: none;  }

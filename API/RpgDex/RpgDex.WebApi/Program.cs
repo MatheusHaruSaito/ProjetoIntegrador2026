@@ -58,6 +58,7 @@ builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
 builder.Services.AddScoped<ICampaignService, CampaignService>();
 builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 builder.Services.AddScoped<IDiscordAuthService, DiscordAuthService>();
+builder.Services.AddScoped<IPasswordHasher<Campaign>, PasswordHasher<Campaign>>();
 
 builder.Services.Configure<ForwardedHeadersOptions>(o =>
 {

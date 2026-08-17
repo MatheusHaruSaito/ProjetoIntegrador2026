@@ -4,248 +4,264 @@
   background-image:
     repeating-linear-gradient(0deg, var(--rpg-purple-10) 0, var(--rpg-purple-10) 1px, transparent 1px, transparent 40px),
     repeating-linear-gradient(90deg, var(--rpg-purple-10) 0, var(--rpg-purple-10) 1px, transparent 1px, transparent 40px);
-  padding: 60px 20px;
+  padding: 50px 20px 80px;
 }
 
-/* --- TÍTULO --- */
-.campaigns-title {
-  font-family: 'Exo 2', sans-serif;
-  font-weight: 800;
-  font-size: 2.2rem;
-  color: var(--rpg-text-body);
-  text-align: center;
-  text-transform: uppercase;
-  margin-bottom: 50px;
-  text-decoration: underline;
-  text-underline-offset: 8px;
-  text-decoration-color: var(--rpg-text-faint);
+.cmp-container {
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-/* --- GRID E CARDS --- */
-.campaigns-grid {
+/* ── PAGE HEADER ── */
+.cmp-page-header {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
-  gap: 30px;
-  justify-content: center;
+  gap: 16px;
+  margin-bottom: 36px;
 }
 
-.camp-card {
-  width: 220px;
-  height: 220px;
-  border-radius: 24px;
-  border: 3px solid var(--rpg-purple);
-  overflow: hidden;
-  position: relative;
-  cursor: pointer;
-  box-shadow: var(--rpg-shadow-card);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.camp-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--rpg-shadow-btn);
-}
-
-.camp-card__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.camp-card__overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: var(--rpg-purple-85);
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 700;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
-}
-
-.camp-card:hover .camp-card__overlay {
-  transform: translateY(0);
-}
-
-/* --- BOTÃO ADICIONAR --- */
-.add-card {
-  width: 220px;
-  height: 220px;
-  border-radius: 24px;
-  border: 3px solid var(--rpg-purple-soft);
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.add-card:hover {
-  border-color: var(--rpg-purple);
-  background: var(--rpg-purple-05);
-  transform: scale(1.02);
-}
-
-.add-card__icon {
-  font-size: 5rem;
-  color: var(--rpg-purple-soft);
-  font-family: 'Nunito', sans-serif;
-  transition: color 0.3s ease;
-}
-
-.add-card:hover .add-card__icon {
-  color: var(--rpg-purple);
-}
-
-/* --- MODAL --- */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: var(--rpg-surface);
-  padding: 40px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 450px;
-  position: relative;
-  text-align: center;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-}
-
-.modal-close {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 1.5rem;
-  background: none;
-  border: none;
-  color: var(--rpg-text-faint);
-  cursor: pointer;
-}
-
-.modal-title {
+.cmp-page-title {
   font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
   color: var(--rpg-text-dark);
-  font-size: 1.8rem;
-  margin-bottom: 10px;
+  margin: 0;
 }
 
-.modal-sub {
+.cmp-page-sub {
   font-family: 'Nunito', sans-serif;
   color: var(--rpg-text-muted);
-  margin-bottom: 25px;
+  font-size: 0.95rem;
+  margin: 4px 0 0;
 }
 
-.input-group input {
-  width: 100%;
-  font-family: 'Nunito', sans-serif;
-  padding: 15px;
-  border: 2px solid var(--rpg-border);
-  border-radius: 10px;
-  font-size: 1rem;
-  color: var(--rpg-text-strong);
-  background: var(--rpg-surface-2);
-  margin-bottom: 20px;
-  transition: border-color 0.3s;
+/* ── GRID DE CAMPANHAS ── */
+.cmp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+  margin-bottom: 60px;
 }
 
-.input-group input:focus {
-  outline: none;
-  border-color: var(--rpg-purple);
+.cmp-card {
   background: var(--rpg-surface);
-}
-
-.btn-create {
-  font-family: 'Exo 2', sans-serif;
-  padding: 15px 40px;
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: white;
-  background: var(--rpg-purple);
-  border: none;
-  border-radius: 8px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2px solid var(--rpg-border-light);
   cursor: pointer;
-  width: 100%;
-  text-transform: uppercase;
-  box-shadow: var(--rpg-shadow-btn);
-  transition: all 0.3s ease;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
 }
 
-.btn-create:hover {
-  filter: brightness(1.1);
-  transform: translateY(-2px);
-  box-shadow: var(--rpg-shadow-btn-hov);
+.cmp-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--rpg-purple);
+  box-shadow: var(--rpg-shadow-btn);
 }
-/* ── SEÇÃO PERSONAGENS ── */
-.section-title {
+
+.cmp-card__cover {
+  height: 150px;
+  background: var(--rpg-gradient);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cmp-card__cover-fallback {
+  font-size: 2.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cmp-card__status {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--rpg-success-bg);
+  color: var(--rpg-success);
+  border: 1px solid var(--rpg-success-border);
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.cmp-card__status--inactive {
+  background: var(--rpg-error-bg);
+  color: var(--rpg-error);
+  border-color: var(--rpg-error-border);
+}
+
+.cmp-card__body { padding: 16px 18px; }
+
+.cmp-card__title {
   font-family: 'Exo 2', sans-serif;
   font-weight: 800;
-  font-size: 1.5rem;
-  color: var(--rpg-text-body);
-  text-transform: uppercase;
-  margin: 60px 0 6px;
-  text-decoration: underline;
-  text-underline-offset: 6px;
-  text-decoration-color: var(--rpg-text-faint);
-  text-align: center;
+  font-size: 1rem;
+  color: var(--rpg-text-dark);
+  margin: 0 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.section-sub {
+.cmp-card__desc {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  color: var(--rpg-text-muted);
+  margin: 0 0 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cmp-card__meta {
+  display: flex;
+  gap: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.8rem;
+  color: var(--rpg-text-faint);
+}
+
+.cmp-card__meta i { color: var(--rpg-purple); margin-right: 4px; }
+
+/* ── VAZIO ── */
+.cmp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px 20px;
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.cmp-empty__icon {
+  width: 72px;
+  height: 72px;
+  background: var(--rpg-purple-tint);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: var(--rpg-purple);
+  opacity: 0.7;
+}
+
+.cmp-empty__title {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--rpg-text-dark);
+  margin: 0;
+}
+
+.cmp-empty__sub {
   font-family: 'Nunito', sans-serif;
   color: var(--rpg-text-muted);
-  font-size: 0.92rem;
-  text-align: center;
-  margin-bottom: 30px;
+  font-size: 0.9rem;
+  margin: 0;
 }
 
-/* ── LISTA ── */
+/* ── DIVISOR SEÇÃO ── */
+.cmp-section-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 8px;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--rpg-text-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.cmp-section-divider::before,
+.cmp-section-divider::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: var(--rpg-border-light);
+}
+
+/* ── CABEÇALHO DA SEÇÃO DE PERSONAGENS ── */
+.cmp-section-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 960px;
+  margin: 0 auto 16px;
+  gap: 12px;
+}
+
+.cmp-section-sub {
+  font-family: 'Nunito', sans-serif;
+  color: var(--rpg-text-muted);
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.char-see-all-link {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--rpg-purple);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.char-see-all-link:hover {
+  opacity: 0.8;
+  transform: translateX(2px);
+}
+
+/* ── PERSONAGENS (PADRÃO MAIN) ── */
 .char-session-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   max-width: 960px;
   margin: 0 auto;
 }
 
-/* ── EMPTY ── */
 .char-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 50px 20px;
+  gap: 10px;
+  padding: 40px 20px;
   color: var(--rpg-text-faint);
   font-family: 'Nunito', sans-serif;
   text-align: center;
 }
 
 .char-empty__icon {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   background: var(--rpg-purple-tint);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: var(--rpg-purple);
   opacity: 0.7;
 }
 
-.char-empty__text { font-weight: 700; margin: 0; }
+.char-empty__text { font-weight: 700; margin: 0; color: var(--rpg-text-faint); }
 
 .char-empty__link {
   color: var(--rpg-purple);
@@ -258,44 +274,49 @@
 }
 .char-empty__link:hover { opacity: 0.75; }
 
-/* ── CARD ── */
 .char-session-card {
-  background: var(--rpg-surface);
-  border: 2px solid var(--rpg-border-light);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: border-color 0.25s, box-shadow 0.25s;
-}
-
-.char-session-card.expanded {
-  border-color: var(--rpg-purple);
-  box-shadow: 0 4px 24px rgba(120, 80, 200, 0.12);
-}
-
-/* ── HEADER DO CARD ── */
-.char-session-card__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 22px;
+  padding: 14px 18px;
+  gap: 14px;
+  background: var(--rpg-surface);
+  border: 2px solid var(--rpg-border-light);
+  border-radius: 14px;
   cursor: pointer;
-  user-select: none;
-  gap: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
 
-.char-session-card__header:hover { background: var(--rpg-surface-tint); }
+.char-session-card:hover {
+  border-color: var(--rpg-purple);
+  box-shadow: var(--rpg-shadow-btn);
+  transform: translateX(4px);
+}
+
+.char-session-card:hover .char-session-card__name {
+  color: var(--rpg-purple);
+}
+
+.char-session-card:hover .char-session-avatar {
+  border-color: var(--rpg-purple);
+}
+
+.char-session-card:hover .char-quick-arrow {
+  color: var(--rpg-purple);
+  transform: translateX(2px);
+}
 
 .char-session-card__left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   flex: 1;
   min-width: 0;
 }
 
 .char-session-avatar {
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--rpg-purple-tint);
   background-size: cover;
@@ -304,32 +325,29 @@
   align-items: center;
   justify-content: center;
   color: var(--rpg-purple);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   flex-shrink: 0;
   border: 2px solid var(--rpg-border-light);
+  transition: border-color 0.2s;
 }
 
-.char-session-card.expanded .char-session-avatar { border-color: var(--rpg-purple); }
-
-.char-session-card__info {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-}
+.char-session-card__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 
 .char-session-card__name {
   font-family: 'Exo 2', sans-serif;
   font-weight: 800;
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--rpg-text-dark);
+  transition: color 0.2s;
 }
 
 .char-session-card__desc {
   font-family: 'Nunito', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--rpg-text-muted);
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -451,19 +469,38 @@
   transition: color 0.2s, transform 0.2s;
 }
 
-.char-quick-card:hover .char-quick-arrow {
-  color: var(--rpg-purple);
-  transform: translateX(3px);
+/* ── BOTÕES ── */
+.btn-primary {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 11px 22px;
+  border-radius: 8px;
+  border: none;
+  background: var(--rpg-purple);
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: var(--rpg-shadow-btn);
+  transition: all 0.25s ease;
+  text-transform: uppercase;
 }
 
-/* Responsivo */
-@media (max-width: 520px) {
-  .char-quick-card {
-    padding: 12px 14px;
-    gap: 12px;
-  }
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: var(--rpg-shadow-btn-hov);
+}
 
-  .char-quick-time {
-    display: none;
-  }
+/* ── RESPONSIVO ── */
+@media (max-width: 640px) {
+  .cmp-page-header { flex-direction: column; align-items: flex-start; }
+  .cmp-grid { grid-template-columns: 1fr 1fr; }
+  .char-quick-time { display: none; }
+}
+
+@media (max-width: 400px) {
+  .cmp-grid { grid-template-columns: 1fr; }
 }

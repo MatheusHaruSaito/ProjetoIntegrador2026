@@ -1,0 +1,847 @@
+/* ── ESTRUTURA GERAL DA TELA ── */
+.cd-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 16px;
+  color: var(--rpg-purple);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.1rem;
+}
+
+.cd-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  padding: 24px 16px 48px;
+  box-sizing: border-box;
+}
+
+.cd-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── BARRA SUPERIOR (TOPBAR) ── */
+.cd-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.cd-back-btn {
+  background: transparent;
+  border: 1px solid var(--rpg-border-light);
+  color: var(--rpg-text-dark);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.cd-back-btn:hover {
+  background: var(--rpg-surface-tint);
+  border-color: var(--rpg-purple);
+  color: var(--rpg-purple);
+}
+
+.cd-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── BOTÕES PADRONIZADOS ── */
+.btn-primary {
+  background: var(--rpg-purple);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--rpg-purple-dark);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: var(--rpg-surface-tint);
+  color: var(--rpg-text-dark);
+  border: 1px solid var(--rpg-border-light);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--rpg-purple);
+  color: var(--rpg-purple);
+}
+
+.btn-secondary.btn-sm {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
+.btn-outline-danger {
+  background: transparent;
+  color: #e63946;
+  border: 1px solid rgba(230, 57, 70, 0.3);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-outline-danger:hover {
+  background: rgba(230, 57, 70, 0.1);
+  border-color: #e63946;
+}
+
+/* ── HERO DA CAMPANHA ── */
+.cd-hero {
+  background: var(--rpg-surface);
+  border: 1px solid var(--rpg-border-light);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  box-shadow: var(--rpg-shadow-sm);
+}
+
+.cd-hero-cover {
+  width: 120px;
+  height: 120px;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--rpg-surface-tint);
+  border: 2px solid var(--rpg-border-purple);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cd-hero-cover-fallback {
+  font-size: 2.5rem;
+  color: var(--rpg-purple);
+}
+
+.cd-hero-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.cd-hero-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cd-tag {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cd-tag--status {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+}
+
+.cd-tag--status.cd-tag--inactive {
+  background: rgba(149, 165, 166, 0.15);
+  color: #95a5a6;
+}
+
+.cd-tag--gm {
+  background: rgba(241, 196, 15, 0.15);
+  color: #f1c40f;
+}
+
+.cd-tag--player {
+  background: var(--rpg-purple-tint);
+  color: var(--rpg-purple);
+}
+
+.cd-hero-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--rpg-text-dark);
+  margin: 0;
+}
+
+.cd-hero-desc {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  color: var(--rpg-text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.cd-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.cd-meta-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--rpg-text-dark);
+  background: var(--rpg-surface-tint);
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+/* ── TABULEIRO VIRTUAL (PLACEHOLDER) ── */
+.vtt-placeholder-card {
+  border: 1px dashed var(--rpg-border-purple);
+}
+
+.vtt-badge {
+  background: var(--rpg-purple-tint);
+  color: var(--rpg-purple);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.vtt-placeholder-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  text-align: center;
+  gap: 8px;
+}
+
+.vtt-icon {
+  font-size: 2.5rem;
+  color: var(--rpg-purple);
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.vtt-placeholder-body h3 {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.1rem;
+  color: var(--rpg-text-dark);
+  margin: 0;
+}
+
+.vtt-placeholder-body p {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  color: var(--rpg-text-muted);
+  max-width: 500px;
+  margin: 0;
+}
+
+/* ── LAYOUT EM GRID ── */
+.cd-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .cd-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cd-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── CARDS PADRONIZADOS ── */
+.cd-card {
+  background: var(--rpg-surface);
+  border: 1px solid var(--rpg-border-light);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--rpg-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cd-card--gm {
+  border-color: rgba(241, 196, 15, 0.4);
+}
+
+.cd-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cd-card-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--rpg-text-dark);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cd-card-sub {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  color: var(--rpg-text-muted);
+  margin: -8px 0 0 0;
+}
+
+.cd-badge-count {
+  background: var(--rpg-purple-tint);
+  color: var(--rpg-purple);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+/* ── INPUTS E FORMULÁRIOS ── */
+.cd-input-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cd-input-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.cd-input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--rpg-text-muted);
+  font-size: 0.9rem;
+}
+
+.cd-input {
+  width: 100%;
+  padding: 10px 14px 10px 40px;
+  background: var(--rpg-surface-tint);
+  border: 1px solid var(--rpg-border-light);
+  border-radius: 8px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  color: var(--rpg-text-dark);
+  box-sizing: border-box;
+}
+
+.cd-input:focus {
+  outline: none;
+  border-color: var(--rpg-purple);
+}
+
+.cd-select {
+  cursor: pointer;
+  appearance: none;
+}
+
+/* ── LISTA E CARDS DE PERSONAGEM NA CAMPANHA ── */
+.char-session-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.char-card-item {
+  background: var(--rpg-surface-tint);
+  border: 1px solid var(--rpg-border-light);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.char-card-item:hover {
+  border-color: var(--rpg-purple-soft);
+  box-shadow: var(--rpg-shadow-sm);
+}
+
+.char-card-item.expanded {
+  border-color: var(--rpg-purple);
+  background: var(--rpg-surface);
+}
+
+.char-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  gap: 16px;
+  user-select: none;
+}
+
+.char-card-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1;
+}
+
+.char-avatar-frame {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--rpg-purple-tint);
+  background-size: cover;
+  background-position: center;
+  border: 2px solid var(--rpg-border-purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rpg-purple);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.char-avatar-frame--sm {
+  width: 38px;
+  height: 38px;
+  font-size: 0.9rem;
+}
+
+.char-card-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.char-card-name {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--rpg-text-dark);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.char-card-desc {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  color: var(--rpg-text-muted);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.char-card-toggle-btn {
+  background: var(--rpg-purple-tint);
+  color: var(--rpg-purple);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+
+.char-card-toggle-btn:hover {
+  background: var(--rpg-purple);
+  color: white;
+}
+
+/* ── FICHA EXPANSÍVEL DO PERSONAGEM ── */
+.char-sheet-body {
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--rpg-border-light);
+  margin-top: 4px;
+  padding-top: 16px;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── LISTA DE JOGADORES E SOLICITAÇÕES ── */
+.cd-players-empty {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  color: var(--rpg-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+}
+
+.cd-players-list, .cd-request-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cd-player-item, .cd-request-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--rpg-surface-tint);
+  border: 1px solid var(--rpg-border-light);
+  border-radius: 8px;
+  gap: 12px;
+}
+
+.cd-player-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cd-request-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cd-player-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--rpg-purple-tint);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--rpg-border-purple);
+  color: var(--rpg-purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.cd-player-avatar--gm {
+  border-color: #f1c40f;
+}
+
+.cd-player-name, .cd-request-id {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--rpg-text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cd-player-you {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  background: var(--rpg-purple-tint);
+  color: var(--rpg-purple);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 2px;
+  flex-shrink: 0;
+}
+
+.btn-remove {
+  background: transparent;
+  border: none;
+  color: #e63946;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-remove:hover {
+  background: rgba(230, 57, 70, 0.1);
+}
+
+.cd-request-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-accept, .btn-reject {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-accept {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+
+.btn-accept:hover {
+  background: #2ecc71;
+  color: white;
+}
+
+.btn-reject {
+  background: rgba(230, 57, 70, 0.2);
+  color: #e63946;
+}
+
+.btn-reject:hover {
+  background: #e63946;
+  color: white;
+}
+
+/* ── AVATARES E INFOS DE USUÁRIO NAS FICHAS E SOLICITAÇÕES ── */
+.cd-char-owner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  color: var(--rpg-text-muted);
+  margin-top: 2px;
+}
+
+.cd-user-avatar-xs {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--rpg-purple-tint);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  color: var(--rpg-purple);
+  border: 1px solid var(--rpg-border-purple);
+  flex-shrink: 0;
+}
+
+/* ── BADGES DE ROLE NA LISTA DE PARTICIPANTES ── */
+.cd-role-badge {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: uppercase;
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+
+.cd-role-badge--gm {
+  background: rgba(241, 196, 15, 0.15);
+  color: #d35400;
+  border: 1px solid rgba(241, 196, 15, 0.4);
+}
+
+.cd-role-badge--player {
+  background: var(--rpg-purple-tint);
+  color: var(--rpg-purple);
+  border: 1px solid var(--rpg-border-purple);
+}
+
+/* ── PAINEL DO MESTRE (TOGGLES) ── */
+.cd-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.cd-toggle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cd-toggle-label {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--rpg-text-dark);
+}
+
+.cd-toggle-sub {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.8rem;
+  color: var(--rpg-text-muted);
+}
+
+.cd-toggle-switch {
+  width: 44px;
+  height: 24px;
+  background: var(--rpg-border-light);
+  border-radius: 12px;
+  padding: 2px;
+  box-sizing: border-box;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.cd-toggle-switch.active {
+  background: var(--rpg-purple);
+}
+
+.cd-toggle-thumb {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.cd-toggle-switch.active .cd-toggle-thumb {
+  transform: translateX(20px);
+}
+
+/* ── MENSAGENS DE FEEDBACK ── */
+.cd-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.cd-alert-success {
+  background: rgba(46, 204, 113, 0.15);
+  border: 1px solid #2ecc71;
+  color: #27ae60;
+}
+
+.cd-alert-danger {
+  background: rgba(230, 57, 70, 0.15);
+  border: 1px solid #e63946;
+  color: #e63946;
+}
+
+.cd-alert-close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+/* ── RESPONSIVIDADE ── */
+@media (max-width: 580px) {
+  .cd-hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .cd-hero-meta {
+    justify-content: center;
+  }
+
+  .char-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .char-card-toggle-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cd-player-info {
+    flex-wrap: wrap;
+  }
+}

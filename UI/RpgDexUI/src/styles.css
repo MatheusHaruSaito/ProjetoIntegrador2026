@@ -198,3 +198,34 @@ main {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.char-counter {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.72rem;
+  color: var(--rpg-text-faint);
+  text-align: right;
+  margin-top: 2px;
+}
+
+.cropper-backdrop {
+  z-index: 1100;
+}
+
+.cropper-card {
+  max-width: 480px;
+}
+
+.cropper-body {
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--rpg-bg);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+image-cropper {
+  max-height: 320px;
+  width: 100%;
+}

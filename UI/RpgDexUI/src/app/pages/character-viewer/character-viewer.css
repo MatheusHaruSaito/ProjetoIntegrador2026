@@ -1,0 +1,177 @@
+/* ── CONTAINER PRINCIPAL DO VIEWER ── */
+.cv-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── HEADER / PERFIL DO PERSONAGEM ── */
+.cv-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--rpg-surface-tint);
+  border: 1px solid var(--rpg-border-light);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.cv-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--rpg-purple-tint);
+  border: 2px solid var(--rpg-border-purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rpg-purple);
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.cv-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cv-name {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--rpg-text-dark);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cv-desc {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  color: var(--rpg-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ── ESTADO VAZIO ── */
+.cv-sheet-empty {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  color: var(--rpg-text-faint);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: var(--rpg-surface-tint);
+  border-radius: 8px;
+  border: 1px dashed var(--rpg-border-light);
+}
+
+/* ── GRID E COLUNAS DA FICHA ── */
+.cv-sheet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.cv-sheet-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── VALORES ESCALARES DE DESTAQUE ── */
+.cv-scalar-badge {
+  background: var(--rpg-purple-tint);
+  border: 1px solid var(--rpg-border-purple);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── BLOCOS DE SEÇÃO DA FICHA ── */
+.cv-section-block {
+  background: var(--rpg-surface);
+  border: 1px solid var(--rpg-border-light);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--rpg-shadow-sm);
+}
+
+.cv-section-title {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rpg-purple);
+  margin: 0;
+  border-bottom: 1px dashed var(--rpg-border-purple);
+  padding-bottom: 6px;
+}
+
+/* ── LISTA DE PROPRIEDADES ── */
+.cv-props-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cv-prop-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--rpg-surface-tint);
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+
+.cv-prop-chip:hover {
+  background: rgba(124, 58, 237, 0.08);
+}
+
+.cv-prop-key {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--rpg-text-dark);
+}
+
+.cv-prop-val {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--rpg-purple);
+  text-align: right;
+}
+
+/* ── RESPONSIVIDADE ── */
+@media (max-width: 480px) {
+  .cv-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cv-details {
+    align-items: center;
+  }
+
+  .cv-sheet-grid {
+    grid-template-columns: 1fr;
+  }
+}

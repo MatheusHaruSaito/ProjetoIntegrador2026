@@ -35,18 +35,22 @@ export class CharacterList implements OnInit {
     this.characterService.GetAll(userId).subscribe({
       next: (response) => {
         this.characterList = response.data ?? [];
-        this.filteredList = [...this.characterList];
+        this.onSearch();
         this.cdr.detectChanges();
       },
-      error: () => {},
+      error: (err) => console.error('Erro ao buscar personagens:', err),
     });
   }
 
   onSearch(): void {
-    const q = this.searchQuery.trim().toLowerCase();
-    this.filteredList = q
-      ? this.characterList.filter(c => c.name.toLowerCase().includes(q))
-      : [...this.characterList];
+    const query = this.searchQuery.trim().toLowerCase();
+    if (!query) {
+      this.filteredList = [...this.characterList];
+      return;
+    }
+    this.filteredList = this.characterList.filter((char) =>
+      char.name.toLowerCase().includes(query)
+    );
   }
 
   navigateToEditor(id: string): void {
@@ -55,13 +59,12 @@ export class CharacterList implements OnInit {
 
   DeleteCharacter(id: string): void {
     if (!confirm('Tem certeza que deseja excluir este personagem?')) return;
+
     this.characterService.Delete(id).subscribe({
       next: () => {
-        this.characterList = this.characterList.filter(c => c.id !== id);
-        this.filteredList = this.filteredList.filter(c => c.id !== id);
-        this.cdr.detectChanges();
+        this.GetAllCharacters();
       },
-      error: () => {},
+      error: (err) => console.error('Erro ao deletar personagem:', err),
     });
   }
 }
