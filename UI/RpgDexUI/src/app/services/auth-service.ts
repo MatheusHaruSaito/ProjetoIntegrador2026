@@ -56,7 +56,6 @@ export class AuthService {
   public Login(user: LoginUser): Observable<ApiResponse<LoginResponse>> {
     return this.http.post<ApiResponse<LoginResponse>>(`${this.env}/Login`, user).pipe(
       tap((response: ApiResponse<LoginResponse>) => {
-        console.log(response);
         if (response.success && response.data) {
           this.cookieService.set(this.JWT_Token, response.data.accessToken, {
             path: '/',
