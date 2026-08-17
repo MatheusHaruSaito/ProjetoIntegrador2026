@@ -1,14 +1,11 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Identity;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
 using RpgDex.Application.Interfaces;
 using RpgDex.Domain.Entities;
-using RpgDex.Domain.Exceptions;
 using RpgDex.Domain.Interfaces;
 using RpgDex.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RpgDex.Application.Services   
 {
@@ -18,30 +15,61 @@ namespace RpgDex.Application.Services
         private readonly IFileService _fileService;
         private readonly IUserRepository _userRepository;
         private readonly ICharacterRepository _characterRepository;
-        public CampaignService(ICampaignRepository campaignRepository, IFileService fileService, IUserRepository userRepository, ICharacterRepository characterRepository)
+        private readonly IPasswordHasher<Campaign> _passwordHasher;
+        public CampaignService(ICampaignRepository campaignRepository, IFileService fileService, IUserRepository userRepository, ICharacterRepository characterRepository, IPasswordHasher<Campaign> passwordHasher)
         {
             _campaignRepository = campaignRepository;
             _fileService = fileService;
             _userRepository = userRepository;
             _characterRepository = characterRepository;
+            _passwordHasher = passwordHasher;
         }
 
+        private string? HashPassword(Campaign campaign, string? password)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                return null;
+            }
+            return _passwordHasher.HashPassword(campaign, password);
+        }
+        private bool ValidatePassword(Campaign campaign,string password)
+        {
+            if (string.IsNullOrEmpty(campaign.PasswordHash))
+                return true;
+
+            if (string.IsNullOrEmpty(password))
+                return false;
+
+            var result = _passwordHasher.VerifyHashedPassword(campaign, campaign.PasswordHash, password);
+
+            if (result == PasswordVerificationResult.Failed) return false;
+
+            if (result == PasswordVerificationResult.SuccessRehashNeeded)
+            {
+               campaign.SetPasswordHash(HashPassword(campaign,password));
+            }
+            return true;
+        }
         public async Task<Result<CampaignResponse>> Create(CreateCampaignRequest request)
         {
-            var user = await _userRepository.GetByIdAsync(request.GameMasterId);
-            if(user is null)
+            var userExisits = await _userRepository.GetByIdAsync(request.GameMasterId);
+            if(userExisits is null)
             {
-                return Result<CampaignResponse>.Failure("Usuario Não Logado");
+                return Result<CampaignResponse>.Failure("User Not Logged In");
             }
 
             var campaign = request.Adapt<Campaign>();
-            //Temporario, mudar quando definir assinaturas
-            if(request.MaxPlayers > 15)
+
+            campaign.SetPasswordHash(HashPassword(campaign,request.Password));
+
+            //Temporary, change when subscriptions are defined
+            if (request.MaxPlayers > 15)
             {
                 campaign.MaxPlayers = 15;
             }
-            //Salvar Icone, caso exista
-            if(request.Icon is not null)
+            //Save Icon, if it exists
+            if (request.Icon is not null)
             {
                 try
                 {
@@ -49,14 +77,14 @@ namespace RpgDex.Application.Services
                 }
                 catch
                 {
-                    return Result<CampaignResponse>.Failure("Falha ao fazer upload do ícone");
+                    return Result<CampaignResponse>.Failure("Failed to upload icon");
                 }
             }
 
             var result = await _campaignRepository.InsertAsync(campaign);
             if(result is null)
             {
-                return Result<CampaignResponse>.Failure("Falha ao criar campanha");
+                return Result<CampaignResponse>.Failure("Failed to create campaign");
             }
             return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
         }
@@ -66,7 +94,7 @@ namespace RpgDex.Application.Services
             var response = await _campaignRepository.GetAllAsync();
             if (!response.Any())
             {
-                return Result<IEnumerable<CampaignResponse>>.Failure("Falha ao recuperar campanhas");
+                return Result<IEnumerable<CampaignResponse>>.Failure("Failed to retrieve campaigns");
             }
 
             return Result<IEnumerable<CampaignResponse>>.Success(response.Adapt<IEnumerable<CampaignResponse>>());
@@ -77,13 +105,13 @@ namespace RpgDex.Application.Services
             var user = await _userRepository.GetByIdAsync(userId);
             if (user is null)
             {
-                return Result<IEnumerable<CampaignResponse>>.Failure("Usuario Não Logado");
+                return Result<IEnumerable<CampaignResponse>>.Failure("User Not Logged In");
             }
 
             var response = await _campaignRepository.GetAllAsync(userId);
             if (!response.Any())
             {
-                return Result<IEnumerable<CampaignResponse>>.Failure("Falha ao recuperar campanhas");
+                return Result<IEnumerable<CampaignResponse>>.Failure("Failed to retrieve campaigns");
             }
             return Result<IEnumerable<CampaignResponse>>.Success(response.Adapt<IEnumerable<CampaignResponse>>());
         }
@@ -93,7 +121,7 @@ namespace RpgDex.Application.Services
             var response = await _campaignRepository.GetByIdAsync(id);
             if (response is null)
             {
-                return Result<CampaignResponse>.Failure("Falha ao recuperar campanha");
+                return Result<CampaignResponse>.Failure("Failed to retrieve campaign");
             }
 
             return Result<CampaignResponse>.Success(response.Adapt<CampaignResponse>());
@@ -104,16 +132,16 @@ namespace RpgDex.Application.Services
             var campaign = await _campaignRepository.GetByIdAsync(request.Id);
             if (campaign is null)
             {
-                return Result<CampaignResponse>.Failure("Campanha não encontrada");
+                return Result<CampaignResponse>.Failure("Campaign not found");
             }
             if(campaign.PlayerIds.Count() > request.MaxPlayers)
             {
-                return Result<CampaignResponse>.Failure("Remova Jogadores antes de diminuir a capacidade da campanha");
+                return Result<CampaignResponse>.Failure("Remove players before reducing campaign capacity");
             }
 
             campaign.Update(request.Title, request.Description, request.MaxPlayers,request.NextSession);
 
-            //Altera Icone, caso request envie outro
+            //Update Icon, if request provides another
             if (request.Icon is not null)
             {
                 try
@@ -122,7 +150,7 @@ namespace RpgDex.Application.Services
                 }
                 catch
                 {
-                    return Result<CampaignResponse>.Failure("Falha ao fazer upload do ícone");
+                    return Result<CampaignResponse>.Failure("Failed to upload icon");
                 }
             }
 
@@ -130,7 +158,7 @@ namespace RpgDex.Application.Services
 
             if(result is null)
             {
-                return Result<CampaignResponse>.Failure("Falha ao atualizar campanha");
+                return Result<CampaignResponse>.Failure("Failed to update campaign");
             }
 
             return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
@@ -141,7 +169,7 @@ namespace RpgDex.Application.Services
             var result = await _campaignRepository.SetActiveState(Id, activeState);
             if(!result)
             {
-                return Result<bool>.Failure("Falha ao atualizar estado da campanha");
+                return Result<bool>.Failure("Failed to update campaign state");
             } 
             return Result<bool>.Success(result);
         }
@@ -151,54 +179,47 @@ namespace RpgDex.Application.Services
             var campaign = await _campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaign is null)
             {
-                return Result<string>.Failure("Campanha não encontrada");
+                return Result<string>.Failure("Campaign not found");
             }
-            //Campanha encontrada
+            //Campaign found
 
             var player = await _userRepository.GetByIdAsync(request.PlayerId);
             if(player is null)
             {
-                return Result<string>.Failure("Jogador não encontrado");
+                return Result<string>.Failure("Player not found");
             }
-            //Jogador Encontrado
-
-            var (message, IsSuccess) = campaign.TryAddPlayer(request.PlayerId, request.Password);
+            //Player found
+            var isValid = ValidatePassword(campaign, request.Password);
+            if (!isValid) {
+                return Result<string>.Failure("Invalid Password");
+            }
+            var (message, IsSuccess) = campaign.TryAddPlayer(request.PlayerId);
             if (!IsSuccess)
             {
                 return Result<string>.Failure(message);
             }
-            //try
-            //{
-            //    campaign.AddPlayer(player.Id, request.Password);
-            //}
-            //catch (DomainException ex)
-            //{
-            //    return Result<CampaignResponse>.Failure(ex.Message);
-            //}
 
             var result = await _campaignRepository.UpdateAsync(campaign);
             if(result is null)
             {
-                return Result<string>.Failure("Falha ao atualizar campanha");
+                return Result<string>.Failure("Failed to update campaign");
             }
 
-            //Tudo Certo :ThumbsUp:
-            return Result<string>.Success("Jogador adicionado à campanha com sucesso");
+            return Result<string>.Success("Player added to campaign successfully");
         }
 
         public async Task<Result<string>> AddCharacter(AddCharacterToCampaignRequest request)
         {
             var characterFound = await _characterRepository.GetByIdAsync(request.CharacterId);
             if(characterFound is null) {
-                return Result<string>.Failure("Personagem não encontrado");
+                return Result<string>.Failure("Character not found");
             }
-            //Personagem Encontrado
-
+            //Character found
             var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
             if(campaignFound is null) {
-                return Result<string>.Failure("Campanha não encontrada");
+                return Result<string>.Failure("Campaign not found");
             }
-            //Campanha Encontrada
+            //Campaign found
             var (message, IsSuccess) = campaignFound.TryAddCharacter(request.CharacterId);
             if (!IsSuccess)
             {
@@ -209,57 +230,64 @@ namespace RpgDex.Application.Services
             var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
             if(updatedCampaign is null)
             {
-                return Result<string>.Failure("Falha ao atualizar campanha");
+                return Result<string>.Failure("Failed to update campaign");
             }
             return Result<string>.Success(message);
         }
+
 
         public async Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request)
         {
             var characterFound = await _characterRepository.GetByIdAsync(request.CharacterId);
             if (characterFound is null)
             {
-                return Result<string>.Failure("Personagem não encontrado");
+                return Result<string>.Failure("Character not found");
             }
-            //Personagem Encontrado
+            //Character found
 
             var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaignFound is null)
             {
-                return Result<string>.Failure("Campanha não encontrada");
+                return Result<string>.Failure("Campaign not found");
             }
-            //Campanha Encontrada
+            //Campaign found
             var userFound = await _userRepository.GetByIdAsync(request.UserId);
             if (userFound is null)
             {
-                return Result<string>.Failure("Usuário Logado não encontrado");
+                return Result<string>.Failure("Logged-in user not found");
             }
-            //Usuario Encontrado
+            //User found
 
             var isUserGameMaster = campaignFound.GameMasterId == userFound.Id;
             if (!isUserGameMaster)
             {
-                return Result<string>.Failure("Apenas o mestre da campanha pode aceitar ou rejeitar personagens");
+                return Result<string>.Failure("Only the game master can accept or reject characters");
             }
-            string successMessage;
 
-            var (message, IsSuccess) = campaignFound.TryAcceptCharacter(request.CharacterId);
-            if (IsSuccess)
+            (string message, bool isSuccess) chracterAdded;
+ 
+            if (request.IsAccepted)
             {
-                successMessage = message;
+                chracterAdded = campaignFound.TryAcceptCharacter(request.CharacterId);
             }
-            else
+            else{
+                chracterAdded = campaignFound.TryRejectCharacter(request.CharacterId);
+            }
+
+            if (!chracterAdded.isSuccess)
             {
-                return Result<string>.Failure(message);
+                return Result<string>.Failure(chracterAdded.message);
+
             }
-            //Personagem aceito na campanha
+
+            //Character accepted into campaign
 
             var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
-            if(updatedCampaign is null)
+            if (updatedCampaign is null)
             {
-                return Result<string>.Failure("Falha ao atualizar campanha");
+                return Result<string>.Failure("Failed to update campaign");
             }
-            return Result<string>.Success(successMessage);
+            return Result<string>.Success(chracterAdded.message);
         }
 
         public async Task<Result<string>> RemovePlayer(RemovePlayerFromCampaignRequest request)
@@ -267,19 +295,19 @@ namespace RpgDex.Application.Services
             var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaignFound is null)
             {
-                return Result<string>.Failure("Campanha não encontrada");
+                return Result<string>.Failure("Campaign not found");
             }
-            //Usuario Encontrado
+            //User found
             var isUserGameMaster = campaignFound.GameMasterId == request.IssuerPlayerId;
             if (!isUserGameMaster)
             {
-                return Result<string>.Failure("Apenas o mestre da campanha pode expulsar jogadores");
+                return Result<string>.Failure("Only the game master can kick players");
             }
             if (!campaignFound.PlayerIds.Contains(request.PlayerId))
             {
-                return Result<string>.Failure("Jogador a ser expulso não encontrado");
+                return Result<string>.Failure("Player to be kicked not found");
             }
-            //Jogador a ser expulso encontrado
+            //Player to be kicked found
             var (message, IsSuccess) = campaignFound.TryRemovePlayer(request.PlayerId);
             if (!IsSuccess)
             {
@@ -288,7 +316,7 @@ namespace RpgDex.Application.Services
             var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
             if (updatedCampaign is null)
             {
-                return Result<string>.Failure("Falha ao atualizar campanha");
+                return Result<string>.Failure("Failed to update campaign");
             }
 
             return Result<string>.Success(message);
@@ -299,7 +327,7 @@ namespace RpgDex.Application.Services
             var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaignFound is null)
             {
-                return Result<string>.Failure("Campanha não encontrada");
+                return Result<string>.Failure("Campaign not found");
             }
 
             campaignFound.UpdateSettings(request.Adapt<CampaignSettings>());
@@ -307,10 +335,10 @@ namespace RpgDex.Application.Services
             var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
             if (updatedCampaign is null)
             {
-                return Result<string>.Failure("Falha ao atualizar Configurações da campanha");
+                return Result<string>.Failure("Failed to update campaign settings");
             }
 
-            return Result<string>.Success("Configurações da campanha atualizadas com sucesso");
+            return Result<string>.Success("Campaign settings updated successfully");
         }
     }
 }

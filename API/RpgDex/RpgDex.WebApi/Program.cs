@@ -1,25 +1,26 @@
-using RpgDex.Application.Interfaces;
-using RpgDex.Application.Mapping;
-using RpgDex.Application.Services;
-using RpgDex.Domain.Interfaces;
-using RpgDex.Infrastructure.Data;
-using RpgDex.Infrastructure.Services;
+using AspNetCore.Identity.MongoDbCore.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
-using RpgDex.Domain.Entities;
-using AspNetCore.Identity.MongoDbCore.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using RpgDex.Infrastructure.Repositories;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
-using RpgDex.Infrastructure.Settings;
 using Resend;
+using RpgDex.Application.Interfaces;
+using RpgDex.Application.Mapping;
+using RpgDex.Application.Services;
+using RpgDex.Domain.Entities;
+using RpgDex.Domain.Interfaces;
+using RpgDex.Infrastructure.Data;
+using RpgDex.Infrastructure.Repositories;
+using RpgDex.Infrastructure.Services;
+using RpgDex.Infrastructure.Settings;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
@@ -40,6 +41,7 @@ builder.Services.AddScoped<IGridFSBucket>(sp =>
     return new GridFSBucket(database);
 });
 
+
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -56,6 +58,16 @@ builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
 builder.Services.AddScoped<ICampaignService, CampaignService>();
 builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 builder.Services.AddScoped<IDiscordAuthService, DiscordAuthService>();
+builder.Services.AddScoped<IPasswordHasher<Campaign>, PasswordHasher<Campaign>>();
+
+builder.Services.Configure<ForwardedHeadersOptions>(o =>
+{
+    o.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+    o.KnownIPNetworks.Clear();
+    o.KnownProxies.Clear();
+
+});
 
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -150,6 +162,8 @@ builder.Services.AddAuthentication(option =>
 var app = builder.Build();
 
 app.UseCors("PermitirTudo");
+
+app.UseForwardedHeaders();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

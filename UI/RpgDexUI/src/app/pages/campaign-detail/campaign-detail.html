@@ -1,0 +1,346 @@
+<!-- Loading -->
+<div class="cd-loading" *ngIf="!campaign">
+  <i class="fa fa-spinner fa-spin"></i>
+  <span>Carregando campanha...</span>
+</div>
+
+<div class="cd-wrapper" *ngIf="campaign">
+  <div class="cd-container">
+
+    <!-- ── ALERTAS DE FEEDBACK (SUCESSO / ERRO) ── -->
+    <div #alertBanner class="cd-alert cd-alert-success" *ngIf="successMessage">
+      <span><i class="fa fa-circle-check"></i> {{ successMessage }}</span>
+      <button class="cd-alert-close" (click)="successMessage = null">&times;</button>
+    </div>
+
+    <div #alertBanner class="cd-alert cd-alert-danger" *ngIf="errorMessage">
+      <span><i class="fa fa-circle-exclamation"></i> {{ errorMessage }}</span>
+      <button class="cd-alert-close" (click)="errorMessage = null">&times;</button>
+    </div>
+
+    <!-- ── TOPBAR ── -->
+    <div class="cd-topbar">
+      
+      <button class="cd-back-btn" routerLink="/campanhas">
+        <i class="fa fa-arrow-left"></i> Campanhas
+      </button>
+
+      <div class="cd-topbar-actions">
+        <button class="btn-secondary" (click)="copyCampaignCode()">
+          <i class="fa" [ngClass]="copiedFeedback ? 'fa-check' : 'fa-copy'"></i>
+          {{ copiedFeedback ? 'Copiado!' : 'Copiar Código' }}
+        </button>
+
+        <button *ngIf="isPlayerInCampaign && !isGameMaster" class="btn-outline-danger"
+          (click)="removePlayer(currentUserId)">
+          <i class="fa fa-right-from-bracket"></i> Sair da Campanha
+        </button>
+
+        <button *ngIf="isGameMaster" class="btn-outline-danger" (click)="toggleActiveState()">
+          <i class="fa fa-power-off"></i>
+          {{ campaign.isActive ? 'Desativar' : 'Reativar' }}
+        </button>
+
+        <button *ngIf="isGameMaster" class="btn-secondary" (click)="isEditModalOpen = true">
+          <i class="fa fa-gear"></i> Editar
+        </button>
+      </div>
+    </div>
+
+    <!-- ── HERO DA CAMPANHA ── -->
+    <div class="cd-hero">
+      <div class="cd-hero-cover" [style.background-image]="campaign.iconPath ? 'url(' + campaign.iconPath + ')' : ''">
+        <div class="cd-hero-cover-fallback" *ngIf="!campaign.iconPath">
+          <i class="fa fa-map-location-dot"></i>
+        </div>
+      </div>
+
+      <div class="cd-hero-info">
+        <div class="cd-hero-tags">
+          <span class="cd-tag cd-tag--status" [class.cd-tag--inactive]="!campaign.isActive">
+            <i class="fa fa-circle" style="font-size:0.55rem"></i>
+            {{ campaign.isActive ? 'Ativa' : 'Inativa' }}
+          </span>
+          <span class="cd-tag cd-tag--gm" *ngIf="isGameMaster">
+            <i class="fa fa-crown"></i> Mestre
+          </span>
+          <span class="cd-tag cd-tag--player" *ngIf="isPlayerInCampaign && !isGameMaster">
+            <i class="fa fa-shield-halved"></i> Jogador
+          </span>
+        </div>
+
+        <h1 class="cd-hero-title">{{ campaign.title }}</h1>
+        <p class="cd-hero-desc" *ngIf="campaign.description">{{ campaign.description }}</p>
+
+        <div class="cd-hero-meta">
+          <div class="cd-meta-chip">
+            <i class="fa fa-users"></i>
+            <span>{{ campaign.playerIds?.length || 0 }} / {{ campaign.maxPlayers }} jogadores</span>
+          </div>
+          <div class="cd-meta-chip">
+            <i class="fa fa-calendar-days"></i>
+            <span>
+              Próxima sessão: {{ formatNextSession(campaign.nextSession) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MESA VIRTUAL / TABULEIRO (Placeholder) ── -->
+    <div class="cd-card vtt-placeholder-card">
+      <div class="cd-card-header">
+        <h2 class="cd-card-title"><i class="fa fa-dice-d20"></i> Tabuleiro Virtual</h2>
+        <span class="vtt-badge">Em Breve</span>
+      </div>
+      <div class="vtt-placeholder-body">
+        <i class="fa fa-chess-board vtt-icon"></i>
+        <h3>Mesa de Jogo em Desenvolvimento</h3>
+        <p>Em breve você poderá acessar o tabuleiro virtual interativo com mapas, tokens e rolagens de dados em tempo
+          real diretamente por aqui.</p>
+      </div>
+    </div>
+
+    <!-- ── GRID DE CONTEÚDO ── -->
+    <div class="cd-grid">
+
+      <!-- Coluna principal -->
+      <div class="cd-col cd-col--main">
+
+        <!-- Entrar na campanha (visitante) -->
+        <div class="cd-card" *ngIf="!isPlayerInCampaign && !isGameMaster">
+          <div class="cd-card-header">
+            <h2 class="cd-card-title"><i class="fa fa-door-open"></i> Entrar na Campanha</h2>
+          </div>
+          <p class="cd-card-sub">Se a campanha tiver senha, insira-a abaixo para participar.</p>
+          <div class="cd-input-row">
+            <div class="cd-input-wrap">
+              <i class="fa fa-lock cd-input-icon"></i>
+              <input type="password" class="cd-input" [(ngModel)]="joinPassword"
+                placeholder="Senha (deixe vazio se pública)" maxlength="50">
+            </div>
+            <button class="btn-primary" (click)="joinCampaign()">
+              <i class="fa fa-right-to-bracket"></i> Entrar
+            </button>
+          </div>
+        </div>
+
+        <!-- Vincular personagem (jogador) -->
+        <div class="cd-card" *ngIf="isPlayerInCampaign && !isGameMaster">
+          <div class="cd-card-header">
+            <h2 class="cd-card-title"><i class="fa fa-shield-halved"></i> Vincular Personagem</h2>
+          </div>
+          <p class="cd-card-sub">Envie sua ficha de personagem para participar das sessões.</p>
+          <div class="cd-input-row">
+            <div class="cd-input-wrap cd-input-wrap--select">
+              <i class="fa fa-user cd-input-icon"></i>
+              <select class="cd-input cd-select" [(ngModel)]="selectedCharacterId">
+                <option value="" disabled selected>Selecione um personagem</option>
+                <option *ngFor="let char of myCharacters" [value]="char.id">{{ char.name }}</option>
+              </select>
+            </div>
+            <button class="btn-primary" (click)="submitCharacter()" [disabled]="!selectedCharacterId">
+              <i class="fa fa-paper-plane"></i> Enviar Ficha
+            </button>
+          </div>
+        </div>
+
+        <!-- Adicionar personagem diretamente (Mestre) -->
+        <div class="cd-card cd-card--gm" *ngIf="isGameMaster">
+          <div class="cd-card-header">
+            <h2 class="cd-card-title"><i class="fa fa-user-plus"></i> Adicionar Personagem à Mesa</h2>
+          </div>
+          <p class="cd-card-sub">Como Mestre, você pode adicionar diretamente um de seus personagens ou PNJ/NPCs.</p>
+          <div class="cd-input-row">
+            <div class="cd-input-wrap cd-input-wrap--select">
+              <i class="fa fa-mask cd-input-icon"></i>
+              <select class="cd-input cd-select" [(ngModel)]="selectedGmCharacterId">
+                <option value="" disabled selected>Selecione um personagem para adicionar</option>
+                <option *ngFor="let char of myCharacters" [value]="char.id">{{ char.name }}</option>
+              </select>
+            </div>
+            <button class="btn-primary" (click)="submitCharacter(selectedGmCharacterId)"
+              [disabled]="!selectedGmCharacterId">
+              <i class="fa fa-plus"></i> Adicionar
+            </button>
+          </div>
+        </div>
+
+        <!-- Solicitações pendentes (mestre) -->
+        <div class="cd-card cd-card--gm" *ngIf="isGameMaster && pendingCharacters.length > 0">
+          <div class="cd-card-header">
+            <h2 class="cd-card-title"><i class="fa fa-clock"></i> Solicitações Pendentes</h2>
+            <span class="cd-badge-count">{{ pendingCharacters.length }}</span>
+          </div>
+          <div class="cd-request-list">
+            <div *ngFor="let char of pendingCharacters" class="cd-request-item flex-column gap-2">
+              <div class="d-flex align-items-center justify-content-between w-100 gap-2">
+                <div class="cd-request-info d-flex align-items-center gap-2">
+                  <div class="char-avatar-frame char-avatar-frame--sm"
+                    [style.background-image]="char.iconPath ? 'url(' + char.iconPath + ')' : ''">
+                    <i class="fa fa-shield-halved" *ngIf="!char.iconPath"></i>
+                  </div>
+                  <div>
+                    <span class="cd-request-id">{{ char.name }}</span>
+                    <div class="cd-char-owner" *ngIf="char.userId">
+                      <div class="cd-user-avatar-xs" 
+                           [style.background-image]="getUser(char.userId)?.iconPath ? 'url(' + getUser(char.userId)?.iconPath + ')' : ''">
+                        <i class="fa fa-user" *ngIf="!getUser(char.userId)?.iconPath"></i>
+                      </div>
+                      <span>{{ getUser(char.userId)?.displayName || 'Jogador' }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="cd-request-actions">
+                  <button class="btn-secondary btn-sm" type="button" (click)="toggleCharacter(char.id)">
+                    <i class="fa" [ngClass]="expandedCharacterId === char.id ? 'fa-chevron-up' : 'fa-eye'"></i>
+                    {{ expandedCharacterId === char.id ? 'Ocultar' : 'Ver Ficha' }}
+                  </button>
+                  <button class="btn-accept" (click)="handleCharacterApproval(char.id, true)">
+                    <i class="fa fa-check"></i> Aprovar
+                  </button>
+                  <button class="btn-reject" (click)="handleCharacterApproval(char.id, false)">
+                    <i class="fa fa-xmark"></i> Recusar
+                  </button>
+                </div>
+              </div>
+
+              <!-- Ficha Detalhada para avaliação prévia pelo Mestre -->
+              <div class="char-sheet-body w-100" *ngIf="expandedCharacterId === char.id">
+                <app-character-viewer [character]="char"></app-character-viewer>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PERSONAGENS DA CAMPANHA ── -->
+        <div class="cd-card">
+          <div class="cd-card-header">
+            <h2 class="cd-card-title"><i class="fa fa-users-viewfinder"></i> Personagens na Mesa</h2>
+            <span class="cd-badge-count">{{ approvedCharacters.length }}</span>
+          </div>
+
+          <div class="cd-players-empty" *ngIf="approvedCharacters.length === 0">
+            <i class="fa fa-scroll"></i>
+            <span>Nenhum personagem vinculado a esta campanha até o momento.</span>
+          </div>
+
+          <div class="char-session-grid" *ngIf="approvedCharacters.length > 0">
+            <div class="char-card-item" *ngFor="let char of approvedCharacters"
+              [class.expanded]="expandedCharacterId === char.id">
+
+              <div class="char-card-header" (click)="toggleCharacter(char.id)">
+                <div class="char-card-main">
+                  <div class="char-avatar-frame"
+                    [style.background-image]="char.iconPath ? 'url(' + char.iconPath + ')' : ''">
+                    <i class="fa fa-shield-halved" *ngIf="!char.iconPath"></i>
+                  </div>
+                  <div class="char-card-titles">
+                    <h3 class="char-card-name">{{ char.name }}</h3>
+                    <p class="char-card-desc" *ngIf="char.description">{{ char.description }}</p>
+                    <div class="cd-char-owner" *ngIf="char.userId">
+                      <div class="cd-user-avatar-xs" 
+                           [style.background-image]="getUser(char.userId)?.iconPath ? 'url(' + getUser(char.userId)?.iconPath + ')' : ''">
+                        <i class="fa fa-user" *ngIf="!getUser(char.userId)?.iconPath"></i>
+                      </div>
+                      <span>{{ getUser(char.userId)?.displayName || 'Jogador' }}</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="char-card-toggle-btn" type="button"
+                  [attr.aria-expanded]="expandedCharacterId === char.id">
+                  <span>{{ expandedCharacterId === char.id ? 'Ocultar Ficha' : 'Ver Ficha' }}</span>
+                  <i class="fa" [ngClass]="expandedCharacterId === char.id ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                </button>
+              </div>
+
+              <!-- Ficha Detalhada do Personagem Expansível -->
+              <div class="char-sheet-body" *ngIf="expandedCharacterId === char.id">
+                <app-character-viewer [character]="char"></app-character-viewer>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PARTICIPANTES DA MESA ── -->
+        <div class="cd-card">
+          <div class="cd-card-header">
+            <h2 class="cd-card-title"><i class="fa fa-users"></i> Participantes</h2>
+            <span class="cd-badge-count">{{ (campaign.playerIds?.length || 0) + (campaign.gameMasterId ? 1 : 0) }}</span>
+          </div>
+
+          <div class="cd-players-list">
+            <!-- Mestre da Campanha -->
+            <div class="cd-player-item" *ngIf="campaign.gameMasterId">
+              <div class="cd-player-info">
+                <div class="cd-player-avatar cd-player-avatar--gm" 
+                     [style.background-image]="getUser(campaign.gameMasterId)?.iconPath ? 'url(' + getUser(campaign.gameMasterId)?.iconPath + ')' : ''">
+                  <i class="fa fa-user" *ngIf="!getUser(campaign.gameMasterId)?.iconPath"></i>
+                </div>
+                <span class="cd-player-name">
+                  {{ getUser(campaign.gameMasterId)?.displayName || 'Mestre' }}
+                </span>
+                <span class="cd-role-badge cd-role-badge--gm">
+                  <i class="fa fa-crown"></i> Mestre
+                </span>
+                <span class="cd-player-you" *ngIf="campaign.gameMasterId === currentUserId">você</span>
+              </div>
+            </div>
+
+            <!-- Jogadores Inscritos -->
+            <ng-container *ngIf="(campaign.playerIds?.length || 0) > 0">
+              <div *ngFor="let playerId of campaign.playerIds" class="cd-player-item">
+                <div class="cd-player-info">
+                  <div class="cd-player-avatar" 
+                       [style.background-image]="getUser(playerId)?.iconPath ? 'url(' + getUser(playerId)?.iconPath + ')' : ''">
+                    <i class="fa fa-user" *ngIf="!getUser(playerId)?.iconPath"></i>
+                  </div>
+                  <span class="cd-player-name">
+                    {{ getUser(playerId)?.displayName || (playerId.substring(0, 10) + '…') }}
+                  </span>
+                  <span class="cd-role-badge cd-role-badge--player">
+                    <i class="fa fa-shield-halved"></i> Jogador
+                  </span>
+                  <span class="cd-player-you" *ngIf="playerId === currentUserId">você</span>
+                </div>
+
+                <button *ngIf="isGameMaster && playerId !== currentUserId" class="btn-remove"
+                  (click)="removePlayer(playerId)">
+                  <i class="fa fa-user-minus"></i>
+                </button>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Coluna lateral: painel do mestre -->
+      <div class="cd-col cd-col--side" *ngIf="isGameMaster">
+        <div class="cd-card cd-card--gm cd-gm-panel">
+          <div class="cd-card-header">
+            <h2 class="cd-card-title"><i class="fa fa-crown"></i> Painel do Mestre</h2>
+          </div>
+
+          <label class="cd-toggle-row" (click)="requireApproval = !requireApproval; toggleRequireApproval()">
+            <div class="cd-toggle-info">
+              <span class="cd-toggle-label">Aprovar personagens manualmente</span>
+              <span class="cd-toggle-sub">Novas fichas precisam de aprovação antes de entrar.</span>
+            </div>
+            <div class="cd-toggle-switch" [class.active]="requireApproval">
+              <div class="cd-toggle-thumb"></div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal isolado de edição de campanha -->
+<app-edit-campaign-modal [(isOpen)]="isEditModalOpen" [campaign]="campaign" (onSave)="saveCampaignChanges($event)">
+</app-edit-campaign-modal>

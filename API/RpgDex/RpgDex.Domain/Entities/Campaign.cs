@@ -1,9 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using RpgDex.Domain.Exceptions;
 using RpgDex.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RpgDex.Domain.Entities
 {
@@ -21,14 +17,14 @@ namespace RpgDex.Domain.Entities
         public Guid Id{ get; set; }
         public string Title{ get; set; }
         public string? Description{ get; set; }
-        public string? Password { get; set; }
+        public string? PasswordHash { get; private set; }
         public int MaxPlayers { get; set; }
         public string? IconPath { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime NextSession { get; set; } = DateTime.UtcNow;
         public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
         public Guid GameMasterId{ get; set; }
-        public CampaignSettings? Settings { get; set; }
+        public CampaignSettings Settings { get; set; }
 
         [BsonIgnore]
         public IReadOnlyCollection<Guid> PlayerIds => _playerIds.AsReadOnly();
@@ -41,39 +37,39 @@ namespace RpgDex.Domain.Entities
         {
             Settings = new CampaignSettings();
         }
-        public (string message, bool IsSuccess) TryAddPlayer(Guid playerId, string password)
+
+        public void SetPasswordHash(string? passwordHash)
+        {
+            PasswordHash = passwordHash;
+        }
+        public (string message, bool IsSuccess) TryAddPlayer(Guid playerId)
         {
             if (_playerIds.Contains(playerId))
-                return ("Player já está na campanha", false);
+                return ("Player already in campaign", false);
 
             if (_playerIds.Count >= MaxPlayers)
-                return ("Falha ao adicionar jogador à campanha / Capacidade maxima atingida", false);
-
-            if(Password != password)
-            {
-                return ("Senha inválida.", false);
-            }
+                return ("Failed to add player to campaign / max player capacity", false);
 
             _playerIds.Add(playerId);
-            return ("Jogador adicionado à campanha.", true);
+            return ("Player added to campaign", true);
         }
         public (string message, bool IsSuccess) TryAddCharacter(Guid characterId)
         {
             if (_characterIds.Contains(characterId))
-                return ("Personagem já está na campanha", false);
+                return ("Character already in campaign", false);
 
             if (Settings.RequireApprovalForCharacters)
             {
                 if (_characterRequests.Contains(characterId))
                 {
-                    return ("Personagem já está aguardando aprovação.", false);
+                    return ("Character awaiting for approval", false);
                 }
                 _characterRequests.Add(characterId);
-                return ("Solicitação enviada para o Mestre da campanha.", true);
+                return ("request sent to game master", true);
             }
 
             _characterIds.Add(characterId);
-            return ("Personagem adicionado à campanha.", true);
+            return ("Character added to campaign", true);
         }
 
         public void Update(string title, string? description, int maxPlayers, DateTime nextSession)
@@ -89,24 +85,24 @@ namespace RpgDex.Domain.Entities
         public (string message, bool IsSuccess) TryAcceptCharacter(Guid characterId)
         {
             if (!_characterRequests.Contains(characterId))
-                return ("Personagem não está aguardando aprovação.", false);
+                return ("Character is not in the list", false);
             _characterRequests.Remove(characterId);
             _characterIds.Add(characterId);
-            return ("Personagem aceito na campanha.", true);
+            return ("Character accepted", true);
         }
         public (string message, bool IsSuccess) TryRejectCharacter(Guid characterId)
         {
             if (!_characterRequests.Contains(characterId))
-                return ("Personagem não está aguardando aprovação.", false);
+                return ("Character is not in the list.", false);
             _characterRequests.Remove(characterId);
-            return ("Solicitação de personagem rejeitada.", true);
+            return ("Character rejected", true);
         }
         public (string message, bool IsSuccess) TryRemovePlayer(Guid playerId)
         {
             if (!PlayerIds.Contains(playerId))
-                return ("Jogador não está na campanha.", false);
+                return ("Player is not in campaign", false);
             _playerIds.Remove(playerId);
-            return ("Jogador removido da campanha.", true);
+            return ("Player removed from campaign", true);
         }
     }
 }

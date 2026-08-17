@@ -1,16 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ProfileComponent } from './profile';
 
-describe('ProfileComponent', () => {
-  let component: ProfileComponent;
-  let fixture: ComponentFixture<ProfileComponent>;
+import { CharacterViewer } from './character-viewer';
+
+describe('CharacterViewer', () => {
+  let component: CharacterViewer;
+  let fixture: ComponentFixture<CharacterViewer>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProfileComponent],
+      imports: [CharacterViewer],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ProfileComponent);
+    fixture = TestBed.createComponent(CharacterViewer);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

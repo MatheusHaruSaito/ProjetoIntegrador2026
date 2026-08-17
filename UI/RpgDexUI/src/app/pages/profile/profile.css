@@ -196,7 +196,6 @@
   color: var(--rpg-purple);
 }
 
-/* Personagem com foto */
 .character-avatar--image {
   padding: 0;
   overflow: hidden;
@@ -226,6 +225,11 @@
   color: var(--rpg-purple);
 }
 
+.camp-role--gm {
+  color: var(--rpg-purple-dark, #582191);
+  font-weight: 800;
+}
+
 .char-desc-preview {
   font-size: 0.82rem;
   color: var(--rpg-text-faint);
@@ -248,4 +252,16 @@
 .add-card:hover {
   border-color: var(--rpg-purple);
   color: var(--rpg-purple);
+}
+
+.campaign-avatar--image {
+  padding: 0;
+  overflow: hidden;
+}
+
+.campaign-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }

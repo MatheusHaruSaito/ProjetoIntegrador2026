@@ -979,6 +979,35 @@
   padding: 8px 12px;
   text-align: center;
 }
+
+/* ── CROPPER SUB-MODAL ── */
+.cropper-backdrop {
+  z-index: 1100;
+}
+
+.cropper-card {
+  max-width: 400px;
+}
+
+.cropper-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--rpg-surface-tint); 
+  border-radius: 12px;
+  padding: 16px;
+  overflow: hidden;
+}
+
+image-cropper {
+  max-height: 320px;
+  width: 100%;
+}
+
+::ng-deep .ngx-ic-cropper-container {
+  background-color: transparent !important;
+}
+
 /* ── HINT DE REDIRECIONAMENTO ── */
 .create-hint {
   font-family: 'Nunito', sans-serif;
