@@ -26,6 +26,8 @@ export class UserRegisterComponent {
 
   confirmPassword = '';
   termsAccepted = false;
+  hasReadTerms = false;
+  isTermsModalOpen = false;
   showPasswordHint = false;
 
   isLoading = false;
@@ -46,7 +48,6 @@ export class UserRegisterComponent {
       });
     });
 
-    // Necessário para o SDK registrar a origem — mantém div#google-btn oculta no HTML
     this.googleAuth.renderButton('google-btn');
   }
 
@@ -71,6 +72,35 @@ export class UserRegisterComponent {
     this.showPasswordHint = !this.showPasswordHint;
   }
 
+  // CONTROLE DO MODAL E CHECKBOX DE TERMOS DE USO
+  openTermsModal(event?: Event): void {
+    if (event) event.preventDefault();
+    this.isTermsModalOpen = true;
+  }
+
+  closeTermsModal(): void {
+    this.isTermsModalOpen = false;
+  }
+
+  acceptTermsAndClose(): void {
+    this.hasReadTerms = true;
+    this.termsAccepted = true;
+    this.isTermsModalOpen = false;
+    this.errorMessage = '';
+  }
+
+  onTermsCheckboxClick(event: MouseEvent): void {
+    event.preventDefault(); // Impede alteração do checkbox por clique direto sem validação
+    
+    if (!this.hasReadTerms) {
+      this.openTermsModal();
+      this.errorMessage = 'Por favor, leia os Termos de Uso no modal antes de aceitá-los.';
+    } else {
+      // Permite alternar o aceite apenas se já leu ao menos uma vez
+      this.termsAccepted = !this.termsAccepted;
+    }
+  }
+
   loginComGoogle(): void {
     const googleBtn = document.querySelector('#google-btn div[role="button"]') as HTMLElement;
     if (googleBtn) {
@@ -79,6 +109,7 @@ export class UserRegisterComponent {
       this.googleAuth.prompt();
     }
   }
+
   Register() {
     this.errorMessage = '';
     this.successMessage = '';
@@ -108,8 +139,8 @@ export class UserRegisterComponent {
       return;
     }
 
-    if (!this.termsAccepted) {
-      this.errorMessage = 'Você precisa aceitar os Termos de Uso.';
+    if (!this.termsAccepted || !this.hasReadTerms) {
+      this.errorMessage = 'Você precisa abrir e aceitar os Termos de Uso antes de cadastrar.';
       return;
     }
 
@@ -136,6 +167,7 @@ export class UserRegisterComponent {
       },
     });
   }
+
   onDiscordLogin() {
     this.authService.DiscordSingUp();
   }

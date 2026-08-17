@@ -182,7 +182,13 @@
                   </div>
                   <div>
                     <span class="cd-request-id">{{ char.name }}</span>
-                    <small class="cd-request-sub">{{ char.description || 'Sem descrição' }}</small>
+                    <div class="cd-char-owner" *ngIf="char.userId">
+                      <div class="cd-user-avatar-xs" 
+                           [style.background-image]="getUser(char.userId)?.iconPath ? 'url(' + getUser(char.userId)?.iconPath + ')' : ''">
+                        <i class="fa fa-user" *ngIf="!getUser(char.userId)?.iconPath"></i>
+                      </div>
+                      <span>{{ getUser(char.userId)?.displayName || 'Jogador' }}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -234,6 +240,13 @@
                   <div class="char-card-titles">
                     <h3 class="char-card-name">{{ char.name }}</h3>
                     <p class="char-card-desc" *ngIf="char.description">{{ char.description }}</p>
+                    <div class="cd-char-owner" *ngIf="char.userId">
+                      <div class="cd-user-avatar-xs" 
+                           [style.background-image]="getUser(char.userId)?.iconPath ? 'url(' + getUser(char.userId)?.iconPath + ')' : ''">
+                        <i class="fa fa-user" *ngIf="!getUser(char.userId)?.iconPath"></i>
+                      </div>
+                      <span>{{ getUser(char.userId)?.displayName || 'Jogador' }}</span>
+                    </div>
                   </div>
                 </div>
                 <button class="char-card-toggle-btn" type="button"
@@ -252,30 +265,54 @@
           </div>
         </div>
 
-        <!-- Jogadores da Mesa -->
+        <!-- ── PARTICIPANTES DA MESA ── -->
         <div class="cd-card">
           <div class="cd-card-header">
-            <h2 class="cd-card-title"><i class="fa fa-users"></i> Jogadores Inscritos</h2>
-            <span class="cd-badge-count">{{ campaign.playerIds?.length || 0 }}</span>
+            <h2 class="cd-card-title"><i class="fa fa-users"></i> Participantes</h2>
+            <span class="cd-badge-count">{{ (campaign.playerIds?.length || 0) + (campaign.gameMasterId ? 1 : 0) }}</span>
           </div>
 
-          <div class="cd-players-empty" *ngIf="(campaign.playerIds?.length || 0) === 0">
-            <i class="fa fa-user-slash"></i>
-            <span>Nenhum jogador entrou ainda.</span>
-          </div>
-
-          <div class="cd-players-list" *ngIf="(campaign.playerIds?.length || 0) > 0">
-            <div *ngFor="let playerId of campaign.playerIds" class="cd-player-item">
-              <div class="cd-player-avatar">
-                <i class="fa fa-user"></i>
+          <div class="cd-players-list">
+            <!-- Mestre da Campanha -->
+            <div class="cd-player-item" *ngIf="campaign.gameMasterId">
+              <div class="cd-player-info">
+                <div class="cd-player-avatar cd-player-avatar--gm" 
+                     [style.background-image]="getUser(campaign.gameMasterId)?.iconPath ? 'url(' + getUser(campaign.gameMasterId)?.iconPath + ')' : ''">
+                  <i class="fa fa-user" *ngIf="!getUser(campaign.gameMasterId)?.iconPath"></i>
+                </div>
+                <span class="cd-player-name">
+                  {{ getUser(campaign.gameMasterId)?.displayName || 'Mestre' }}
+                </span>
+                <span class="cd-role-badge cd-role-badge--gm">
+                  <i class="fa fa-crown"></i> Mestre
+                </span>
+                <span class="cd-player-you" *ngIf="campaign.gameMasterId === currentUserId">você</span>
               </div>
-              <span class="cd-player-id">{{ playerId.substring(0, 12) }}…</span>
-              <span class="cd-player-you" *ngIf="playerId === currentUserId">você</span>
-              <button *ngIf="isGameMaster && playerId !== currentUserId" class="btn-remove"
-                (click)="removePlayer(playerId)">
-                <i class="fa fa-user-minus"></i>
-              </button>
             </div>
+
+            <!-- Jogadores Inscritos -->
+            <ng-container *ngIf="(campaign.playerIds?.length || 0) > 0">
+              <div *ngFor="let playerId of campaign.playerIds" class="cd-player-item">
+                <div class="cd-player-info">
+                  <div class="cd-player-avatar" 
+                       [style.background-image]="getUser(playerId)?.iconPath ? 'url(' + getUser(playerId)?.iconPath + ')' : ''">
+                    <i class="fa fa-user" *ngIf="!getUser(playerId)?.iconPath"></i>
+                  </div>
+                  <span class="cd-player-name">
+                    {{ getUser(playerId)?.displayName || (playerId.substring(0, 10) + '…') }}
+                  </span>
+                  <span class="cd-role-badge cd-role-badge--player">
+                    <i class="fa fa-shield-halved"></i> Jogador
+                  </span>
+                  <span class="cd-player-you" *ngIf="playerId === currentUserId">você</span>
+                </div>
+
+                <button *ngIf="isGameMaster && playerId !== currentUserId" class="btn-remove"
+                  (click)="removePlayer(playerId)">
+                  <i class="fa fa-user-minus"></i>
+                </button>
+              </div>
+            </ng-container>
           </div>
         </div>
 

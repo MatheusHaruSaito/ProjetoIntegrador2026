@@ -5,8 +5,11 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CampaignService } from '../../services/campaign-service';
 import { CharacterService } from '../../services/character-service';
 import { AuthService } from '../../services/auth-service';
+import { UserService } from '../../services/user-service';
 import { Campaign } from '../../../models/campaign';
 import { Character } from '../../../models/character';
+import { UserResponse } from '../../../models/userResponse';
+import { UpdateCampaignSettingsRequest } from '../../../models/updateCampaignSettingsRequest';
 import { EditCampaignModalComponent } from '../../modals/edit-campaign-modal/edit-campaign-modal';
 import { CharacterViewerComponent } from '../../pages/character-viewer/character-viewer';
 
@@ -32,6 +35,7 @@ export class CampaignDetailComponent implements OnInit {
   private campaignService = inject(CampaignService);
   private characterService = inject(CharacterService);
   private authService = inject(AuthService);
+  private userService = inject(UserService);
   private cdr = inject(ChangeDetectorRef);
   private datePipe = inject(DatePipe);
 
@@ -41,6 +45,9 @@ export class CampaignDetailComponent implements OnInit {
 
   isGameMaster = false;
   isPlayerInCampaign = false;
+
+  // Cache para armazenar dados dos usuários (Key: userId, Value: UserResponse)
+  usersCache: { [id: string]: UserResponse } = {};
 
   approvedCharacters: Character[] = [];
   pendingCharacters: Character[] = [];
@@ -69,7 +76,6 @@ export class CampaignDetailComponent implements OnInit {
     }
   }
 
-  // Dispara mensagens de feedback temporárias e foca no elemento visualmente
   showFeedback(message: string, isError: boolean = false): void {
     if (this.feedbackTimeout) clearTimeout(this.feedbackTimeout);
 
@@ -83,7 +89,6 @@ export class CampaignDetailComponent implements OnInit {
 
     this.cdr.detectChanges();
 
-    // Rola a tela suavemente para focar na mensagem de alerta
     setTimeout(() => {
       if (this.alertBanner?.nativeElement) {
         this.alertBanner.nativeElement.scrollIntoView({
@@ -100,25 +105,65 @@ export class CampaignDetailComponent implements OnInit {
     }, 5000);
   }
 
-  // Extrai a mensagem de erro retornada do backend
   private getErrorMessage(err: any, fallbackMessage: string): string {
     return err?.error?.message || err?.error?.title || fallbackMessage;
   }
 
-  loadCampaign(): void {
+  loadCampaign(isSilentReload: boolean = false): void {
     this.campaignService.GetById(this.campaignId).subscribe({
       next: (res) => {
         this.campaign = res.data;
         if (this.campaign) {
           this.isGameMaster = this.campaign.gameMasterId === this.currentUserId;
-          this.isPlayerInCampaign = !!this.campaign.playerIds?.includes(this.currentUserId);
+          this.isPlayerInCampaign = !!this.campaign.playerIds?.includes(this.currentUserId) || this.isGameMaster;
+
+          // Sincroniza a configuração de aprovação sem sobrescrever seleções pendentes de tela
+          this.requireApproval = this.campaign.requireApprovalForCharacters ?? true;
+
+          // Carregar dados agregados
+          this.loadUsersInfo();
           this.loadApprovedCharacters();
           this.loadPendingCharacters();
         }
         this.cdr.detectChanges();
       },
-      error: () => this.router.navigate(['/campanhas']),
+      error: (err) => {
+        if (!isSilentReload) {
+          this.router.navigate(['/campanhas']);
+        }
+      },
     });
+  }
+
+  loadUsersInfo(): void {
+    if (!this.campaign) return;
+
+    const userIdsToFetch = new Set<string>();
+
+    if (this.campaign.gameMasterId) {
+      userIdsToFetch.add(this.campaign.gameMasterId);
+    }
+
+    if (this.campaign.playerIds) {
+      this.campaign.playerIds.forEach((id) => userIdsToFetch.add(id));
+    }
+
+    userIdsToFetch.forEach((userId) => {
+      if (!this.usersCache[userId]) {
+        this.userService.GetById(userId).subscribe({
+          next: (res) => {
+            if (res.data) {
+              this.usersCache[userId] = res.data;
+              this.cdr.detectChanges();
+            }
+          },
+        });
+      }
+    });
+  }
+
+  getUser(userId: string): UserResponse | undefined {
+    return this.usersCache[userId];
   }
 
   loadMyCharacters(): void {
@@ -143,6 +188,15 @@ export class CampaignDetailComponent implements OnInit {
         next: (res) => {
           if (res.data) {
             this.approvedCharacters.push(res.data);
+            if (res.data.userId && !this.usersCache[res.data.userId]) {
+              this.userService.GetById(res.data.userId).subscribe({
+                next: (uRes) => {
+                  if (res?.data?.userId && uRes?.data) {
+                    this.usersCache[res.data.userId] = uRes.data;
+                  }
+                },
+              });
+            }
             this.cdr.detectChanges();
           }
         },
@@ -162,6 +216,15 @@ export class CampaignDetailComponent implements OnInit {
         next: (res) => {
           if (res.data) {
             this.pendingCharacters.push(res.data);
+            if (res.data.userId && !this.usersCache[res.data.userId]) {
+              this.userService.GetById(res.data.userId).subscribe({
+                next: (uRes) => {
+                  if (res?.data?.userId && uRes?.data) {
+                    this.usersCache[res.data.userId] = uRes.data;
+                  }
+                },
+              });
+            }
             this.cdr.detectChanges();
           }
         },
@@ -207,12 +270,13 @@ export class CampaignDetailComponent implements OnInit {
       .subscribe({
         next: () => {
           this.showFeedback('Você entrou na campanha com sucesso!');
-          this.loadCampaign();
+          this.joinPassword = '';
+          this.loadCampaign(true);
         },
         error: (err) =>
           this.showFeedback(
             this.getErrorMessage(err, 'Erro ao entrar na campanha. Verifique a senha.'),
-            true,
+            true
           ),
       });
   }
@@ -231,12 +295,14 @@ export class CampaignDetailComponent implements OnInit {
           this.selectedGmCharacterId = '';
           this.selectedCharacterId = '';
           this.showFeedback('Ficha vinculada/enviada com sucesso!');
-          this.loadCampaign();
+          
+          // Atualiza apenas as listas sem resetar o layout
+          this.loadCampaign(true);
         },
         error: (err) =>
           this.showFeedback(
             this.getErrorMessage(err, 'Não foi possível vincular o personagem.'),
-            true,
+            true
           ),
       });
   }
@@ -254,18 +320,24 @@ export class CampaignDetailComponent implements OnInit {
       .subscribe({
         next: () => {
           this.showFeedback(approve ? 'Personagem aprovado na mesa!' : 'Solicitação recusada.');
-          this.loadCampaign();
+          this.loadCampaign(true);
         },
         error: (err) =>
           this.showFeedback(
             this.getErrorMessage(err, 'Erro ao processar solicitação de personagem.'),
-            true,
+            true
           ),
       });
   }
 
   removePlayer(userId: string): void {
     if (!this.campaign) return;
+
+    const confirmMsg = userId === this.currentUserId 
+      ? 'Tem certeza de que deseja sair desta campanha?' 
+      : 'Tem certeza de que deseja remover este jogador?';
+
+    if (!confirm(confirmMsg)) return;
 
     this.campaignService
       .RemovePlayer({
@@ -279,7 +351,7 @@ export class CampaignDetailComponent implements OnInit {
             this.router.navigate(['/campanhas']);
           } else {
             this.showFeedback('Jogador removido com sucesso.');
-            this.loadCampaign();
+            this.loadCampaign(true);
           }
         },
         error: (err) =>
@@ -304,7 +376,7 @@ export class CampaignDetailComponent implements OnInit {
     this.campaignService.Update(updatePayload).subscribe({
       next: () => {
         this.showFeedback(`Campanha ${newState ? 'reativada' : 'desativada'} com sucesso!`);
-        this.loadCampaign();
+        this.loadCampaign(true);
       },
       error: (err) =>
         this.showFeedback(this.getErrorMessage(err, 'Erro ao alterar status da campanha.'), true),
@@ -312,7 +384,31 @@ export class CampaignDetailComponent implements OnInit {
   }
 
   toggleRequireApproval(): void {
-    // Implementar a chamada para atualização de configuração no banco caso necessário
+    if (!this.campaign) return;
+
+    const request: UpdateCampaignSettingsRequest = {
+      campaignId: this.campaign.id,
+      RequireApprovalForCharacters: this.requireApproval,
+    };
+
+    this.campaignService.UpdateSettings(request).subscribe({
+      next: () => {
+        this.showFeedback(
+          this.requireApproval
+            ? 'Aprovação manual ativada com sucesso!'
+            : 'Aprovação manual desativada. Novos personagens entrarão diretamente.'
+        );
+      },
+      error: (err) => {
+        // Reverte a flag visual em caso de erro
+        this.requireApproval = !this.requireApproval;
+        this.cdr.detectChanges();
+        this.showFeedback(
+          this.getErrorMessage(err, 'Erro ao atualizar configurações da campanha.'),
+          true
+        );
+      },
+    });
   }
 
   saveCampaignChanges(eventData: any): void {
@@ -320,7 +416,7 @@ export class CampaignDetailComponent implements OnInit {
       next: () => {
         this.isEditModalOpen = false;
         this.showFeedback('Campanha atualizada com sucesso!');
-        this.loadCampaign();
+        this.loadCampaign(true);
       },
       error: (err) =>
         this.showFeedback(this.getErrorMessage(err, 'Erro ao atualizar dados da campanha.'), true),

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
@@ -7,7 +7,7 @@ import { CharacterService } from '../../services/character-service';
 import { Character } from '../../../models/character';
 
 export interface AttrEntry { key: string; value: string; }
-export interface AttrGroup { title: string; entries: AttrEntry[]; }
+export interface AttrGroup  { title: string; entries: AttrEntry[]; }
 
 @Component({
   selector: 'app-character-editor',
@@ -17,14 +17,20 @@ export interface AttrGroup { title: string; entries: AttrEntry[]; }
   styleUrl: './character-editor.css',
 })
 export class CharacterEditor implements OnInit {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  private route            = inject(ActivatedRoute);
+  private router           = inject(Router);
   private characterService = inject(CharacterService);
-  private cdr = inject(ChangeDetectorRef);
+  private cdr              = inject(ChangeDetectorRef);
+  private location         = inject(Location);
 
   character: Character | null = null;
   editForm = { name: '', description: '' };
   groups: AttrGroup[] = [];
+
+  // ── Crop de Imagem ─────────────────────────────────────
+  showCropperModal = false;
+  imageChangedEvent: Event | null = null;
+  croppedBlob: Blob | null = null;
 
   private savedState: { editForm: { name: string; description: string }; groups: AttrGroup[] } = {
     editForm: { name: '', description: '' },
@@ -35,17 +41,12 @@ export class CharacterEditor implements OnInit {
     this.savedState = JSON.parse(JSON.stringify({ editForm: this.editForm, groups: this.groups }));
   }
 
-  // Estados da imagem e do corte
-  imageChangedEvent: Event | null = null;
-  croppedImageBlob: Blob | null = null;
-  showCropperModal = false;
-
   selectedIconFile: File | null = null;
   iconPreviewUrl = '';
-  isSaving = false;
-  errorMessage = '';
+  isSaving       = false;
+  errorMessage   = '';
   successMessage = '';
-  isEditing = false;
+  isEditing      = false;
 
   private readonly GUID_RE =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -147,36 +148,51 @@ export class CharacterEditor implements OnInit {
   }
 
   // ── Grupos ─────────────────────────────────────────────
-  addGroup(): void { this.groups.push({ title: '', entries: [] }); }
-  removeGroup(i: number): void { this.groups.splice(i, 1); }
-  addEntry(g: AttrGroup): void { g.entries.push({ key: '', value: '' }); }
+  addGroup(): void              { this.groups.push({ title: '', entries: [] }); }
+  removeGroup(i: number): void  { this.groups.splice(i, 1); }
+  addEntry(g: AttrGroup): void  { g.entries.push({ key: '', value: '' }); }
   removeEntry(g: AttrGroup, i: number): void { g.entries.splice(i, 1); }
 
-  // ── Ícone e Cropper ──────────────────────────────────────
+  // ── Ícone e Cortador de Imagem ──────────────────────────
   onIconSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.imageChangedEvent = event;
-      this.showCropperModal = true;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      this.errorMessage = 'A imagem deve ter no máximo 5MB.';
+      return;
     }
+
+    this.errorMessage = '';
+    this.imageChangedEvent = event;
+    this.showCropperModal = true;
   }
 
   imageCropped(event: ImageCroppedEvent): void {
-    this.croppedImageBlob = event.blob ?? null;
+    if (event.blob) {
+      this.croppedBlob = event.blob;
+    }
+    if (event.objectUrl) {
+      this.iconPreviewUrl = event.objectUrl;
+    }
   }
 
   confirmCrop(): void {
-    if (this.croppedImageBlob) {
-      this.selectedIconFile = new File([this.croppedImageBlob], 'avatar.png', { type: 'image/png' });
-      this.iconPreviewUrl = URL.createObjectURL(this.croppedImageBlob);
+    if (this.croppedBlob) {
+      this.selectedIconFile = new File([this.croppedBlob], 'avatar.png', {
+        type: 'image/png',
+      });
     }
     this.showCropperModal = false;
+    this.imageChangedEvent = null;
+    this.cdr.detectChanges();
   }
 
   cancelCrop(): void {
     this.showCropperModal = false;
     this.imageChangedEvent = null;
-    this.croppedImageBlob = null;
+    this.croppedBlob = null;
   }
 
   // ── Salvar ─────────────────────────────────────────────
@@ -198,10 +214,10 @@ export class CharacterEditor implements OnInit {
     }
 
     const form = new FormData();
-    form.append('id', this.character!.id);
-    form.append('name', this.editForm.name.trim());
+    form.append('id',          this.character!.id);
+    form.append('name',        this.editForm.name.trim());
     form.append('description', this.editForm.description ?? '');
-    form.append('properties', JSON.stringify(propertiesObj));
+    form.append('properties',  JSON.stringify(propertiesObj));
     if (this.selectedIconFile) {
       form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
     }
@@ -241,7 +257,7 @@ export class CharacterEditor implements OnInit {
   confirmDelete(): void {
     if (!confirm('Tem certeza que deseja excluir este personagem? Esta ação é irreversível.')) return;
     this.characterService.Delete(this.character!.id).subscribe({
-      next: () => this.router.navigate(['/personagens']),
+      next:  () => this.router.navigate(['/personagens']),
       error: () => { this.errorMessage = 'Erro ao excluir personagem.'; },
     });
   }
@@ -250,6 +266,6 @@ export class CharacterEditor implements OnInit {
     if (this.isEditing && this.hasUnsavedChanges) {
       if (!confirm('Você tem alterações não salvas. Deseja sair mesmo assim?')) return;
     }
-    this.router.navigate(['/personagens']);
+    this.location.back();
   }
 }

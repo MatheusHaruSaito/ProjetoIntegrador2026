@@ -559,42 +559,55 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px;
+  padding: 10px 14px;
   background: var(--rpg-surface-tint);
   border: 1px solid var(--rpg-border-light);
   border-radius: 8px;
   gap: 12px;
 }
 
+.cd-player-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
 .cd-request-info {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-.cd-request-sub {
-  color: var(--rpg-text-muted);
-  display: block;
-  font-size: 0.8rem;
+  gap: 12px;
 }
 
 .cd-player-avatar {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--rpg-purple-tint);
+  background-color: var(--rpg-purple-tint);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--rpg-border-purple);
   color: var(--rpg-purple);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.85rem;
+  flex-shrink: 0;
 }
 
-.cd-player-id, .cd-request-id {
+.cd-player-avatar--gm {
+  border-color: #f1c40f;
+}
+
+.cd-player-name, .cd-request-id {
   font-family: 'Exo 2', sans-serif;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.95rem;
   color: var(--rpg-text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cd-player-you {
@@ -605,6 +618,8 @@
   color: var(--rpg-purple);
   padding: 2px 6px;
   border-radius: 4px;
+  margin-left: 2px;
+  flex-shrink: 0;
 }
 
 .btn-remove {
@@ -612,9 +627,10 @@
   border: none;
   color: #e63946;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
   border-radius: 4px;
   transition: background 0.2s;
+  flex-shrink: 0;
 }
 
 .btn-remove:hover {
@@ -658,6 +674,60 @@
 .btn-reject:hover {
   background: #e63946;
   color: white;
+}
+
+/* ── AVATARES E INFOS DE USUÁRIO NAS FICHAS E SOLICITAÇÕES ── */
+.cd-char-owner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.82rem;
+  color: var(--rpg-text-muted);
+  margin-top: 2px;
+}
+
+.cd-user-avatar-xs {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--rpg-purple-tint);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  color: var(--rpg-purple);
+  border: 1px solid var(--rpg-border-purple);
+  flex-shrink: 0;
+}
+
+/* ── BADGES DE ROLE NA LISTA DE PARTICIPANTES ── */
+.cd-role-badge {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: uppercase;
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+
+.cd-role-badge--gm {
+  background: rgba(241, 196, 15, 0.15);
+  color: #d35400;
+  border: 1px solid rgba(241, 196, 15, 0.4);
+}
+
+.cd-role-badge--player {
+  background: var(--rpg-purple-tint);
+  color: var(--rpg-purple);
+  border: 1px solid var(--rpg-border-purple);
 }
 
 /* ── PAINEL DO MESTRE (TOGGLES) ── */
@@ -769,5 +839,9 @@
   .char-card-toggle-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .cd-player-info {
+    flex-wrap: wrap;
   }
 }
