@@ -24,14 +24,14 @@ export interface CampaignDisplayItem {
   standalone: true,
   imports: [CommonModule, RouterModule, SettingsModalComponent],
   templateUrl: './profile.html',
-  styleUrls: ['./profile.css'] // 🟢 Corrigido de styleUrl para styleUrls
+  styleUrls: ['./profile.css'], // 🟢 Corrigido de styleUrl para styleUrls
 })
 export class ProfileComponent implements OnInit {
-  private authService      = inject(AuthService);
+  private authService = inject(AuthService);
   private characterService = inject(CharacterService);
-  private campaignService  = inject(CampaignService);
-  private router           = inject(Router);
-  private cdr              = inject(ChangeDetectorRef);
+  private campaignService = inject(CampaignService);
+  private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   user: UserResponse | null = null;
   authOptions: AuthOptionsResponse | null = null;
@@ -132,6 +132,7 @@ export class ProfileComponent implements OnInit {
     if (this.authOptions) {
       this.authOptions.isTwoFactorEnabled = isEnabled;
     }
+  }
   private loadCampaignPreview(): void {
     const userId = this.authService.getLoggedUserId();
     if (!userId) return;
@@ -139,23 +140,23 @@ export class ProfileComponent implements OnInit {
     this.campaignService.GetAll().subscribe({
       next: (response) => {
         const allCampaigns: Campaign[] = response.data ?? [];
-        
-        const userCampaigns = allCampaigns.filter(c => 
-          c.gameMasterId === userId || (c.playerIds && c.playerIds.includes(userId))
+
+        const userCampaigns = allCampaigns.filter(
+          (c) => c.gameMasterId === userId || (c.playerIds && c.playerIds.includes(userId)),
         );
 
         this.campaignTotal = userCampaigns.length;
 
-        this.campaignPreview = userCampaigns.slice(0, 3).map(c => ({
+        this.campaignPreview = userCampaigns.slice(0, 3).map((c) => ({
           id: c.id,
           title: c.title,
           role: c.gameMasterId === userId ? 'Mestre' : 'Jogador',
-          iconPath: c.iconPath
+          iconPath: c.iconPath,
         }));
 
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Erro ao carregar campanhas', err)
+      error: (err) => console.error('Erro ao carregar campanhas', err),
     });
   }
 
