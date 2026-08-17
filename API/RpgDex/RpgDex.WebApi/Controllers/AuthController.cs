@@ -94,7 +94,7 @@ namespace RpgDex.WebApi.Controllers
 
             if (result.IsFailure)
             {
-                //return Redirect($"{_settings.UIBaseUrl}/auth/callback?error={result.Error}");
+                return Redirect($"{_settings.UIBaseUrl}/auth/callback?error={result.Error}");
             }
             var token = result.Value.AccessToken;
             var refreshToken = result.Value.RefreshToken;

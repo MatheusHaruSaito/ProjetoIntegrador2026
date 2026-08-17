@@ -182,6 +182,7 @@ namespace RpgDex.Application.Services
 
         public async Task<Result<string>> RegisterUser(CreateUserDTO authUser) {
             var user = authUser.Adapt<ApplicationUser>();
+            user.DisplayName = user.UserName;
             var result = await _userManager.CreateAsync(user, authUser.Password);
             if (!result.Succeeded)
             {
@@ -280,7 +281,7 @@ namespace RpgDex.Application.Services
             {
                 //Change this later when DisplayName is available
                 DisplayName = discorduser.DisplayName,
-                UserName = discorduser.Email,
+                UserName = discorduser.UserName,
                 Email = discorduser.Email,
                 IconPath = discorduser.IconUrl,
                 EmailConfirmed = true

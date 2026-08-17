@@ -19,7 +19,7 @@ export class UserRegisterComponent {
   private router = inject(Router);
 
   registerForm: RegisterUser = {
-    displayName: '',
+    userName: '',
     email: '',
     password: '',
   };
@@ -91,7 +91,7 @@ export class UserRegisterComponent {
 
   onTermsCheckboxClick(event: MouseEvent): void {
     event.preventDefault(); // Impede alteração do checkbox por clique direto sem validação
-    
+
     if (!this.hasReadTerms) {
       this.openTermsModal();
       this.errorMessage = 'Por favor, leia os Termos de Uso no modal antes de aceitá-los.';
@@ -115,7 +115,7 @@ export class UserRegisterComponent {
     this.successMessage = '';
 
     if (
-      !this.registerForm.displayName ||
+      !this.registerForm.userName ||
       !this.registerForm.email ||
       !this.registerForm.password ||
       !this.confirmPassword

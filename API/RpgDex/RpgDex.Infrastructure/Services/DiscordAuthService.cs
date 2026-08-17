@@ -24,7 +24,8 @@ namespace RpgDex.Infrastructure.Services
             }
 
             var emailClaim = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var nameClaim = info.Principal.FindFirstValue(ClaimTypes.Name);
+            var userNameClaim  = info.Principal.FindFirstValue(ClaimTypes.Name) ?? info.Principal.FindFirstValue(ClaimTypes.GivenName);
+            var dsiplayNameClaim = info.Principal.FindFirstValue("global_name")?? info.Principal.FindFirstValue(ClaimTypes.GivenName);
             var discordId = info.ProviderKey;
 
             var avatarHash = info.Principal.FindFirstValue("urn:discord:avatar");
@@ -40,7 +41,7 @@ namespace RpgDex.Infrastructure.Services
                 IconUrl = "";
             }
 
-            return new DiscordUser(discordId, nameClaim, emailClaim, IconUrl);
+            return new DiscordUser(discordId,userNameClaim, dsiplayNameClaim, emailClaim, IconUrl);
         }
     }
 }

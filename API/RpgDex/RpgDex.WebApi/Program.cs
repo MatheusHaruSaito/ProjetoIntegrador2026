@@ -153,7 +153,7 @@ builder.Services.AddAuthentication(option =>
         o.Scope.Add("email");
 
         o.ClaimActions.MapJsonKey("urn:discord:avatar", "avatar");
-
+        o.ClaimActions.MapJsonKey("global_name", "global_name");
         o.SignInScheme = IdentityConstants.ExternalScheme;
     });
 
