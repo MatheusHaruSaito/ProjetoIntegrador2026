@@ -64,8 +64,8 @@ namespace RpgDex.Application.Services
 
             var newRefreshToken = await GenerateRefreshTokenModelAsync(user);
 
-            response.RefreshToken = newRefreshToken;
-
+            response.RefreshToken = newRefreshToken.RefreshToken;
+            response.AccessToken = newRefreshToken.AccessToken;
 
             return Result<LoginResponse>.Success(response);
         }

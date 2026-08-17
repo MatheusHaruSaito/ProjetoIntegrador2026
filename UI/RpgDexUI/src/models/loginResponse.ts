@@ -1,6 +1,6 @@
-import { tokenModel } from './tokenMode';
 export interface LoginResponse {
-  refreshTokenModel: tokenModel;
+  accessToken: string;
+  refreshToken: string;
   twoFactorEnabled: boolean;
   email: string;
 }

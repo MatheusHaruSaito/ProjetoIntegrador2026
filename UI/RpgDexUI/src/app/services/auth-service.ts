@@ -55,12 +55,13 @@ export class AuthService {
 
   public Login(user: LoginUser): Observable<ApiResponse<LoginResponse>> {
     return this.http.post<ApiResponse<LoginResponse>>(`${this.env}/Login`, user).pipe(
-      map((response: ApiResponse<LoginResponse>) => {
+      tap((response: ApiResponse<LoginResponse>) => {
+        console.log(response);
         if (response.success && response.data) {
-          this.cookieService.set(this.JWT_Token, response.data.refreshTokenModel.accessToken, {
+          this.cookieService.set(this.JWT_Token, response.data.accessToken, {
             path: '/',
           });
-          this.cookieService.set(this.REFRESH_Token, response.data.refreshTokenModel.refreshToken, {
+          this.cookieService.set(this.REFRESH_Token, response.data.refreshToken, {
             path: '/',
           });
           this.currentUserSubject.next(response.data);
@@ -169,12 +170,10 @@ export class AuthService {
       request,
     );
   }
-  public SendTwoFactorAuthEmail(
-    request: { userId: string }
-  ): Observable<ApiResponse<tokenModel>> {
+  public SendTwoFactorAuthEmail(request: { userId: string }): Observable<ApiResponse<tokenModel>> {
     return this.http.post<ApiResponse<tokenModel>>(
       `${this.env}/SendTwoFactorAuthEmailRequest`, // Removida a barra extra do final
-      { userId: request.userId }
+      { userId: request.userId },
     );
   }
   public TwoFAActivation(request: ValidateTwoFactorRequest): Observable<ApiResponse<tokenModel>> {
