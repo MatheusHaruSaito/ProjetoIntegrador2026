@@ -36,16 +36,18 @@ namespace RpgDex.Application.Services
             var user = await _userRepository.GetByIdAsync(request.UserId);
             if (user is null) return Result<CharacterResponse>.Failure("Usuario não encontrado");
 
-            // Salva Imagem
-            try
+            if (request.Icon is not null)
             {
-                character.IconPath = await _fileService.UploadFileAsync(request.Icon, character.Id.ToString());
+                // Salva Imagem
+                try
+                {
+                    character.IconPath = await _fileService.UploadFileAsync(request.Icon, character.Id.ToString());
+                }
+                catch (Exception ex)
+                {
+                    return Result<CharacterResponse>.Failure($"Erro ao salvar a imagem: {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                return Result<CharacterResponse>.Failure($"Erro ao salvar a imagem: {ex.Message}");
-            }
-            
             
             // coloca o personagem no banco
             var response = await _character.InsertAsync(character);
