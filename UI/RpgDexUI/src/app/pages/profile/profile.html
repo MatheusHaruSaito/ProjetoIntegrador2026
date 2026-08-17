@@ -33,7 +33,7 @@
         >
           <i class="fa-solid" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
         </button>
-        <button class="icon-btn" title="Configurações">
+        <button class="icon-btn" title="Configurações" (click)="openSettingsModal()">
           <i class="fa-solid fa-gear"></i>
         </button>
       </div>
@@ -128,3 +128,11 @@
     </div>
   </section>
 </div>
+
+<app-settings-modal
+  [isOpen]="isSettingsModalOpen"
+  [user]="user"
+  [authOptions]="authOptions"
+  (closeModal)="isSettingsModalOpen = false"
+  (twoFactorUpdated)="onTwoFactorUpdated($event)">
+</app-settings-modal>

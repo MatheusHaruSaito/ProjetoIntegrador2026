@@ -1,0 +1,85 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    
+    <!-- Cabeçalho do Modal -->
+    <div class="modal-header">
+      <h2><i class="fa-solid fa-shield-halved"></i> Configurações de Segurança</h2>
+      <button class="modal-close-btn" (click)="onClose()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Corpo do Modal -->
+    <div class="modal-body">
+      <!-- Alerta de Feedback -->
+      <div class="modal-alert" *ngIf="settingsMessage.text" [ngClass]="settingsMessage.type">
+        {{ settingsMessage.text }}
+      </div>
+
+      <!-- Métodos de Autenticação -->
+      <div class="settings-group" *ngIf="authOptions">
+        <h3>Métodos de Autenticação</h3>
+
+        <!-- Senha Local -->
+        <div class="auth-method-item" *ngIf="authOptions.hasPassword">
+          <span><i class="fa-solid fa-key"></i> Senha Local</span>
+          <span class="status-badge active">Cadastrada</span>
+        </div>
+
+        <!-- Provedores Externos (ex: Google) -->
+        <div class="auth-method-item" *ngFor="let provider of authOptions.externalProviders">
+          <span><i class="fa-brands" [ngClass]="'fa-' + provider.toLowerCase()"></i> {{ provider }}</span>
+          <span class="status-badge active">Conectado</span>
+        </div>
+      </div>
+
+      <hr class="modal-divider" *ngIf="authOptions" />
+
+      <!-- Seção 2FA -->
+      <div class="settings-group">
+        <h3>Autenticação em Duas Etapas (2FA)</h3>
+
+        <div class="twofa-status-box">
+          <div class="twofa-info">
+            <span class="twofa-title">Status do 2FA:</span>
+            <span class="status-badge" [class.active]="authOptions?.isTwoFactorEnabled">
+              {{ authOptions?.isTwoFactorEnabled ? 'Ativado' : 'Desativado' }}
+            </span>
+          </div>
+
+          <button
+            class="btn-primary-2fa"
+            *ngIf="!authOptions?.isTwoFactorEnabled && twoFactorStep === 'idle'"
+            (click)="request2FACode()"
+            [disabled]="isSending2FAEmail"
+          >
+            <i class="fa-solid" [ngClass]="isSending2FAEmail ? 'fa-spinner fa-spin' : 'fa-envelope'"></i>
+            {{ isSending2FAEmail ? 'Enviando...' : 'Ativar por E-mail' }}
+          </button>
+        </div>
+
+        <!-- Passo para Inserir o Código -->
+        <div class="twofa-code-step" *ngIf="twoFactorStep === 'code-sent'">
+          <p class="step-desc">Insira o código enviado para seu e-mail para confirmar a ativação:</p>
+          <div class="code-input-group">
+            <input
+              type="text"
+              class="modal-input"
+              placeholder="Digite o código"
+              [(ngModel)]="twoFactorTokenInput"
+            />
+            <button
+              class="btn-confirm-2fa"
+              (click)="confirm2FAActivation()"
+              [disabled]="isActivating2FA || !twoFactorTokenInput"
+            >
+              <i class="fa-solid" [ngClass]="isActivating2FA ? 'fa-spinner fa-spin' : 'fa-check'"></i>
+              Confirmar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

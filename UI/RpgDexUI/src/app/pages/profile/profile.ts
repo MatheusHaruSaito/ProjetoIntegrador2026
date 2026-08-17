@@ -6,6 +6,8 @@ import { CharacterService } from '../../services/character-service';
 import { CampaignService } from '../../services/campaign-service';
 import { UserResponse } from '../../../models/userResponse';
 import { Character } from '../../../models/character';
+import { AuthOptionsResponse } from '../../../models/authOptionsResponse';
+import { SettingsModalComponent } from '../../modals/settings-modal/settings-modal';
 import { Campaign } from '../../../models/campaign';
 
 const THEME_KEY = 'rpgdex-theme';
@@ -20,7 +22,7 @@ export interface CampaignDisplayItem {
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SettingsModalComponent],
   templateUrl: './profile.html',
   styleUrls: ['./profile.css'] // 🟢 Corrigido de styleUrl para styleUrls
 })
@@ -32,7 +34,9 @@ export class ProfileComponent implements OnInit {
   private cdr              = inject(ChangeDetectorRef);
 
   user: UserResponse | null = null;
+  authOptions: AuthOptionsResponse | null = null;
   isDarkMode = false;
+  isSettingsModalOpen = false;
 
   characterPreview: Character[] = [];
   characterTotal = 0;
@@ -75,13 +79,29 @@ export class ProfileComponent implements OnInit {
       next: (response) => {
         this.user = response.data ?? null;
         this.cdr.detectChanges();
-        this.loadCharacterPreview();
-        this.loadCampaignPreview();
+
+        if (this.user?.id) {
+          this.loadAuthOptions(this.user.id);
+          this.loadCharacterPreview();
+          this.loadCampaignPreview();
+        }
       },
       error: (err) => {
         console.error('Erro ao carregar usuário', err);
         this.logout();
       },
+    });
+  }
+
+  private loadAuthOptions(userId: string): void {
+    this.authService.GetUserAuthOptions(userId).subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          this.authOptions = res.data;
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => console.error('Erro ao carregar opções de autenticação', err),
     });
   }
 
@@ -100,6 +120,18 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  openSettingsModal(): void {
+    this.isSettingsModalOpen = true;
+  }
+
+  closeSettingsModal(): void {
+    this.isSettingsModalOpen = false;
+  }
+
+  onTwoFactorUpdated(isEnabled: boolean): void {
+    if (this.authOptions) {
+      this.authOptions.isTwoFactorEnabled = isEnabled;
+    }
   private loadCampaignPreview(): void {
     const userId = this.authService.getLoggedUserId();
     if (!userId) return;

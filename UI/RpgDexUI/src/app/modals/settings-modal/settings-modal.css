@@ -1,0 +1,215 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: var(--rpg-surface);
+  border: 2px solid var(--rpg-border-light);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 520px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  font-size: 1.25rem;
+  color: var(--rpg-text-strong);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-header h2 i {
+  color: var(--rpg-purple);
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--rpg-text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+  color: var(--rpg-text-strong);
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-alert {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.modal-alert.success {
+  background: var(--rpg-success-bg, rgba(46, 204, 113, 0.15));
+  color: #27ae60;
+  border: 1px solid #27ae60;
+}
+
+.modal-alert.error {
+  background: var(--rpg-error-bg, rgba(231, 76, 60, 0.15));
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+
+.settings-group h3 {
+  font-size: 0.95rem;
+  color: var(--rpg-text-muted);
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.auth-method-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--rpg-bg);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: var(--rpg-text-strong);
+}
+
+.auth-method-item i {
+  margin-right: 8px;
+  color: var(--rpg-purple);
+}
+
+.status-badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--rpg-border-light);
+  color: var(--rpg-text-faint);
+}
+
+.status-badge.active {
+  background: var(--rpg-purple-tint);
+  color: var(--rpg-purple);
+}
+
+.modal-divider {
+  border: 0;
+  border-top: 1px solid var(--rpg-border-light);
+  margin: 8px 0;
+}
+
+.twofa-status-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--rpg-bg);
+  border-radius: 10px;
+}
+
+.twofa-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.twofa-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--rpg-text-strong);
+}
+
+.btn-primary-2fa,
+.btn-confirm-2fa {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--rpg-purple);
+  color: white;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.2s;
+}
+
+.btn-primary-2fa:hover,
+.btn-confirm-2fa:hover {
+  opacity: 0.9;
+}
+
+.btn-primary-2fa:disabled,
+.btn-confirm-2fa:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.twofa-code-step {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.step-desc {
+  font-size: 0.85rem;
+  color: var(--rpg-text-muted);
+  margin: 0;
+}
+
+.code-input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--rpg-border);
+  background: var(--rpg-surface);
+  color: var(--rpg-text-strong);
+  font-size: 0.9rem;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: var(--rpg-purple);
+}

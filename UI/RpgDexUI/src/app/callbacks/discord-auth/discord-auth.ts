@@ -21,13 +21,17 @@ export class DiscordAuth {
       const token = params['token'];
       const refreshToken = params['refreshToken'];
       const error = params['error'];
+      const redirectTo = params['redirectPage'] ?? '/';
 
       if (token) {
         // Salva os tokens recebidos
+        for (var e in params) {
+          console.log(params[e]);
+        }
         this.authService.StoreToken(token, refreshToken);
 
         // Redireciona o usuário para a tela principal/dashboard da sua app
-        this.router.navigate(['/']);
+        this.router.navigate([redirectTo]);
       } else {
         console.error('Erro na autenticação:', error);
         this.router.navigate(['/login']);

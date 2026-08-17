@@ -66,6 +66,6 @@ export class UserLoginComponent implements OnInit {
     });
   }
   onDiscordLogin() {
-    this.authService.DiscordSingUp();
+    this.authService.DiscordSingUp('');
   }
 }

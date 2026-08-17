@@ -20,6 +20,9 @@ namespace RpgDex.WebApi.Controllers
         private readonly IAuthService _authSerice;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApiSettings _settings;
+
+        private string[] authRedirectWhitelist = ["/","/perfil"];
+
         public AuthController(IAuthService authSerice, SignInManager<ApplicationUser> signInManager, IOptions<ApiSettings> settings)
         {
             _authSerice = authSerice;
@@ -69,9 +72,10 @@ namespace RpgDex.WebApi.Controllers
         }
 
         [HttpGet("discord")]
-        public IActionResult DiscordLogin()
+        public IActionResult DiscordLogin([FromQuery] string? redirectUri)
         {
-            var redirectUrl = Url.Action(nameof(DiscordSignUp), "Auth");
+            var redirectUrl = Url.Action(nameof(DiscordSignUp), "Auth", new { customRedirect = redirectUri});
+
 
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(
                 DiscordAuthenticationDefaults.AuthenticationScheme,
@@ -84,19 +88,51 @@ namespace RpgDex.WebApi.Controllers
             );
         }
         [HttpGet("DiscordSignUp")]
-        public async Task<IActionResult> DiscordSignUp()
+        public async Task<IActionResult> DiscordSignUp([FromQuery] string? customRedirect)
         {
             var result = await _authSerice.DiscordSignUp();
 
             if (result.IsFailure)
             {
-                return Redirect($"{_settings.UIBaseUrl}/auth/callback?error={result.Error}");
+                //return Redirect($"{_settings.UIBaseUrl}/auth/callback?error={result.Error}");
             }
-
             var token = result.Value.AccessToken;
             var refreshToken = result.Value.RefreshToken;
+            var filteredRedirect = () =>
+            {
+                if (authRedirectWhitelist.Contains(customRedirect)) return customRedirect;
+                return authRedirectWhitelist[0];
+            };
 
-            return Redirect($"{_settings.UIBaseUrl}/auth/callback?token={token}&refreshToken={refreshToken}");
+            return Redirect($"{_settings.UIBaseUrl}/auth/callback?token={token}&refreshToken={refreshToken}&redirectPage={filteredRedirect()}");
+        } 
+
+        [HttpGet("AuthOptions/{userId}")]
+        public async Task<IActionResult> GetUserAuthOptions(Guid userId)
+        {
+            var result = await _authSerice.GetUserAuthOptions(userId);
+            return result.ToIActionResult();
+
+        }
+        [HttpPost("ValidateTwoFactor")]
+        public async Task<IActionResult> ValidateTwoFactor(ValidateTwoFactorRequest request)
+        {
+            var result = await _authSerice.ValidateTwoFactor(request);
+            return result.ToIActionResult();
+        }
+
+        [HttpPost("SendTwoFactorAuthEmailRequest")]
+        public async Task<IActionResult> SendTwoFactorAuthEmailRequest(TwoFactorAuthEmailRequest request)
+        {
+            var result = await _authSerice.SendTwoFactorAuthEmailRequest(request);
+            return result.ToIActionResult();
+        }
+
+        [HttpPost("ActiveTwoFactorAuth")]
+        public async Task<IActionResult> RequestTwoFAActivation(ValidateTwoFactorRequest request)
+        {
+            var result = await _authSerice.RequestTwoFAActivation(request);
+            return result.ToIActionResult();
         }
     }
 }

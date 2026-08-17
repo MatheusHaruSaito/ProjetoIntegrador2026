@@ -39,22 +39,104 @@ namespace RpgDex.Application.Services
             _configuration = configuration;
             _discordAuthService = discordAuthService;
         }
-        public async Task<Result<RefreshTokenModel>> LogIn(AuthUserDTO authUser)
+        public async Task<Result<LoginResponse>> LogIn(AuthUserDTO authUser)
         {
             var user = await _userManager.FindByEmailAsync(authUser.Email);
-            if (user is null) return Result<RefreshTokenModel>.Failure("Invalid Credentials");
+            if (user is null) return Result<LoginResponse>.Failure("Invalid Credentials");
 
             var validUser = await _userManager.CheckPasswordAsync(user, authUser.Password);
-            if (!validUser) return Result<RefreshTokenModel>.Failure("Invalid Credentials");
+            if (!validUser) return Result<LoginResponse>.Failure("Invalid Credentials");
 
             var IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
-            if(!IsEmailConfirmed) return Result<RefreshTokenModel>.Failure("Email not confirmed");
+            if(!IsEmailConfirmed) return Result<LoginResponse>.Failure("Email not confirmed");
 
+            var response = new LoginResponse();
+
+            if (user.TwoFactorEnabled)
+            {
+               response.TwoFactorEnabled = true;
+               response.Email = user.Email;
+
+               return await SendTwoFatorEmail(user,response);
+            }
 
             var accessToken = await _tokenService.GenerateTokenAsync(user);
 
             var newRefreshToken = await GenerateRefreshTokenModelAsync(user);
-            return Result<RefreshTokenModel>.Success(newRefreshToken);
+
+            response.RefreshToken = newRefreshToken;
+
+
+            return Result<LoginResponse>.Success(response);
+        }
+
+        public async Task<Result<AuthOptionsResponse>> GetUserAuthOptions(Guid UserId)
+        {
+            var user = await _userManager.FindByIdAsync(UserId.ToString());
+            if(user is null)
+            {
+                return Result<AuthOptionsResponse>.Failure("Failed to return User");
+            }
+            var hasPassword = await _userManager.HasPasswordAsync(user);
+            var isTwoFactorEnabled = user.TwoFactorEnabled;
+
+            var logins = await _userManager.GetLoginsAsync(user);
+            var extrenalProviders = logins.Select(l => l.LoginProvider).ToList();
+            var authoptions = new AuthOptionsResponse
+            {
+                HasPassword = hasPassword,
+                ExternalProviders = extrenalProviders,
+                IsTwoFactorEnabled = isTwoFactorEnabled,
+
+            };
+            return Result<AuthOptionsResponse>.Success(authoptions);
+        }
+        public async Task<Result<RefreshTokenModel>> ValidateTwoFactor(ValidateTwoFactorRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if(user is null)
+            {
+                return Result<RefreshTokenModel>.Failure("Invalid two-factor code or user request");
+            }
+
+            var isTokenValid = await _userManager.VerifyTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider, request.Token);
+
+            if (!isTokenValid)
+            {
+                return Result<RefreshTokenModel>.Failure("Invalid two-factor code or user request");
+            }
+
+            return await LogInAsync(user);
+        }
+        public async Task<Result<string>> RequestTwoFAActivation(ValidateTwoFactorRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user is null)
+            {
+                return Result<string>.Failure("Invalid two-factor code or user request");
+            }
+            var isValid = await _userManager.VerifyTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider,request.Token);
+
+            if (!isValid)
+            {
+                return Result<string>.Failure("Invalid two-factor code or user request");
+            }
+
+            var result = await _userManager.SetTwoFactorEnabledAsync(user, true);
+            if (!result.Succeeded)
+            {
+                return Result<string>.Failure("Unable to activate Twho Factor Authentication");
+
+            }
+            return Result<string>.Success("Two Factor Authentication Activated");
+        }
+
+        public async Task<Result<string>> SendTwoFactorAuthEmailRequest(TwoFactorAuthEmailRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+            if (user is null) return Result<string>.Failure("User not found");
+
+            return await SendTwoFatorEmail(user, "Confirmation Code sent to your email");
         }
 
         public async Task<Result<RefreshTokenModel>> RefreshTokenAsync(RefreshTokenModel tokenModel)
@@ -109,28 +191,6 @@ namespace RpgDex.Application.Services
 
         }
 
-        private async Task<Result<string>> SendEmailVerificationAsync(string email)
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-            if(user is null)
-            {
-                return Result<string>.Failure("User not found");
-            }
-
-            var token = await _tokenService.GenerateEmailTokenVerificationAsync(user.Id);
-            if (token is null)
-            {
-                return Result<string>.Failure("It was not possible to generate the verification token");
-            }
-            string verificationLink = $"/emailConfirmation?userid={user.Id}&token={token}";
-            var htmlBody = _emailService.GenerateEmailVerificationHTMLTemplate(verificationLink, user.UserName);
-            var (isEmailSent, message) = await _emailService.SendEmailAsync(user.Email, user.UserName, "Email Verification", htmlBody);
-            if (!isEmailSent)
-            {
-                return Result<string>.Failure(message);
-            }
-            return Result<string>.Success(message);
-        }
         public async Task<Result<string>> ValidateEmailByTokenAsync(ValidateEmailByTokenRequest request)
         {
             var isValid = await _tokenService.ValidateEmailToken(request.UserId, request.Token);
@@ -196,36 +256,6 @@ namespace RpgDex.Application.Services
 
             return await LogInAsync(user);
         }
-        private async Task<Result<RefreshTokenModel>> LogInAsync(ApplicationUser user)
-        {
-
-            var newRefreshToken = await GenerateRefreshTokenModelAsync(user);
-            if (newRefreshToken is null)
-            {
-                return Result<RefreshTokenModel>.Failure("It was not possible to generate a new token");
-            }
-            return Result<RefreshTokenModel>.Success(newRefreshToken);
-        }
-
-        private async Task<RefreshTokenModel> GenerateRefreshTokenModelAsync(ApplicationUser user)
-        {
-            var accessToken = await _tokenService.GenerateTokenAsync(user);
-            var refreshToken = _tokenService.GenerateRefreshToken();
-            var newRefreshToken = new RefreshTokenModel
-            {
-                RefreshToken = refreshToken,
-                AccessToken = accessToken,
-
-            };
-            var result = await _tokenService.StoreRefreshTokenAsync(newRefreshToken.AccessToken, newRefreshToken.RefreshToken, user.Id);
-
-            if (!result)
-            {
-                return null;
-            }
-
-            return newRefreshToken;
-        }
 
         public async Task<Result<RefreshTokenModel>> DiscordSignUp()
         {
@@ -266,6 +296,81 @@ namespace RpgDex.Application.Services
 
 
             return await LogInAsync(user);
+        }
+        private async Task<Result<string>> SendEmailVerificationAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+            {
+                return Result<string>.Failure("User not found");
+            }
+
+            var token = await _tokenService.GenerateEmailTokenVerificationAsync(user.Id);
+            if (token is null)
+            {
+                return Result<string>.Failure("It was not possible to generate the verification token");
+            }
+            string verificationLink = $"/emailConfirmation?userid={user.Id}&token={token}";
+            var htmlBody = _emailService.GenerateEmailVerificationHTMLTemplate(verificationLink, user.UserName);
+            var (isEmailSent, message) = await _emailService.SendEmailAsync(user.Email, user.UserName, "Email Verification", htmlBody);
+            if (!isEmailSent)
+            {
+                return Result<string>.Failure(message);
+            }
+            return Result<string>.Success(message);
+        }
+
+        private async Task<Result<RefreshTokenModel>> LogInAsync(ApplicationUser user)
+        {
+
+            var newRefreshToken = await GenerateRefreshTokenModelAsync(user);
+            if (newRefreshToken is null)
+            {
+                return Result<RefreshTokenModel>.Failure("It was not possible to generate a new token");
+            }
+            return Result<RefreshTokenModel>.Success(newRefreshToken);
+        }
+
+        private async Task<RefreshTokenModel> GenerateRefreshTokenModelAsync(ApplicationUser user)
+        {
+            var accessToken = await _tokenService.GenerateTokenAsync(user);
+            var refreshToken = _tokenService.GenerateRefreshToken();
+            var newRefreshToken = new RefreshTokenModel
+            {
+                RefreshToken = refreshToken,
+                AccessToken = accessToken,
+
+            };
+            var result = await _tokenService.StoreRefreshTokenAsync(newRefreshToken.AccessToken, newRefreshToken.RefreshToken, user.Id);
+
+            if (!result)
+            {
+                return null;
+            }
+
+            return newRefreshToken;
+        }
+
+        private async Task<Result<T>> SendTwoFatorEmail<T>(ApplicationUser user, T response)
+        {
+            try
+            {
+                var twoFactorToken = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
+
+                //Generate Email and sendUser
+                var htmlTemplate = _emailService.GenerateTwoFactorEmailHTMLTemplate(twoFactorToken, user.DisplayName);
+                var emailResult = await _emailService.SendEmailAsync(user.Email, user.DisplayName, "Two Factor Authentication", htmlTemplate);
+
+                if (!emailResult.isEmailSent)
+                {
+                    return Result<T>.Failure("An Error has occured sending the Two Factor Code");
+                }
+                return Result<T>.Success(response);
+            }
+            catch
+            {
+                return Result<T>.Failure("An Error has occured while genereting the Two Factor Code");
+            }
         }
     }
 }
