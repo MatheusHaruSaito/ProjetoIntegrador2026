@@ -13,7 +13,7 @@
 
         <!-- Ícone -->
         <div class="input-group">
-          <label class="input-label">Ícone do Personagem</label>
+          <label class="input-label">Ícone do Personagem <span class="field-optional">(opcional)</span></label>
           <div class="icon-upload-area" (click)="iconInput.click()" [class.has-preview]="iconPreviewUrl">
             <img *ngIf="iconPreviewUrl" [src]="iconPreviewUrl" class="icon-preview-img" alt="Preview"/>
             <div class="icon-upload-placeholder" *ngIf="!iconPreviewUrl">
