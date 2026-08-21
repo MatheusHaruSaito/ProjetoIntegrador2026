@@ -57,6 +57,7 @@
               <li><i class="fa fa-check"></i> Pelo menos uma letra maiúscula (A–Z)</li>
               <li><i class="fa fa-check"></i> Pelo menos uma letra minúscula (a–z)</li>
               <li><i class="fa fa-check"></i> Pelo menos um número (0–9)</li>
+              <li><i class="fa fa-check"></i> Pelo menos um caracter especial</li>
             </ul>
           </div>
         </div>
@@ -74,12 +75,22 @@
 
       <div class="social-logins">
         <!-- Botão Google com visual do site; div oculta satisfaz o SDK -->
-        <button type="button" class="social-btn" (click)="loginComGoogle()" title="Entrar com Google">
+        <button
+          type="button"
+          class="social-btn"
+          (click)="loginComGoogle()"
+          title="Entrar com Google"
+        >
           <i class="fa-brands fa-google"></i>
         </button>
-        <div id="google-btn" style="display:none;position:absolute;"></div>
+        <div id="google-btn" style="display: none; position: absolute"></div>
 
-        <button type="button" (click)="onDiscordLogin()" class="social-btn" title="Entrar com Discord">
+        <button
+          type="button"
+          (click)="onDiscordLogin()"
+          class="social-btn"
+          title="Entrar com Discord"
+        >
           <i class="fa-brands fa-discord"></i>
         </button>
       </div>

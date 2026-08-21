@@ -65,6 +65,8 @@ export class UserRegisterComponent {
     if (!/[A-Z]/.test(p)) return 'A senha deve conter pelo menos uma letra maiúscula.';
     if (!/[a-z]/.test(p)) return 'A senha deve conter pelo menos uma letra minúscula.';
     if (!/[0-9]/.test(p)) return 'A senha deve conter pelo menos um número.';
+    if (!/[0-9]/.test(p)) return 'A senha deve conter pelo menos um número.';
+    if (!/[^a-zA-Z0-9 ]/.test(p)) return 'A senha deve conter pelo menos um caracter especial.';
     return '';
   }
 
@@ -124,6 +126,11 @@ export class UserRegisterComponent {
       return;
     }
 
+    if (this.registerForm.userName.includes(' ')) {
+      this.errorMessage = 'O nome de usuario não deve conter espaços.';
+      return;
+    }
+
     if (this.registerForm.password.length < 8) {
       this.errorMessage = 'A senha deve ter pelo menos 8 caracteres.';
       return;
@@ -144,6 +151,10 @@ export class UserRegisterComponent {
       return;
     }
 
+    if (!/[^a-zA-Z0-9 ]/.test(this.registerForm.password)) {
+      this.errorMessage = 'A senha deve conter pelo menos um caracter especial.';
+      return;
+    }
     this.isLoading = true;
 
     this.authService.Register(this.registerForm).subscribe({

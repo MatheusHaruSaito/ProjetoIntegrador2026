@@ -106,8 +106,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
-    options.Password.RequireNonAlphanumeric = false;
-
+    options.Password.RequireNonAlphanumeric = true;
     options.User.RequireUniqueEmail = true;
 })
     .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>
