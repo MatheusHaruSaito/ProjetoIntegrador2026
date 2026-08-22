@@ -1,162 +1,24 @@
-using AspNetCore.Identity.MongoDbCore.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Driver;
-using MongoDB.Driver.GridFS;
-using Resend;
-using RpgDex.Application.Interfaces;
+using RpgDex.Application;
 using RpgDex.Application.Mapping;
-using RpgDex.Application.Services;
-using RpgDex.Domain.Entities;
-using RpgDex.Domain.Interfaces;
-using RpgDex.Infrastructure.Data;
-using RpgDex.Infrastructure.Repositories;
-using RpgDex.Infrastructure.Services;
-using RpgDex.Infrastructure.Settings;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
+using RpgDex.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
-// Add services to the container.
-
-builder.Services.AddSingleton<MongoDbContext>();
-
-builder.Services.AddScoped<IMongoDatabase>(sp =>
-{
-    var context = sp.GetRequiredService<MongoDbContext>();
-    return context.GetDatabase();
-});
-
-builder.Services.AddScoped<IGridFSBucket>(sp =>
-{
-    var database = sp.GetRequiredService<IMongoDatabase>();
-    return new GridFSBucket(database);
-});
-
+var baseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:8080";
+MappingConfig.Configure(baseUrl);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
-builder.Services.AddScoped<ICharacterSevice,CharacterService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ITokenService,TokenService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ITokenRepository,TokenRepository>();
-builder.Services.AddScoped<IUserService,UserService>();
-builder.Services.AddScoped<IFileRepository, FileRepository>();
-builder.Services.AddScoped<IFileService, FileService>();
-builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
-builder.Services.AddScoped<ICampaignService, CampaignService>();
-builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
-builder.Services.AddScoped<IDiscordAuthService, DiscordAuthService>();
-builder.Services.AddScoped<IPasswordHasher<Campaign>, PasswordHasher<Campaign>>();
 
-builder.Services.Configure<ForwardedHeadersOptions>(o =>
-{
-    o.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices();
 
-    o.KnownIPNetworks.Clear();
-    o.KnownProxies.Clear();
-
-});
-
-
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.AddScoped<IEmailService, EmailService>();
-
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
-var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()
-    ?? throw new InvalidOperationException("Jwt Settings Not Found");
-
-var baseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "http://localhost:8080";
-MappingConfig.Configure(baseUrl);
-
-builder.Services.Configure<GoogleAuthSettings>(builder.Configuration.GetSection("Google"));
-builder.Services.Configure<DiscordSettings>(builder.Configuration.GetSection("Discord"));
-builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
-
-
-builder.Services.AddOptions();
-builder.Services.AddHttpClient<IResend, ResendClient>();
-builder.Services.Configure<ResendClientOptions>(o =>
-    o.ApiToken = builder.Configuration["EmailSettings:ResendApiKey"]
-);
-builder.Services.AddTransient<IResend, ResendClient>();
-
-builder.Services.AddCors(options => {
-    options.AddPolicy("PermitirTudo", policy => {
-        policy.AllowAnyOrigin()
-        .AllowAnyHeader()
-        .AllowAnyMethod();
-    });
-});
-
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-{
-    options.Password.RequiredLength = 8;
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.User.RequireUniqueEmail = true;
-})
-    .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>
-    (
-        builder.Configuration.GetConnectionString("MongoDbConnection"),
-        builder.Configuration["ConnectionStrings:DatabaseName"]
-    ). AddDefaultTokenProviders()
-    .AddRoles<ApplicationRole>();
-
-var jwtKey = builder.Configuration["Jwt:Key"] 
-    ?? throw new InvalidOperationException("Jwt Not Found");
-
-builder.Services.AddAuthentication(option =>
-{
-    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings.Issuer,
-            ValidAudience = jwtSettings.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-            ClockSkew = TimeSpan.Zero,
-            NameClaimType = JwtRegisteredClaimNames.UniqueName
-        };
-    })
-    .AddDiscord(o =>
-    {
-        o.ClientId = builder.Configuration["Discord:ClientId"]
-            ?? throw new InvalidOperationException("Discord ClientId Not Found");
-        o.ClientSecret = builder.Configuration["Discord:ClientSecret"]
-            ?? throw new InvalidOperationException("Discord ClientSecret Not Found");
-
-        o.CallbackPath = "/signin-discord";
-        
-        o.Scope.Add("identify");
-        o.Scope.Add("email");
-
-        o.ClaimActions.MapJsonKey("urn:discord:avatar", "avatar");
-        o.ClaimActions.MapJsonKey("global_name", "global_name");
-        o.SignInScheme = IdentityConstants.ExternalScheme;
-    });
-
-
+//builder.Services.AddOptions();
 
 var app = builder.Build();
 
