@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using RpgDex.Application.Interfaces;
 using RpgDex.Application.Services;
+using RpgDex.Application.Validators;
 using RpgDex.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace RpgDex.Application
@@ -19,6 +22,8 @@ namespace RpgDex.Application
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<ICampaignService, CampaignService>();
             services.AddScoped<IPasswordHasher<Campaign>, PasswordHasher<Campaign>>();
+
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             return services;
         }
     }

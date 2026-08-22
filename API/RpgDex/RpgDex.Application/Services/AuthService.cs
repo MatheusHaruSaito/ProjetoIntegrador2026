@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using FluentValidation;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using RpgDex.Application.Common;
@@ -23,13 +24,14 @@ namespace RpgDex.Application.Services
         private readonly IGoogleAuthService _googleAuthService;
         private readonly IDiscordAuthService _discordAuthService;
 
+        private readonly IValidator<CreateUserDTO> _createUserValidator;
 
         private const string GoogleProvider = "Google";
         private const string DiscordProvider = "Discord";
 
 
         private readonly IConfiguration _configuration;
-        public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService, IEmailService emailService, IGoogleAuthService googleAuthService, RoleManager<ApplicationRole> rolemanager, IConfiguration configuration, IDiscordAuthService discordAuthService)
+        public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService, IEmailService emailService, IGoogleAuthService googleAuthService, RoleManager<ApplicationRole> rolemanager, IConfiguration configuration, IDiscordAuthService discordAuthService, IValidator<CreateUserDTO> createUserValidator)
         {
             _userManager = userManager;
             _tokenService = tokenService;
@@ -38,6 +40,7 @@ namespace RpgDex.Application.Services
             _rolemanager = rolemanager;
             _configuration = configuration;
             _discordAuthService = discordAuthService;
+            _createUserValidator = createUserValidator;
         }
         public async Task<Result<LoginResponse>> LogIn(AuthUserDTO authUser)
         {
@@ -181,6 +184,12 @@ namespace RpgDex.Application.Services
         }
 
         public async Task<Result<string>> RegisterUser(CreateUserDTO authUser) {
+            var validUser = _createUserValidator.Validate(authUser);
+            if (!validUser.IsValid)
+            {
+                var errrorMessage = string.Join(", ", validUser.Errors.Select(e => e.ErrorMessage));
+                return Result<string>.Failure(errrorMessage);
+            }
             var user = authUser.Adapt<ApplicationUser>();
             user.DisplayName = user.UserName;
             var result = await _userManager.CreateAsync(user, authUser.Password);
