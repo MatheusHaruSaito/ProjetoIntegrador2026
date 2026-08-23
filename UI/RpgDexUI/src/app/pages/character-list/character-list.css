@@ -203,7 +203,7 @@ table td:nth-child(2) {
 
 .empty-sub {
     font-size: 0.85rem;
-    color: var(--rpg-border);
+    color: var(--rpg-text-faint);
     margin: 0;
 }
 
