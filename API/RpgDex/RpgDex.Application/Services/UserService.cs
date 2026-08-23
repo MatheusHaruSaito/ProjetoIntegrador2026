@@ -3,6 +3,7 @@ using Mapster;
 using Microsoft.AspNetCore.Identity;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
+using RpgDex.Application.Extension;
 using RpgDex.Application.Interfaces;
 using RpgDex.Domain.Entities;
 using System;
@@ -11,19 +12,11 @@ using System.Text;
 
 namespace RpgDex.Application.Services
 {
-    public class UserService : IUserService
+    public class UserService(UserManager<ApplicationUser> userManager, IFileService fileService, IValidator<UpdateUserProfileDTO> updateUserProfileValidator) : IUserService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IFileService _fileService;
-        public UserService(UserManager<ApplicationUser> userManager, IFileService fileService)
-        {
-            _userManager = userManager;
-            _fileService = fileService;
-        }
-
         public async Task<Result<UserResponse>> GetUserById(Guid Id)
         {
-            var user = await _userManager.FindByIdAsync(Id.ToString());
+            var user = await userManager.FindByIdAsync(Id.ToString());
             if (user is null)
             {
                 return Result<UserResponse>.Failure("User not found.");
@@ -34,7 +27,10 @@ namespace RpgDex.Application.Services
 
         public async Task<Result<string>> UpdateUserProfileAsync(Guid Id,UpdateUserProfileDTO updatedUser)
         {
-            var user = await _userManager.FindByIdAsync(Id.ToString());
+            var checkUpdateUserValid = updateUserProfileValidator.Validate(updatedUser);
+            if (!checkUpdateUserValid.IsValid) return checkUpdateUserValid.ReturnErrors<string>();
+            var user = await userManager.FindByIdAsync(Id.ToString());
+
             if(user is null)
             {
                 return Result<string>.Failure("Invalid User");
@@ -43,14 +39,14 @@ namespace RpgDex.Application.Services
 
             try
             {
-                user.IconPath = await _fileService.UploadFileAsync(updatedUser.Icon, user.Id.ToString());
+                user.IconPath = await fileService.UploadFileAsync(updatedUser.Icon, user.Id.ToString());
             }
             catch (Exception ex)
             {
                 return Result<string>.Failure($"Error occurred while saving the image: {ex.Message}");
             }
 
-            var result = await _userManager.UpdateAsync(user);
+            var result = await userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
                 return Result<string>.Failure("Failed to update profile." + string.Join(" ", result.Errors.Select(e => e.Description)));
