@@ -1,8 +1,11 @@
-﻿using Mapster;
+﻿using FluentValidation;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
+using RpgDex.Application.Extension;
 using RpgDex.Application.Interfaces;
+using RpgDex.Application.Validators;
 using RpgDex.Domain.Entities;
 using RpgDex.Domain.Interfaces;
 using System;
@@ -12,28 +15,21 @@ using System.Text;
 
 namespace RpgDex.Application.Services
 {
-    public class CharacterService : ICharacterSevice
+    public class CharacterService(ICharacterRepository character, IUserRepository userRepository, IFileService fileService, IValidator<CreateCharacterRequest> createCharacterRequestValidator) : ICharacterSevice
     {
-        private readonly ICharacterRepository _character;
-        private readonly IUserRepository _userRepository;
-        private readonly IFileService _fileService;
+        private readonly ICharacterRepository _character = character;
 
-        public CharacterService(ICharacterRepository character, IUserRepository userRepository, IFileService fileService)
-        {
-            _character = character;
-            _userRepository = userRepository;
-            _fileService = fileService;
-        }
         public async Task<Result<CharacterResponse>> Create(CreateCharacterRequest request)
         {
-
+            var checkCharacterValid = createCharacterRequestValidator.Validate(request);
+            if (!checkCharacterValid.IsValid) return checkCharacterValid.ReturnErrors<CharacterResponse>();
             //Converte a requisição em um objeto Character
             var character = request.Adapt<Character>();
             character.Id = Guid.NewGuid();
             character.UserId = request.UserId;
 
             //Verifica se o Usuario Existe
-            var user = await _userRepository.GetByIdAsync(request.UserId);
+            var user = await userRepository.GetByIdAsync(request.UserId);
             if (user is null) return Result<CharacterResponse>.Failure("Usuario não encontrado");
 
             if (request.Icon is not null)
@@ -41,7 +37,7 @@ namespace RpgDex.Application.Services
                 // Salva Imagem
                 try
                 {
-                    character.IconPath = await _fileService.UploadFileAsync(request.Icon, character.Id.ToString());
+                    character.IconPath = await fileService.UploadFileAsync(request.Icon, character.Id.ToString());
                 }
                 catch (Exception ex)
                 {
@@ -53,7 +49,7 @@ namespace RpgDex.Application.Services
             var response = await _character.InsertAsync(character);
 
             //Adiciona o Personagem A lista do Usuario
-            var data = await _userRepository.PushCharacterAsync(request.UserId, response.Id);
+            var data = await userRepository.PushCharacterAsync(request.UserId, response.Id);
             if (!data) return Result<CharacterResponse>.Failure("Falha ao Adicionar personagem ao usuario");
 
             return Result<CharacterResponse>.Success(response.Adapt<CharacterResponse>());
@@ -107,7 +103,7 @@ namespace RpgDex.Application.Services
             {
                 try
                 {
-                    updateCharacter.IconPath = await _fileService.UploadFileAsync(request.Icon, updateCharacter.Id.ToString());
+                    updateCharacter.IconPath = await fileService.UploadFileAsync(request.Icon, updateCharacter.Id.ToString());
                 }
                 catch (Exception ex)
                 {
