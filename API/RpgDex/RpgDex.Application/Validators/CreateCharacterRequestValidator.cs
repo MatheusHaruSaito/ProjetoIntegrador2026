@@ -11,9 +11,9 @@ namespace RpgDex.Application.Validators
         public CreateCharacterRequestValidator() {
 
             RuleFor(character => character.Name)
-                .NotNull().WithMessage("Password can't be empty")
-                .NotEmpty().WithMessage("Password can't be empty")
-                .MaximumLength(60).WithMessage("Character name can't exceed 60 digits");
+                .NotNull().WithMessage("Name can't be empty")
+                .NotEmpty().WithMessage("Name can't be empty")
+                .MaximumLength(60).WithMessage("Name can't exceed 60 digits");
 
             RuleFor(character => character.Description)
                 .MaximumLength(2000).WithMessage("Description can't exceed 2000 digits");   
