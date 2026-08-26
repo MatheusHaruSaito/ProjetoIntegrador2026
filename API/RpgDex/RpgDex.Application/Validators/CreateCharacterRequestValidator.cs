@@ -19,10 +19,13 @@ namespace RpgDex.Application.Validators
                 .MaximumLength(2000).WithMessage("Description can't exceed 2000 digits");   
 
             long maxSizeBytes = 2 * 1024 * 1024;
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" }; //Permitir Gifs quando usuario premium for implementado
-            RuleFor(character => character.Icon)
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+            When(character => character.Icon != null, () =>
+            {
+                RuleFor(character => character.Icon)
                 .Must(file => allowedExtensions.Contains(System.IO.Path.GetExtension(file.FileName).ToLower())).WithMessage("Icon must be a JPG, JPEG, or PNG file")
                 .Must(file => file.Length <= maxSizeBytes).WithMessage("Icon file size must not exceed 2MB");
+            });
         }
     }
 }
