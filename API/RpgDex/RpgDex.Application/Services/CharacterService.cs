@@ -15,7 +15,9 @@ using System.Text;
 
 namespace RpgDex.Application.Services
 {
-    public class CharacterService(ICharacterRepository character, IUserRepository userRepository, IFileService fileService, IValidator<CreateCharacterRequest> createCharacterRequestValidator) : ICharacterSevice
+    public class CharacterService(ICharacterRepository character, IUserRepository userRepository,
+        IFileService fileService, IValidator<CreateCharacterRequest> createCharacterRequestValidator,
+        IValidator<UpdateCharacterRequest> updateCharacterRequestValidator) : ICharacterSevice
     {
         private readonly ICharacterRepository _character = character;
 
@@ -98,6 +100,8 @@ namespace RpgDex.Application.Services
 
         public async Task<Result<bool>> UpdateAsync(UpdateCharacterRequest request)
         {
+           var checkUpdateCharacterRequest = updateCharacterRequestValidator.Validate(request);
+            if (!checkUpdateCharacterRequest.IsValid) return checkUpdateCharacterRequest.ReturnErrors<bool>();
             var updateCharacter = request.Adapt<Character>();
             if(request.Icon is not null)
             {
