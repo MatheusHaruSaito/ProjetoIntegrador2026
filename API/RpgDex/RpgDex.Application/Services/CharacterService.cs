@@ -17,7 +17,7 @@ namespace RpgDex.Application.Services
 {
     public class CharacterService(ICharacterRepository character, IUserRepository userRepository,
         IFileService fileService, IValidator<CreateCharacterRequest> createCharacterRequestValidator,
-        IValidator<UpdateCharacterRequest> updateCharacterRequestValidator) : ICharacterSevice
+        IValidator<UpdateCharacterRequest> updateCharacterRequestValidator) : ICharacterService
     {
         private readonly ICharacterRepository _character = character;
 
@@ -25,32 +25,32 @@ namespace RpgDex.Application.Services
         {
             var checkCharacterValid = createCharacterRequestValidator.Validate(request);
             if (!checkCharacterValid.IsValid) return checkCharacterValid.ReturnErrors<CharacterResponse>();
-            //Converte a requisição em um objeto Character
+            //Converts request to character
             var character = request.Adapt<Character>();
             character.Id = Guid.NewGuid();
             character.UserId = request.UserId;
 
-            //Verifica se o Usuario Existe
+            //Verifies if character exists
             var user = await userRepository.GetByIdAsync(request.UserId);
             if (user is null) return Result<CharacterResponse>.Failure("User Not Found");
 
             if (request.Icon is not null)
             {
-                // Salva Imagem
+                // Icon save
                 try
                 {
                     character.IconPath = await fileService.UploadFileAsync(request.Icon, character.Id.ToString());
                 }
                 catch
                 {
-                    return Result<CharacterResponse>.Failure("Error saving image");
+                    return Result<CharacterResponse>.Failure("Error saving icon");
                 }
             }
             
-            // coloca o personagem no banco
+            // push character to database
             var response = await _character.InsertAsync(character);
 
-            //Adiciona o Personagem A lista do Usuario
+            //push character to user list
             var data = await userRepository.PushCharacterAsync(request.UserId, response.Id);
             if (!data) return Result<CharacterResponse>.Failure("Failed to add character to user");
 
@@ -59,11 +59,11 @@ namespace RpgDex.Application.Services
 
         public async Task<Result<CharacterResponse>> SetActiveState(Guid Id, bool ActiveState)
         {
-            //Verifica se o Personagem Existe
+            //Verifies if character exists
             var characterFound = await _character.GetByIdAsync(Id);
             if(characterFound is null) return Result<CharacterResponse>.Failure("Failed to get character");
 
-            //Verifica se o Personagem foi deletado
+            //Verifies if character is deactivated
             bool modified = await _character.SetActiveState(Id,ActiveState);
             if (!modified) return Result<CharacterResponse>.Failure("Failed to deactivate character");
 
@@ -78,9 +78,9 @@ namespace RpgDex.Application.Services
 
         public async Task<Result<IEnumerable<CharacterResponse>>> GetAllByUserIdAsync(Guid userId)
         {
-            //Retorna Todos os Perosnagens
+            //Return all characters
             var characters =  await _character.GetAllByUserIdAsync(userId);
-            if (characters is null) return Result<IEnumerable<CharacterResponse>>.Failure("Falha ao Obter personagem");
+            if (characters is null) return Result<IEnumerable<CharacterResponse>>.Failure("Failed to get character");
 
             var response = characters.Adapt<List<CharacterResponse>>();
             return  Result<IEnumerable<CharacterResponse>>.Success(response);
@@ -88,11 +88,11 @@ namespace RpgDex.Application.Services
 
         public async Task<Result<CharacterResponse>> GetByIdAsync(Guid Id)
         {
-            //Retorna Um dos Perosnagens
+            //Return a character
             var data = await _character.GetByIdAsync(Id);
             if(data is null)
             {
-                return Result<CharacterResponse>.Failure($"Personagem de Id: {Id} Não Encontrado!!");
+                return Result<CharacterResponse>.Failure($"Character not found");
             }
             var response = data.Adapt<CharacterResponse>();
             return Result<CharacterResponse>.Success(response);
@@ -109,22 +109,22 @@ namespace RpgDex.Application.Services
                 {
                     updateCharacter.IconPath = await fileService.UploadFileAsync(request.Icon, updateCharacter.Id.ToString());
                 }
-                catch (Exception ex)
+                catch
                 {
-                    return Result<bool>.Failure($"Erro ao salvar a imagem: {ex.Message}");
+                    return Result<bool>.Failure($"Error saving icon");
                 }
             }
             else
             {
                 var characterFound = await _character.GetByIdAsync(request.Id);
-                if (characterFound is null) return Result<bool>.Failure("Personagem Não Encontrado");
+                if (characterFound is null) return Result<bool>.Failure("Character not found");
                 updateCharacter.IconPath = characterFound.IconPath;
             }
 
 
             var response = await _character.UpdateAsync(updateCharacter);
-            //Verifica se o Personagem foi atualizado
-            if (!response) return Result<bool>.Failure("Não foi possivel atualizar o personagem");
+            //Verifies if character was updated
+            if (!response) return Result<bool>.Failure("It was not possible to update character");
             return Result<bool>.Success(response);
         }
     }

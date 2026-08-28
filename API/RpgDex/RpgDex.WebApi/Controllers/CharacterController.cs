@@ -12,8 +12,8 @@
         [ApiController]
         public class CharacterController : ControllerBase
         {
-            private readonly ICharacterSevice _characterSevice;
-            public CharacterController(ICharacterSevice characterSevice)
+            private readonly ICharacterService _characterSevice;
+            public CharacterController(ICharacterService characterSevice)
             {
                 _characterSevice = characterSevice;
             }

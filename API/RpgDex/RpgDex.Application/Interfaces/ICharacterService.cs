@@ -7,7 +7,7 @@ using System.Text;
 
 namespace RpgDex.Application.Interfaces
 {
-    public interface ICharacterSevice
+    public interface ICharacterService
     {
         Task<Result<CharacterResponse>> Create(CreateCharacterRequest request);
         Task<Result<IEnumerable<CharacterResponse>>> GetAllByUserIdAsync(Guid userId);
