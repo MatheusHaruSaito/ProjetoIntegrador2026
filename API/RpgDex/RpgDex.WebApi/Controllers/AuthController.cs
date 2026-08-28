@@ -1,5 +1,6 @@
 ﻿using AspNet.Security.OAuth.Discord;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +16,7 @@ namespace RpgDex.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authSerice;
@@ -30,12 +32,15 @@ namespace RpgDex.WebApi.Controllers
             _settings = settings.Value;
         }
         [HttpPost]
+        [AllowAnonymous]
+
         public async Task<IActionResult> Register(CreateUserDTO user)
         {
             var result = await _authSerice.RegisterUser(user);
             return result.ToIActionResult();
         }
         [HttpPost("Login")]
+        [AllowAnonymous]
         public async Task<IActionResult> LogIn(AuthUserDTO user)
         {
             var result = await _authSerice.LogIn(user);
@@ -51,6 +56,8 @@ namespace RpgDex.WebApi.Controllers
         }
 
         [HttpPut("ValidateEmail/")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> ValidateEmailByToken(ValidateEmailByTokenRequest request)
         {
             var result = await _authSerice.ValidateEmailByTokenAsync(request);
@@ -58,12 +65,16 @@ namespace RpgDex.WebApi.Controllers
         }
 
         [HttpPost("ResendEmailVerification")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> ResendEmailVerification(ResendEmailVerificationRequest request)
         {
             var result = await _authSerice.ResendEmailVerificationAsync(request);
             return result.ToIActionResult();
         }
         [HttpPost("Google/SignUp")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> GoogleSingUp(GoogleLoginRequest request)
         {
             var result = await _authSerice.GoogleSignUp(request);
@@ -72,6 +83,7 @@ namespace RpgDex.WebApi.Controllers
         }
 
         [HttpGet("discord")]
+        [AllowAnonymous]
         public IActionResult DiscordLogin([FromQuery] string? redirectUri)
         {
             var redirectUrl = Url.Action(nameof(DiscordSignUp), "Auth", new { customRedirect = redirectUri});
@@ -88,6 +100,8 @@ namespace RpgDex.WebApi.Controllers
             );
         }
         [HttpGet("DiscordSignUp")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> DiscordSignUp([FromQuery] string? customRedirect)
         {
             var result = await _authSerice.DiscordSignUp();

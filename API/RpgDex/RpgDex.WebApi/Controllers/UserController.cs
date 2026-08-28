@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RpgDex.Application.Interfaces;
 using RpgDex.Application.Dto;
 using RpgDex.WebApi.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 
 
@@ -10,6 +11,7 @@ namespace RpgDex.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;

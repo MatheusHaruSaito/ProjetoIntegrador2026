@@ -138,7 +138,7 @@ namespace RpgDex.Infrastructure
 
             services.AddCors(options => {
                 options.AddPolicy("PermitirTudo", policy => {
-                    policy.AllowAnyOrigin()
+                    policy.WithOrigins(configuration["ApiSettings:UIBaseUrl"])
                     .AllowAnyHeader()
                     .AllowAnyMethod();
                 });
