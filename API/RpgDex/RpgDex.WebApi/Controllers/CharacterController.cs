@@ -1,13 +1,14 @@
-﻿    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Http.HttpResults;
-    using Microsoft.AspNetCore.Mvc;
-    using RpgDex.Application.Common;
-    using RpgDex.Application.Dto;
-    using RpgDex.Application.Interfaces;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using RpgDex.Application.Common;
+using RpgDex.Application.Dto;
+using RpgDex.Application.Interfaces;
+using RpgDex.WebApi.Extensions;
 
 
-    namespace RpgDex.WebApi.Controllers
-    {
+namespace RpgDex.WebApi.Controllers
+        {
         [Route("api/[controller]")]
         [ApiController]
         public class CharacterController : ControllerBase
@@ -17,102 +18,45 @@
             {
                 _characterSevice = characterSevice;
             }
+
             [HttpPost]
-            public async Task<ActionResult<CharacterResponse>> CreateCharacter(CreateCharacterRequest request)
+            public async Task<IActionResult> CreateCharacter(CreateCharacterRequest request)
             {
            
                 var result = await _characterSevice.Create(request);
-                if (result.IsFailure)
-                {
-                    return BadRequest(new{success = result.IsSuccess,
-                                          message = result.Error,
-                                          data = result.Value});
-                }
-
-
-                return Ok(new {success= result.IsSuccess,
-                               data = result.Value});
+                return result.ToIActionResult();
             }
+
             [HttpGet("{userId}/All")]
-            public async Task<ActionResult<IEnumerable<CharacterResponse>>> GetAllByUserId(Guid userId)
+            public async Task<IActionResult> GetAllByUserId(Guid userId)
             {
                 var result = await _characterSevice.GetAllByUserIdAsync(userId);
-
-                if(result.IsFailure)
-                {
-                    return NotFound(new{ success = result.IsSuccess,
-                        message = result.Error,
-                        data = result.Value
-                    });
-                }
-                return Ok(new
-                {
-                    success = result.IsSuccess,
-                    data = result.Value
-                });
+                return result.ToIActionResult();
 
             }
+
             [HttpGet("{Id}")]
-            public async Task<ActionResult<CharacterResponse>> GetById(Guid Id)
+            public async Task<IActionResult> GetById(Guid Id)
             { 
 
-                 var result = await _characterSevice.GetByIdAsync(Id);
-
-                if (result.IsFailure)
-                {
-                    return NotFound(new
-                    {
-                        success = result.IsSuccess,
-                        message = result.Error,
-                        data = result.Value
-                    });
-                }
-                return Ok(new
-                {
-                    success = result.IsSuccess,
-                    data = result.Value
-                });
+                var result = await _characterSevice.GetByIdAsync(Id);
+                return result.ToIActionResult();
             }
+
             [HttpPut("SetActiveState/{Id}")]
-            public async Task<ActionResult<CharacterResponse>> SetActiveState(Guid Id,bool state)
+            public async Task<IActionResult> SetActiveState(Guid Id,bool state)
             {
 
                 var result = await _characterSevice.SetActiveState(Id, state);
-
-                if (result.IsFailure)
-                {
-                    return NotFound(new
-                    {
-                        success = result.IsSuccess,
-                        message = result.Error,
-                        data = result.Value
-                    });
-                }
-                return Ok(new
-                {
-                    success = result.IsSuccess,
-                    data = result.Value
-                });
+                return result.ToIActionResult();
             }
+
             [HttpPut]
-            public async Task<ActionResult> Update(UpdateCharacterRequest request)
+            public async Task<IActionResult> Update(UpdateCharacterRequest request)
             {
 
                 var result = await _characterSevice.UpdateAsync(request);
-                if (result.IsFailure)
-                {
-                    return NotFound(new
-                    {
-                        success = result.IsSuccess,
-                        message = result.Error,
-                        data = result.Value
-                    });
-                }
-                return Ok(new
-                {
-                    success = result.IsSuccess,
-                    data = result.Value
-                });
+                return result.ToIActionResult();
             }
             
         }
