@@ -19,10 +19,10 @@ namespace RpgDex.Application.Validators
             RuleFor(character => character.Description)
                 .MaximumLength(2000).WithMessage("Description can't exceed 2000 digits");
 
-            long maxSizeBytes = 2 * 1024 * 1024;
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
             When(character => character.Icon != null, () =>
             {
+                long maxSizeBytes = 2 * 1024 * 1024;
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
                 RuleFor(character => character.Icon)
                 .Must(file => allowedExtensions.Contains(System.IO.Path.GetExtension(file.FileName).ToLower())).WithMessage("Icon must be a JPG, JPEG, or PNG file")
                 .Must(file => file.Length <= maxSizeBytes).WithMessage("Icon file size must not exceed 2MB");

@@ -8,6 +8,6 @@ namespace RpgDex.Application.Dto
     public class UpdateUserProfileDTO
     {
         public string DisplayName { get; set; }
-        public IFormFile Icon { get; set; }
+        public IFormFile? Icon { get; set; }
     }
 }

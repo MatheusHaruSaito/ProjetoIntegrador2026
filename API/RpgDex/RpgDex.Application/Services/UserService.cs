@@ -37,13 +37,16 @@ namespace RpgDex.Application.Services
             }
             user.DisplayName = updatedUser.DisplayName;
 
-            try
+            if(updatedUser.Icon is not null)
             {
-                user.IconPath = await fileService.UploadFileAsync(updatedUser.Icon, user.Id.ToString());
-            }
-            catch (Exception ex)
-            {
-                return Result<string>.Failure($"Error occurred while saving the image: {ex.Message}");
+                try
+                {
+                    user.IconPath = await fileService.UploadFileAsync(updatedUser.Icon, user.Id.ToString());
+                }
+                catch (Exception ex)
+                {
+                    return Result<string>.Failure($"Error occurred while saving the image: {ex.Message}");
+                }
             }
 
             var result = await userManager.UpdateAsync(user);
