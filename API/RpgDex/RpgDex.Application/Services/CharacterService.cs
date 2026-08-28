@@ -32,7 +32,7 @@ namespace RpgDex.Application.Services
 
             //Verifica se o Usuario Existe
             var user = await userRepository.GetByIdAsync(request.UserId);
-            if (user is null) return Result<CharacterResponse>.Failure("Usuario não encontrado");
+            if (user is null) return Result<CharacterResponse>.Failure("User Not Found");
 
             if (request.Icon is not null)
             {
@@ -41,9 +41,9 @@ namespace RpgDex.Application.Services
                 {
                     character.IconPath = await fileService.UploadFileAsync(request.Icon, character.Id.ToString());
                 }
-                catch (Exception ex)
+                catch
                 {
-                    return Result<CharacterResponse>.Failure($"Erro ao salvar a imagem: {ex.Message}");
+                    return Result<CharacterResponse>.Failure("Error saving image");
                 }
             }
             
@@ -52,7 +52,7 @@ namespace RpgDex.Application.Services
 
             //Adiciona o Personagem A lista do Usuario
             var data = await userRepository.PushCharacterAsync(request.UserId, response.Id);
-            if (!data) return Result<CharacterResponse>.Failure("Falha ao Adicionar personagem ao usuario");
+            if (!data) return Result<CharacterResponse>.Failure("Failed to add character to user");
 
             return Result<CharacterResponse>.Success(response.Adapt<CharacterResponse>());
         }
@@ -61,11 +61,11 @@ namespace RpgDex.Application.Services
         {
             //Verifica se o Personagem Existe
             var characterFound = await _character.GetByIdAsync(Id);
-            if(characterFound is null) return Result<CharacterResponse>.Failure("Falha ao achar personagem");
+            if(characterFound is null) return Result<CharacterResponse>.Failure("Failed to get character");
 
             //Verifica se o Personagem foi deletado
             bool modified = await _character.SetActiveState(Id,ActiveState);
-            if (!modified) return Result<CharacterResponse>.Failure("Falha ao desativar personagem");
+            if (!modified) return Result<CharacterResponse>.Failure("Failed to deactivate character");
 
             //Verifica se o Personagem foi deletado do Usuario
             //bool deletedFromUser = await _userRepository.PullCharacterAsync(characterFound.UserId, Id);
