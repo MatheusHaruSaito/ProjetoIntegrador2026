@@ -5,6 +5,7 @@ using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
 using RpgDex.Application.Extension;
 using RpgDex.Application.Interfaces;
+using RpgDex.Application.Validators;
 using RpgDex.Domain.Entities;
 using RpgDex.Domain.Interfaces;
 using RpgDex.Domain.ValueObjects;
@@ -13,7 +14,7 @@ namespace RpgDex.Application.Services
 {
     public class CampaignService(ICampaignRepository campaignRepository, IFileService fileService, IUserRepository userRepository,
         ICharacterRepository characterRepository, IPasswordHasher<Campaign> passwordHasher,
-        IValidator<CreateCampaignRequest> createCampaignRequestValidator) : ICampaignService
+        IValidator<CreateCampaignRequest> createCampaignRequestValidator, IValidator<UpdateCampaignRequest> updateCampaignRequestValidator) : ICampaignService
     {
         private string? HashPassword(Campaign campaign, string? password)
         {
@@ -121,6 +122,8 @@ namespace RpgDex.Application.Services
 
         public async Task<Result<CampaignResponse>> Update(UpdateCampaignRequest request)
         {
+            var checkupdateCampaignRequest = updateCampaignRequestValidator.Validate(request);
+            if (!checkupdateCampaignRequest.IsValid) return checkupdateCampaignRequest.ReturnErrors<CampaignResponse>();
             var campaign = await campaignRepository.GetByIdAsync(request.Id);
             if (campaign is null)
             {
