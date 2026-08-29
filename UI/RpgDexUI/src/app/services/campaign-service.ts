@@ -11,6 +11,7 @@ import { AddCharacterToCampaignRequest } from '../../models/AddCharacterToCampai
 import { AcceptCharacterToCampaignRequest } from '../../models/AcceptCharacterToCampaignRequest';
 import { RemovePlayerFromCampaignRequest } from '../../models/removePlayerFromCampaignRequest';
 import { UpdateCampaignSettingsRequest } from '../../models/updateCampaignSettingsRequest';
+import { CampaignSetActiveStateRequest } from '../../models/campaignSetActiveStateRequest';
 @Injectable({
   providedIn: 'root',
 })
@@ -52,5 +53,9 @@ export class CampaignService {
   }
   UpdateSettings(request: UpdateCampaignSettingsRequest): Observable<ApiResponse<String>> {
     return this.http.put<ApiResponse<String>>(`${this.env}/UpdateSettings`, request);
+  }
+  //bad idea, refactor this later to just deactive
+  SetActiveState(request: CampaignSetActiveStateRequest): Observable<ApiResponse<String>> {
+    return this.http.put<ApiResponse<String>>(`${this.env}/SetActiveState`, request);
   }
 }

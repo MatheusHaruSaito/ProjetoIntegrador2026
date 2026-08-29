@@ -12,6 +12,7 @@ import { UserResponse } from '../../../models/userResponse';
 import { UpdateCampaignSettingsRequest } from '../../../models/updateCampaignSettingsRequest';
 import { EditCampaignModalComponent } from '../../modals/edit-campaign-modal/edit-campaign-modal';
 import { CharacterViewerComponent } from '../../pages/character-viewer/character-viewer';
+import { CampaignSetActiveStateRequest } from '../../../models/campaignSetActiveStateRequest';
 
 @Component({
   selector: 'app-campaign-detail',
@@ -364,17 +365,12 @@ export class CampaignDetailComponent implements OnInit {
     if (!this.campaign) return;
 
     const newState = !this.campaign.isActive;
-    const updatePayload: any = {
+    const request: CampaignSetActiveStateRequest = {
       id: this.campaign.id,
-      title: this.campaign.title,
-      description: this.campaign.description,
-      maxPlayers: this.campaign.maxPlayers,
-      nextSession: this.campaign.nextSession,
-      isActive: newState,
-      icon: null,
+      state: newState,
     };
 
-    this.campaignService.Update(updatePayload).subscribe({
+    this.campaignService.SetActiveState(request).subscribe({
       next: () => {
         this.showFeedback(`Campanha ${newState ? 'reativada' : 'desativada'} com sucesso!`);
         this.loadCampaign(true);
