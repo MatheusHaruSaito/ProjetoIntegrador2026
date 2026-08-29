@@ -28,7 +28,7 @@ namespace RpgDex.WebApi.Controllers
                 return result.ToIActionResult();
             }
 
-            [HttpGet("/All")]
+            [HttpGet("All")]
             public async Task<IActionResult> GetAllByUserId()
             {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier);
