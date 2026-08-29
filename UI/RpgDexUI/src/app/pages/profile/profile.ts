@@ -48,6 +48,7 @@ export class ProfileComponent implements OnInit {
     this.initTheme();
     this.loadUser();
     this.loadCharacterPreview();
+    this.loadCampaignPreview();
   }
 
   private initTheme(): void {
@@ -83,7 +84,6 @@ export class ProfileComponent implements OnInit {
 
         if (this.user?.id) {
           this.loadAuthOptions(this.user.id);
-          this.loadCampaignPreview(); //Change this later
         }
       },
       error: (err) => {
@@ -134,17 +134,13 @@ export class ProfileComponent implements OnInit {
     const userId = this.authService.getLoggedUserId();
     if (!userId) return;
 
-    this.campaignService.GetAll().subscribe({
+    this.campaignService.GetAllByUser().subscribe({
       next: (response) => {
         const allCampaigns: Campaign[] = response.data ?? [];
 
-        const userCampaigns = allCampaigns.filter(
-          (c) => c.gameMasterId === userId || (c.playerIds && c.playerIds.includes(userId)),
-        );
+        this.campaignTotal = allCampaigns.length;
 
-        this.campaignTotal = userCampaigns.length;
-
-        this.campaignPreview = userCampaigns.slice(0, 3).map((c) => ({
+        this.campaignPreview = allCampaigns.slice(0, 3).map((c) => ({
           id: c.id,
           title: c.title,
           role: c.gameMasterId === userId ? 'Mestre' : 'Jogador',

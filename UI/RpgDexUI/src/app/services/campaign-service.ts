@@ -22,12 +22,12 @@ export class CampaignService {
 
   Post(request: CreateCampaignRequest | FormData): Observable<ApiResponse<Campaign>> {
     return this.http.post<ApiResponse<Campaign>>(`${this.env}`, request);
-  } 
+  }
   GetAll(): Observable<ApiResponse<Campaign[]>> {
     return this.http.get<ApiResponse<Campaign[]>>(`${this.env}`);
   }
-  GetAllByUserId(userId: string): Observable<ApiResponse<Campaign[]>> {
-    return this.http.get<ApiResponse<Campaign[]>>(`${this.env}/${userId}/All`);
+  GetAllByUser(): Observable<ApiResponse<Campaign[]>> {
+    return this.http.get<ApiResponse<Campaign[]>>(`${this.env}/All`);
   }
   GetById(Id: String): Observable<ApiResponse<Campaign>> {
     return this.http.get<ApiResponse<Campaign>>(`${this.env}/${Id}`);

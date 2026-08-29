@@ -41,14 +41,9 @@ export class CampaignsComponent implements OnInit {
   }
 
   private loadCampaigns(): void {
-    this.campaignService.GetAll().subscribe({
+    this.campaignService.GetAllByUser().subscribe({
       next: (r) => {
-        const allCampaigns: Campaign[] = r.data ?? [];
-        this.myCampaigns = allCampaigns.filter(
-          (c) =>
-            c.gameMasterId === this.currentUserId ||
-            (c.playerIds && c.playerIds.includes(this.currentUserId)),
-        );
+        this.myCampaigns = r.data ?? [];
 
         this.cdr.detectChanges();
       },
