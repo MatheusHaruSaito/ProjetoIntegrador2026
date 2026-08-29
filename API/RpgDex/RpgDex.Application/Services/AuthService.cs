@@ -116,9 +116,9 @@ namespace RpgDex.Application.Services
             return Result<string>.Success("Two Factor Authentication Activated");
         }
 
-        public async Task<Result<string>> SendTwoFactorAuthEmailRequest(TwoFactorAuthEmailRequest request)
+        public async Task<Result<string>> SendTwoFactorAuthEmailRequest(string userId)
         {
-            var user = await userManager.FindByIdAsync(request.UserId.ToString());
+            var user = await userManager.FindByIdAsync(userId);
             if (user is null) return Result<string>.Failure("User not found");
 
             return await SendTwoFatorEmail(user, "Confirmation Code sent to your email");

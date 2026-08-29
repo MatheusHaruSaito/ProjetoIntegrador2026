@@ -137,9 +137,9 @@ namespace RpgDex.WebApi.Controllers
         }
 
         [HttpPost("SendTwoFactorAuthEmailRequest")]
-        public async Task<IActionResult> SendTwoFactorAuthEmailRequest(TwoFactorAuthEmailRequest request)
+        public async Task<IActionResult> SendTwoFactorAuthEmailRequest()
         {
-            var result = await _authSerice.SendTwoFactorAuthEmailRequest(request);
+            var result = await _authSerice.SendTwoFactorAuthEmailRequest(currentUser);
             return result.ToIActionResult();
         }
 
