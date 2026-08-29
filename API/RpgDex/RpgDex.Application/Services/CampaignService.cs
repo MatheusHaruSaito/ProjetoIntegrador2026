@@ -121,16 +121,22 @@ namespace RpgDex.Application.Services
             return Result<CampaignResponse>.Success(response.Adapt<CampaignResponse>());
         }
 
-        public async Task<Result<CampaignResponse>> Update(UpdateCampaignRequest request)
+        public async Task<Result<CampaignResponse>> Update(string userId,UpdateCampaignRequest request)
         {
             var checkupdateCampaignRequest = updateCampaignRequestValidator.Validate(request);
             if (!checkupdateCampaignRequest.IsValid) return checkupdateCampaignRequest.ReturnErrors<CampaignResponse>();
+
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<CampaignResponse>.Failure("Invalid User ID format.");
+
             var campaign = await campaignRepository.GetByIdAsync(request.Id);
             if (campaign is null)
             {
                 return Result<CampaignResponse>.Failure("Campaign not found");
             }
-            if(campaign.PlayerIds.Count() > request.MaxPlayers)
+
+            if(!campaign.GameMasterId.Equals(guidUserId)) Result<CampaignResponse>.Failure("Logged User isn't the game master");
+
+            if (campaign.PlayerIds.Count() > request.MaxPlayers)
             {
                 return Result<CampaignResponse>.Failure("Remove players before reducing campaign capacity");
             }

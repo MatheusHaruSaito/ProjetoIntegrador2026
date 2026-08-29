@@ -46,7 +46,7 @@ namespace RpgDex.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(UpdateCampaignRequest request)
         {
-            var result = await _campaignService.Update(request);
+            var result = await _campaignService.Update(currentUser ,request);
             return result.ToIActionResult();
         }
         [HttpPut("SetActiveState/{Id}")]
