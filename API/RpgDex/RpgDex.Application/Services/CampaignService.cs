@@ -305,15 +305,17 @@ namespace RpgDex.Application.Services
             return Result<string>.Success(chracterAdded.message);
         }
 
-        public async Task<Result<string>> RemovePlayer(RemovePlayerFromCampaignRequest request)
+        public async Task<Result<string>> RemovePlayer(RemovePlayerFromCampaignRequest request, string userId)
         {
             var campaignFound = await campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaignFound is null)
             {
                 return Result<string>.Failure("Campaign not found");
             }
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<string>.Failure("Invalid User ID format");
+
             //User found
-            var isUserGameMaster = campaignFound.GameMasterId == request.IssuerPlayerId;
+            var isUserGameMaster = campaignFound.GameMasterId.Equals(guidUserId);
             if (!isUserGameMaster)
             {
                 return Result<string>.Failure("Only the game master can kick players");

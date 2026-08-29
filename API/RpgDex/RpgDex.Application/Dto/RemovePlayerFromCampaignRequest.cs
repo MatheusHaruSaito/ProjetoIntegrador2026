@@ -7,7 +7,6 @@ namespace RpgDex.Application.Dto
     public class RemovePlayerFromCampaignRequest
     {
         public Guid CampaignId { get; set; }
-        public Guid IssuerPlayerId { get; set; }
         public Guid PlayerId { get; set; }
     }
 }

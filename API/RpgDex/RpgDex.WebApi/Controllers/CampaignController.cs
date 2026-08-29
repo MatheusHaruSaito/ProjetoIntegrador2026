@@ -81,7 +81,7 @@ namespace RpgDex.WebApi.Controllers
         public async Task<IActionResult> RemovePlayer(RemovePlayerFromCampaignRequest request)
         {
 
-            var result = await _campaignService.RemovePlayer(request);
+            var result = await _campaignService.RemovePlayer(request,currentUser);
             return result.ToIActionResult();
         }
         [HttpPut("UpdateSettings")]
