@@ -175,7 +175,7 @@ namespace RpgDex.Application.Services
                 return Result<bool>.Failure("Campaign not found");
             }
 
-            if (!Guid.TryParse(userId, out var guidUserId)) return Result<bool>.Failure("Invalid User ID format.");
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<bool>.Failure("Invalid User ID format");
             if(!campaign.GameMasterId.Equals(guidUserId)) return Result<bool>.Failure("Logged user isn't the game master");
 
             var result = await campaignRepository.SetActiveState(request.Id, request.State);
@@ -223,13 +223,17 @@ namespace RpgDex.Application.Services
             return Result<string>.Success("Player added to campaign successfully");
         }
 
-        public async Task<Result<string>> AddCharacter(AddCharacterToCampaignRequest request)
+        public async Task<Result<string>> AddCharacter(AddCharacterToCampaignRequest request, string userId)
         {
             var characterFound = await characterRepository.GetByIdAsync(request.CharacterId);
             if(characterFound is null) {
                 return Result<string>.Failure("Character not found");
             }
             //Character found
+
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<string>.Failure("Invalid User ID format");
+            if(!characterFound.Id.Equals(guidUserId)) return Result<string>.Failure("Character isn't from logged user");
+
             var campaignFound = await campaignRepository.GetByIdAsync(request.CampaignId);
             if(campaignFound is null) {
                 return Result<string>.Failure("Campaign not found");
