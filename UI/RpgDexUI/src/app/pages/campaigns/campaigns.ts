@@ -113,7 +113,6 @@ export class CampaignsComponent implements OnInit {
   }
 
   handleCreateCampaign(formData: FormData): void {
-    formData.append('gameMasterId', this.currentUserId);
     this.campaignService.Post(formData as any).subscribe({
       next: () => this.loadCampaigns(),
       error: () => {},
