@@ -161,7 +161,7 @@ export class AuthService {
 
   //Ainda não implementado no site
   public GetUserAuthOptions(userId: string): Observable<ApiResponse<AuthOptionsResponse>> {
-    return this.http.get<ApiResponse<AuthOptionsResponse>>(`${this.env}/AuthOptions/${userId}`);
+    return this.http.get<ApiResponse<AuthOptionsResponse>>(`${this.env}/AuthOptions`);
   }
   public ValidateTwoFactor(request: ValidateTwoFactorRequest): Observable<ApiResponse<tokenModel>> {
     return this.http.post<ApiResponse<tokenModel>>(
