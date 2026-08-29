@@ -356,7 +356,6 @@ namespace RpgDex.Application.Services
                 return Result<string>.Failure("Only the game master can update configurations");
             }
             campaignFound.UpdateSettings(request.Adapt<CampaignSettings>());
-
             var updatedCampaign = await campaignRepository.UpdateAsync(campaignFound);
             if (updatedCampaign is null)
             {
