@@ -103,12 +103,6 @@ export class EditProfileComponent implements OnInit {
       return;
     }
 
-    const userId = this.authService.getLoggedUserId();
-    if (!userId) {
-      this.errorMessage = 'Usuário não identificado. Faça login novamente.';
-      return;
-    }
-
     const formData = new FormData();
     formData.append('displayName', this.editForm.displayName.trim());
     if (this.selectedFile) {
@@ -116,7 +110,7 @@ export class EditProfileComponent implements OnInit {
     }
 
     this.isLoading = true;
-    this.userService.Update(formData, userId).subscribe({
+    this.userService.Update(formData).subscribe({
       next: (r) => {
         this.isLoading = false;
         this.successMessage = 'Perfil atualizado com sucesso!';
