@@ -55,9 +55,9 @@ namespace RpgDex.Application.Services
             return Result<LoginResponse>.Success(response);
         }
 
-        public async Task<Result<AuthOptionsResponse>> GetUserAuthOptions(Guid UserId)
+        public async Task<Result<AuthOptionsResponse>> GetUserAuthOptions(string userId)
         {
-            var user = await userManager.FindByIdAsync(UserId.ToString());
+            var user = await userManager.FindByIdAsync(userId);
             if(user is null)
             {
                 return Result<AuthOptionsResponse>.Failure("Failed to return User");

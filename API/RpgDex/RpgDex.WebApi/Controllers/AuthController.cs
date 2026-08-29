@@ -12,6 +12,7 @@ using RpgDex.Application.Interfaces;
 using RpgDex.Domain.Entities;
 using RpgDex.Infrastructure.Settings;
 using RpgDex.WebApi.Extensions;
+using System.Security.Claims;
 namespace RpgDex.WebApi.Controllers
 {
     [Route("api/[controller]")]
@@ -22,7 +23,7 @@ namespace RpgDex.WebApi.Controllers
         private readonly IAuthService _authSerice;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApiSettings _settings;
-
+        private  string currentUser => User.FindFirst(ClaimTypes.NameIdentifier).Value;
         private string[] authRedirectWhitelist = ["/","/perfil"];
 
         public AuthController(IAuthService authSerice, SignInManager<ApplicationUser> signInManager, IOptions<ApiSettings> settings)
@@ -121,10 +122,10 @@ namespace RpgDex.WebApi.Controllers
             return Redirect($"{_settings.UIBaseUrl}/auth/callback?token={token}&refreshToken={refreshToken}&redirectPage={filteredRedirect()}");
         } 
 
-        [HttpGet("AuthOptions/{userId}")]
-        public async Task<IActionResult> GetUserAuthOptions(Guid userId)
+        [HttpGet("AuthOptions")]
+        public async Task<IActionResult> GetUserAuthOptions()
         {
-            var result = await _authSerice.GetUserAuthOptions(userId);
+            var result = await _authSerice.GetUserAuthOptions(currentUser);
             return result.ToIActionResult();
 
         }

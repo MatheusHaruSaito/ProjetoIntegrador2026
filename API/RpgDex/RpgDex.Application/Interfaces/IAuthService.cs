@@ -14,7 +14,7 @@ namespace RpgDex.Application.Interfaces
         Task<Result<RefreshTokenModel>> ValidateTwoFactor(ValidateTwoFactorRequest request);
         Task<Result<string>> RequestTwoFAActivation(ValidateTwoFactorRequest request);
         Task<Result<string>> SendTwoFactorAuthEmailRequest(TwoFactorAuthEmailRequest Id);
-        Task<Result<AuthOptionsResponse>> GetUserAuthOptions(Guid UserId);
+        Task<Result<AuthOptionsResponse>> GetUserAuthOptions(string userId);
         Task<Result<RefreshTokenModel>> DiscordSignUp();
         Task<Result<RefreshTokenModel>> GoogleSignUp(GoogleLoginRequest request);
         Task<Result<RefreshTokenModel>> RefreshTokenAsync(RefreshTokenModel refreshToken);
