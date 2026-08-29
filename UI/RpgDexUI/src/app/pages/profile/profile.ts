@@ -47,6 +47,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.initTheme();
     this.loadUser();
+    this.loadCharacterPreview();
   }
 
   private initTheme(): void {
@@ -82,8 +83,7 @@ export class ProfileComponent implements OnInit {
 
         if (this.user?.id) {
           this.loadAuthOptions(this.user.id);
-          this.loadCharacterPreview();
-          this.loadCampaignPreview();
+          this.loadCampaignPreview(); //Change this later
         }
       },
       error: (err) => {
@@ -112,6 +112,7 @@ export class ProfileComponent implements OnInit {
         this.characterTotal = all.length;
         this.characterPreview = all.slice(0, 3);
         this.cdr.detectChanges();
+        console.log(response);
       },
       error: (err) => console.error('Erro ao carregar personagens', err),
     });
