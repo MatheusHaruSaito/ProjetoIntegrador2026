@@ -21,18 +21,23 @@ namespace RpgDex.Application.Services
     {
         private readonly ICharacterRepository _character = character;
 
-        public async Task<Result<CharacterResponse>> Create(CreateCharacterRequest request)
+        public async Task<Result<CharacterResponse>> Create(string userId,CreateCharacterRequest request)
         {
             var checkCharacterValid = createCharacterRequestValidator.Validate(request);
             if (!checkCharacterValid.IsValid) return checkCharacterValid.ReturnErrors<CharacterResponse>();
             //Converts request to character
             var character = request.Adapt<Character>();
             character.Id = Guid.NewGuid();
-            character.UserId = request.UserId;
 
-            //Verifies if character exists
-            var user = await userRepository.GetByIdAsync(request.UserId);
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<CharacterResponse>.Failure("Invalid User ID format.");
+
+            //Verifies if user exists
+            var user = await userRepository.GetByIdAsync(guidUserId);
             if (user is null) return Result<CharacterResponse>.Failure("User Not Found");
+
+
+            character.UserId = guidUserId;
+
 
             if (request.Icon is not null)
             {
@@ -51,7 +56,7 @@ namespace RpgDex.Application.Services
             var response = await _character.InsertAsync(character);
 
             //push character to user list
-            var data = await userRepository.PushCharacterAsync(request.UserId, response.Id);
+            var data = await userRepository.PushCharacterAsync(guidUserId, response.Id);
             if (!data) return Result<CharacterResponse>.Failure("Failed to add character to user");
 
             return Result<CharacterResponse>.Success(response.Adapt<CharacterResponse>());

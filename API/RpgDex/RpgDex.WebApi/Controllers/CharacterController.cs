@@ -5,6 +5,7 @@ using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
 using RpgDex.Application.Interfaces;
 using RpgDex.WebApi.Extensions;
+using System.Security.Claims;
 
 
 namespace RpgDex.WebApi.Controllers
@@ -22,15 +23,15 @@ namespace RpgDex.WebApi.Controllers
             [HttpPost]
             public async Task<IActionResult> CreateCharacter(CreateCharacterRequest request)
             {
-           
-                var result = await _characterSevice.Create(request);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+            var result = await _characterSevice.Create(userId.Value, request);
                 return result.ToIActionResult();
             }
 
             [HttpGet("{userId}/All")]
             public async Task<IActionResult> GetAllByUserId(Guid userId)
             {
-                var result = await _characterSevice.GetAllByUserIdAsync(userId);
+            var result = await _characterSevice.GetAllByUserIdAsync(userId);
                 return result.ToIActionResult();
 
             }

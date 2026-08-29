@@ -9,7 +9,7 @@ namespace RpgDex.Application.Interfaces
 {
     public interface ICharacterService
     {
-        Task<Result<CharacterResponse>> Create(CreateCharacterRequest request);
+        Task<Result<CharacterResponse>> Create(string userId,CreateCharacterRequest request);
         Task<Result<IEnumerable<CharacterResponse>>> GetAllByUserIdAsync(Guid userId);
         Task<Result<CharacterResponse>> GetByIdAsync(Guid Id);
         Task<Result<bool>> UpdateAsync(UpdateCharacterRequest request);

@@ -11,7 +11,6 @@ namespace RpgDex.Application.Dto
         public string Name { get; set; }
         public string? Description { get; set; }
         public IFormFile? Icon { get; set; }
-        public Guid UserId { get; set; }
         public string? Properties { get; set; }
 
     }

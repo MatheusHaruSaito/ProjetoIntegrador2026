@@ -1,5 +1,4 @@
 export interface CreateCharacter {
-  userId: string;
   icon: File;
   name: string;
   description?: string;
