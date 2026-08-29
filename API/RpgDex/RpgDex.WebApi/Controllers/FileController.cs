@@ -8,7 +8,6 @@ namespace RpgDex.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class FileController : ControllerBase
     {
         private readonly IFileService _fileService;
