@@ -105,12 +105,20 @@ namespace RpgDex.Application.Services
             return Result<CharacterResponse>.Success(response);
         }
 
-        public async Task<Result<bool>> UpdateAsync(UpdateCharacterRequest request)
+        public async Task<Result<bool>> UpdateAsync(string userId, UpdateCharacterRequest request)
         {
            var checkUpdateCharacterRequest = updateCharacterRequestValidator.Validate(request);
             if (!checkUpdateCharacterRequest.IsValid) return checkUpdateCharacterRequest.ReturnErrors<bool>();
+
             var updateCharacter = request.Adapt<Character>();
-            if(request.Icon is not null)
+
+            //Verifies if Character is really from user
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<bool>.Failure("Invalid User ID format.");
+            var characterFound = await _character.GetByIdAsync(request.Id);
+
+            if (!guidUserId.Equals(characterFound.UserId)) return Result<bool>.Failure("Unauthorized User");
+
+            if (request.Icon is not null)
             {
                 try
                 {
@@ -123,7 +131,7 @@ namespace RpgDex.Application.Services
             }
             else
             {
-                var characterFound = await _character.GetByIdAsync(request.Id);
+              
                 if (characterFound is null) return Result<bool>.Failure("Character not found");
                 updateCharacter.IconPath = characterFound.IconPath;
             }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using RpgDex.Application.Common;
@@ -14,6 +15,7 @@ namespace RpgDex.WebApi.Controllers
         [ApiController]
         public class CharacterController : ControllerBase
         {
+        private string? currentUser => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             private readonly ICharacterService _characterSevice;
             public CharacterController(ICharacterService characterSevice)
             {
@@ -23,16 +25,14 @@ namespace RpgDex.WebApi.Controllers
             [HttpPost]
             public async Task<IActionResult> CreateCharacter(CreateCharacterRequest request)
             {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
-            var result = await _characterSevice.Create(userId.Value, request);
+            var result = await _characterSevice.Create(currentUser, request);
                 return result.ToIActionResult();
             }
 
             [HttpGet("All")]
             public async Task<IActionResult> GetAllByUserId()
             {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
-            var result = await _characterSevice.GetAllByUserIdAsync(userId.Value);
+            var result = await _characterSevice.GetAllByUserIdAsync(currentUser);
                 return result.ToIActionResult();
 
             }
@@ -56,8 +56,7 @@ namespace RpgDex.WebApi.Controllers
             [HttpPut]
             public async Task<IActionResult> Update(UpdateCharacterRequest request)
             {
-
-                var result = await _characterSevice.UpdateAsync(request);
+            var result = await _characterSevice.UpdateAsync(currentUser, request);
                 return result.ToIActionResult();
             }
             
