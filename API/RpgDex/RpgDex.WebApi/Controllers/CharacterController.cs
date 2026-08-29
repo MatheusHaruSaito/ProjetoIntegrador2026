@@ -13,6 +13,7 @@ namespace RpgDex.WebApi.Controllers
         {
         [Route("api/[controller]")]
         [ApiController]
+        [Authorize]
         public class CharacterController : ControllerBase
         {
         private string? currentUser => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
