@@ -60,7 +60,7 @@ namespace RpgDex.WebApi.Controllers
         public async Task<IActionResult> JoinCampaignRequest(JoinCampaignRequest request)
         {
 
-            var result = await _campaignService.AddPlayer(request);
+            var result = await _campaignService.AddPlayer(request, currentUser);
             return result.ToIActionResult();
         }
         [HttpPut("AddCharacter")]

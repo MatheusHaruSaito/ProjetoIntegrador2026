@@ -186,7 +186,7 @@ namespace RpgDex.Application.Services
             return Result<bool>.Success(result);
         }
 
-        public async Task<Result<string>> AddPlayer(JoinCampaignRequest request)
+        public async Task<Result<string>> AddPlayer(JoinCampaignRequest request, string userId)
         {
             var campaign = await campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaign is null)
@@ -195,17 +195,20 @@ namespace RpgDex.Application.Services
             }
             //Campaign found
 
-            var player = await userRepository.GetByIdAsync(request.PlayerId);
-            if(player is null)
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<string>.Failure("Invalid User ID format.");
+
+
+            var user = await userRepository.GetByIdAsync(guidUserId);
+            if(user is null)
             {
-                return Result<string>.Failure("Player not found");
+                return Result<string>.Failure("User not found");
             }
             //Player found
             var isValid = ValidatePassword(campaign, request.Password);
             if (!isValid) {
                 return Result<string>.Failure("Invalid Password");
             }
-            var (message, IsSuccess) = campaign.TryAddPlayer(request.PlayerId);
+            var (message, IsSuccess) = campaign.TryAddPlayer(guidUserId);
             if (!IsSuccess)
             {
                 return Result<string>.Failure(message);
