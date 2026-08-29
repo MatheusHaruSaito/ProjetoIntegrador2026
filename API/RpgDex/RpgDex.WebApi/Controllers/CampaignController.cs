@@ -53,27 +53,27 @@ namespace RpgDex.WebApi.Controllers
         public async Task<IActionResult> SetActiveState(CampaignSetActiveStateRequest request)
         {
 
-            var result = await _campaignService.SetActiveState(request, currentUser );
+            var result = await _campaignService.SetActiveState(currentUser, request);
             return result.ToIActionResult();
         }
         [HttpPut("AddPlayer")]
         public async Task<IActionResult> JoinCampaignRequest(JoinCampaignRequest request)
         {
 
-            var result = await _campaignService.AddPlayer(request, currentUser);
+            var result = await _campaignService.AddPlayer(currentUser, request);
             return result.ToIActionResult();
         }
         [HttpPut("AddCharacter")]
         public async Task<IActionResult> AddCharacterRequest(AddCharacterToCampaignRequest request)
         {
 
-            var result = await _campaignService.AddCharacter(request, currentUser);
+            var result = await _campaignService.AddCharacter(currentUser, request);
             return result.ToIActionResult();
         }
         [HttpPut("AcceptCharacter")]
         public async Task<IActionResult> AcceptCharacter(AcceptCharacterToCampaignRequest request)
         {
-            var result = await _campaignService.AcceptCharacter(request, currentUser);
+            var result = await _campaignService.AcceptCharacter(currentUser, request);
             return result.ToIActionResult();
         }
 
@@ -81,7 +81,7 @@ namespace RpgDex.WebApi.Controllers
         public async Task<IActionResult> RemovePlayer(RemovePlayerFromCampaignRequest request)
         {
 
-            var result = await _campaignService.RemovePlayer(request,currentUser);
+            var result = await _campaignService.RemovePlayer(currentUser, request);
             return result.ToIActionResult();
         }
         [HttpPut("UpdateSettings")]

@@ -166,7 +166,7 @@ namespace RpgDex.Application.Services
             return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
         }
 
-        public async Task<Result<bool>> SetActiveState(CampaignSetActiveStateRequest request, string userId)
+        public async Task<Result<bool>> SetActiveState(string userId, CampaignSetActiveStateRequest request)
         {
 
             var campaign = await campaignRepository.GetByIdAsync(request.Id);
@@ -186,7 +186,7 @@ namespace RpgDex.Application.Services
             return Result<bool>.Success(result);
         }
 
-        public async Task<Result<string>> AddPlayer(JoinCampaignRequest request, string userId)
+        public async Task<Result<string>> AddPlayer(string userId, JoinCampaignRequest request)
         {
             var campaign = await campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaign is null)
@@ -223,7 +223,7 @@ namespace RpgDex.Application.Services
             return Result<string>.Success("Player added to campaign successfully");
         }
 
-        public async Task<Result<string>> AddCharacter(AddCharacterToCampaignRequest request, string userId)
+        public async Task<Result<string>> AddCharacter(string userId, AddCharacterToCampaignRequest request)
         {
             var characterFound = await characterRepository.GetByIdAsync(request.CharacterId);
             if(characterFound is null) {
@@ -255,7 +255,7 @@ namespace RpgDex.Application.Services
         }
 
 
-        public async Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request, string userId)
+        public async Task<Result<string>> AcceptCharacter(string userId, AcceptCharacterToCampaignRequest request)
         {
             var characterFound = await characterRepository.GetByIdAsync(request.CharacterId);
             if (characterFound is null)
@@ -305,7 +305,7 @@ namespace RpgDex.Application.Services
             return Result<string>.Success(chracterAdded.message);
         }
 
-        public async Task<Result<string>> RemovePlayer(RemovePlayerFromCampaignRequest request, string userId)
+        public async Task<Result<string>> RemovePlayer(string userId, RemovePlayerFromCampaignRequest request)
         {
             var campaignFound = await campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaignFound is null)
