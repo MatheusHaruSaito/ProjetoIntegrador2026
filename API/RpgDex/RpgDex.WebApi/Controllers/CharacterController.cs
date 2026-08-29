@@ -28,10 +28,11 @@ namespace RpgDex.WebApi.Controllers
                 return result.ToIActionResult();
             }
 
-            [HttpGet("{userId}/All")]
-            public async Task<IActionResult> GetAllByUserId(Guid userId)
+            [HttpGet("/All")]
+            public async Task<IActionResult> GetAllByUserId()
             {
-            var result = await _characterSevice.GetAllByUserIdAsync(userId);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+            var result = await _characterSevice.GetAllByUserIdAsync(userId.Value);
                 return result.ToIActionResult();
 
             }

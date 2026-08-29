@@ -72,7 +72,7 @@ namespace RpgDex.Application.Services
             bool modified = await _character.SetActiveState(Id,ActiveState);
             if (!modified) return Result<CharacterResponse>.Failure("Failed to deactivate character");
 
-            //Verifica se o Personagem foi deletado do Usuario
+            //Verifies if the character is removed
             //bool deletedFromUser = await _userRepository.PullCharacterAsync(characterFound.UserId, Id);
             //if (!deletedFromUser)
             //{
@@ -81,10 +81,12 @@ namespace RpgDex.Application.Services
             return Result<CharacterResponse>.Success(characterFound.Adapt<CharacterResponse>());
         }
 
-        public async Task<Result<IEnumerable<CharacterResponse>>> GetAllByUserIdAsync(Guid userId)
+        public async Task<Result<IEnumerable<CharacterResponse>>> GetAllByUserIdAsync(string userId)
         {
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<IEnumerable<CharacterResponse>>.Failure("Invalid User ID format.");
+
             //Return all characters
-            var characters =  await _character.GetAllByUserIdAsync(userId);
+            var characters =  await _character.GetAllByUserIdAsync(guidUserId);
             if (characters is null) return Result<IEnumerable<CharacterResponse>>.Failure("Failed to get character");
 
             var response = characters.Adapt<List<CharacterResponse>>();
