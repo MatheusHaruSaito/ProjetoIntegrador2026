@@ -2,6 +2,8 @@
 using RpgDex.Application.Interfaces;
 using RpgDex.Domain.Entities;
 using RpgDex.Domain.Interfaces;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Webp;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,19 +26,39 @@ namespace RpgDex.Application.Services
 
         public async Task<string> UploadFileAsync(IFormFile file, string fileName)
         {
-            if (file != null && file.Length > 0)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await file.CopyToAsync(memoryStream);
-                    memoryStream.Position = 0;
+            //if (file != null && file.Length > 0)
+            //{
+            //    using (var memoryStream = new MemoryStream())
+            //    {
+            //        await file.CopyToAsync(memoryStream);
+            //        memoryStream.Position = 0;
 
-                    var Extension = Path.GetExtension(file.FileName);
-                    var ServerfileName = $"{fileName}_icon{Extension}";
-                    return await _fileRepository.UploadFileAsync(ServerfileName, memoryStream);
-                }
+            //        var Extension = Path.GetExtension(file.FileName);
+            //        var ServerfileName = $"{fileName}_icon{Extension}";
+            //        return await _fileRepository.UploadFileAsync(ServerfileName, memoryStream);
+            //    }
+            //}
+            //throw new ArgumentException("File is null or empty");
+            
+            if (file == null || file.Length == 0)
+            {
+                throw new ArgumentException("File is null or empty");
             }
-            throw new ArgumentException("File is null or empty");
+            using var inputStream = file.OpenReadStream();
+            using var outputStream = new MemoryStream();
+
+            using (var image = await Image.LoadAsync(inputStream))
+            {
+                var encoder = new WebpEncoder
+                {
+                    Quality = 80
+                };
+                await image.SaveAsync(outputStream, encoder);
+            }
+            outputStream.Position = 0;
+                var ServerfileName = $"{fileName}_icon.webp";
+            return await _fileRepository.UploadFileAsync(ServerfileName, outputStream);
+
         }
         private string GetImageContentType(byte[] bytes)
         {
