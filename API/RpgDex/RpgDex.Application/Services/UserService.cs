@@ -25,11 +25,11 @@ namespace RpgDex.Application.Services
             return Result<UserResponse>.Success(userResponse);
         }
 
-        public async Task<Result<string>> UpdateUserProfileAsync(Guid Id,UpdateUserProfileDTO updatedUser)
+        public async Task<Result<string>> UpdateUserProfileAsync(string userId,UpdateUserProfileDTO updatedUser)
         {
             var checkUpdateUserValid = updateUserProfileValidator.Validate(updatedUser);
             if (!checkUpdateUserValid.IsValid) return checkUpdateUserValid.ReturnErrors<string>();
-            var user = await userManager.FindByIdAsync(Id.ToString());
+            var user = await userManager.FindByIdAsync(userId);
 
             if(user is null)
             {

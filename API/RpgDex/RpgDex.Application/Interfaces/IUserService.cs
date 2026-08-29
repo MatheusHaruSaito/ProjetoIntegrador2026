@@ -8,7 +8,7 @@ namespace RpgDex.Application.Interfaces
 {
     public interface IUserService
     {
-        Task<Result<string>> UpdateUserProfileAsync(Guid Id,UpdateUserProfileDTO updatedUser);
+        Task<Result<string>> UpdateUserProfileAsync(string userId,UpdateUserProfileDTO updatedUser);
         Task<Result<UserResponse>> GetUserById(Guid Id);
 
     }
