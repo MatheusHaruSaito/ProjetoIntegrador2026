@@ -255,7 +255,7 @@ namespace RpgDex.Application.Services
         }
 
 
-        public async Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request)
+        public async Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request, string userId)
         {
             var characterFound = await characterRepository.GetByIdAsync(request.CharacterId);
             if (characterFound is null)
@@ -270,14 +270,10 @@ namespace RpgDex.Application.Services
                 return Result<string>.Failure("Campaign not found");
             }
             //Campaign found
-            var userFound = await userRepository.GetByIdAsync(request.UserId);
-            if (userFound is null)
-            {
-                return Result<string>.Failure("Logged-in user not found");
-            }
-            //User found
 
-            var isUserGameMaster = campaignFound.GameMasterId == userFound.Id;
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<string>.Failure("Invalid User ID format");
+
+            var isUserGameMaster = campaignFound.GameMasterId.Equals(guidUserId);
             if (!isUserGameMaster)
             {
                 return Result<string>.Failure("Only the game master can accept or reject characters");

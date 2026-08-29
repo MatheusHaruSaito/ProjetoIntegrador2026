@@ -16,7 +16,7 @@ namespace RpgDex.Application.Interfaces
         public Task<Result<bool>> SetActiveState(CampaignSetActiveStateRequest request,string userId);
         public Task<Result<string>> AddPlayer(JoinCampaignRequest request,string userId);
         public Task<Result<string>> AddCharacter(AddCharacterToCampaignRequest request, string userId);
-        public Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request);
+        public Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request,string userId);
         public Task<Result<string>> RemovePlayer(RemovePlayerFromCampaignRequest request);
         public Task<Result<string>> UpdateConfiguration(UpdateCampaignSettingsRequest request);
 

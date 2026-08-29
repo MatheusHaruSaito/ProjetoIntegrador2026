@@ -73,8 +73,7 @@ namespace RpgDex.WebApi.Controllers
         [HttpPut("AcceptCharacter")]
         public async Task<IActionResult> AcceptCharacter(AcceptCharacterToCampaignRequest request)
         {
-
-            var result = await _campaignService.AcceptCharacter(request);
+            var result = await _campaignService.AcceptCharacter(request, currentUser);
             return result.ToIActionResult();
         }
 
