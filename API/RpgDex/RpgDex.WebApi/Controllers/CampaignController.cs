@@ -49,11 +49,11 @@ namespace RpgDex.WebApi.Controllers
             var result = await _campaignService.Update(currentUser ,request);
             return result.ToIActionResult();
         }
-        [HttpPut("SetActiveState/{Id}")]
-        public async Task<IActionResult> SetActiveState(Guid Id, bool state)
+        [HttpPut("SetActiveState")]
+        public async Task<IActionResult> SetActiveState(CampaignSetActiveStateRequest request)
         {
 
-            var result = await _campaignService.SetActiveState(Id, state);
+            var result = await _campaignService.SetActiveState(request, currentUser );
             return result.ToIActionResult();
         }
         [HttpPut("AddPlayer")]

@@ -166,9 +166,19 @@ namespace RpgDex.Application.Services
             return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
         }
 
-        public async Task<Result<bool>> SetActiveState(Guid Id, bool activeState)
+        public async Task<Result<bool>> SetActiveState(CampaignSetActiveStateRequest request, string userId)
         {
-            var result = await campaignRepository.SetActiveState(Id, activeState);
+
+            var campaign = await campaignRepository.GetByIdAsync(request.Id);
+            if (campaign is null)
+            {
+                return Result<bool>.Failure("Campaign not found");
+            }
+
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<bool>.Failure("Invalid User ID format.");
+            if(!campaign.GameMasterId.Equals(guidUserId)) return Result<bool>.Failure("Logged user isn't the game master");
+
+            var result = await campaignRepository.SetActiveState(request.Id, request.State);
             if(!result)
             {
                 return Result<bool>.Failure("Failed to update campaign state");
