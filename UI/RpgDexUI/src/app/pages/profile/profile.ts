@@ -112,7 +112,6 @@ export class ProfileComponent implements OnInit {
         this.characterTotal = all.length;
         this.characterPreview = all.slice(0, 3);
         this.cdr.detectChanges();
-        console.log(response);
       },
       error: (err) => console.error('Erro ao carregar personagens', err),
     });
