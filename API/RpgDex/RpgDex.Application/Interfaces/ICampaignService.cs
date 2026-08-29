@@ -10,7 +10,7 @@ namespace RpgDex.Application.Interfaces
     {
         public Task<Result<CampaignResponse>> Create(CreateCampaignRequest request);
         public Task<Result<IEnumerable<CampaignResponse>>> GetAll();
-        public Task<Result<IEnumerable<CampaignResponse>>> GetAll(Guid userId);
+        public Task<Result<IEnumerable<CampaignResponse>>> GetAllByUserId(string userId);
         public Task<Result<CampaignResponse>> GetById(Guid id);
         public Task<Result<CampaignResponse>> Update(UpdateCampaignRequest request);
         public Task<Result<bool>> SetActiveState(Guid Id, bool activeState);

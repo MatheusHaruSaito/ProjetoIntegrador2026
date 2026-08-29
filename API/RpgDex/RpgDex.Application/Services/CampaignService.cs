@@ -93,19 +93,16 @@ namespace RpgDex.Application.Services
             return Result<IEnumerable<CampaignResponse>>.Success(response.Adapt<IEnumerable<CampaignResponse>>());
         }
 
-        public async Task<Result<IEnumerable<CampaignResponse>>> GetAll(Guid userId)
+        public async Task<Result<IEnumerable<CampaignResponse>>> GetAllByUserId(string userId)
         {
-            var user = await userRepository.GetByIdAsync(userId);
+            if(!Guid.TryParse(userId,out var guidUserId)) return Result<IEnumerable<CampaignResponse>>.Failure("Invalid User ID format.");
+            var user = await userRepository.GetByIdAsync(guidUserId);
             if (user is null)
             {
                 return Result<IEnumerable<CampaignResponse>>.Failure("User Not Logged In");
             }
 
-            var response = await campaignRepository.GetAllAsync(userId);
-            if (!response.Any())
-            {
-                return Result<IEnumerable<CampaignResponse>>.Failure("Failed to retrieve campaigns");
-            }
+            var response = await campaignRepository.GetAllAsync(guidUserId);
             return Result<IEnumerable<CampaignResponse>>.Success(response.Adapt<IEnumerable<CampaignResponse>>());
         }
 

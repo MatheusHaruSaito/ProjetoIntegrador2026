@@ -5,6 +5,7 @@ using RpgDex.Application.Dto;
 using RpgDex.Application.Interfaces;
 using RpgDex.Application.Services;
 using RpgDex.WebApi.Extensions;
+using System.Security.Claims;
 
 namespace RpgDex.WebApi.Controllers
 {
@@ -12,6 +13,7 @@ namespace RpgDex.WebApi.Controllers
     [ApiController]
     public class CampaignController : ControllerBase
     {
+        private string currentUser => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         ICampaignService _campaignService;
         public CampaignController(ICampaignService campaignService)
         {
@@ -23,10 +25,10 @@ namespace RpgDex.WebApi.Controllers
             var result = await _campaignService.GetAll();
             return result.ToIActionResult();
         }
-        [HttpGet("{userId}/All")]
-        public async Task<IActionResult> GetAll(Guid userId)
+        [HttpGet("All")]
+        public async Task<IActionResult> GetAllByUserId()
         {
-            var result = await _campaignService.GetAll(userId);
+            var result = await _campaignService.GetAllByUserId(currentUser);
             return result.ToIActionResult();
         }
         [HttpGet("{id}")]
