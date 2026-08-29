@@ -123,7 +123,6 @@ export class CampaignsComponent implements OnInit {
     this.campaignService
       .AddPlayer({
         campaignId: payload.campaignId,
-        playerId: this.currentUserId,
         password: payload.password,
       })
       .subscribe({

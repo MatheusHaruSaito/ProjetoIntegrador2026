@@ -265,7 +265,6 @@ export class CampaignDetailComponent implements OnInit {
     this.campaignService
       .AddPlayer({
         campaignId: this.campaign.id,
-        playerId: this.currentUserId,
         password: this.joinPassword,
       })
       .subscribe({
