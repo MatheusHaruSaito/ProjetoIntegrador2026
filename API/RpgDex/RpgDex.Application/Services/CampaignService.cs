@@ -339,7 +339,7 @@ namespace RpgDex.Application.Services
             return Result<string>.Success(message);
         }
 
-        public async Task<Result<string>> UpdateConfiguration(UpdateCampaignSettingsRequest request)
+        public async Task<Result<string>> UpdateConfiguration(string userId, UpdateCampaignSettingsRequest request)
         {
             var campaignFound = await campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaignFound is null)
@@ -347,6 +347,14 @@ namespace RpgDex.Application.Services
                 return Result<string>.Failure("Campaign not found");
             }
 
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<string>.Failure("Invalid User ID format");
+            var isUserGameMaster = campaignFound.GameMasterId.Equals(guidUserId);
+
+
+            if (!isUserGameMaster)
+            {
+                return Result<string>.Failure("Only the game master can update configurations");
+            }
             campaignFound.UpdateSettings(request.Adapt<CampaignSettings>());
 
             var updatedCampaign = await campaignRepository.UpdateAsync(campaignFound);

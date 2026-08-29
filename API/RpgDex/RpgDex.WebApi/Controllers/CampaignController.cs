@@ -88,7 +88,7 @@ namespace RpgDex.WebApi.Controllers
         public async Task<IActionResult> UpdateSettings(UpdateCampaignSettingsRequest request)
         {
 
-            var result = await _campaignService.UpdateConfiguration(request);
+            var result = await _campaignService.UpdateConfiguration(currentUser,request);
             return result.ToIActionResult();
         }
     }
