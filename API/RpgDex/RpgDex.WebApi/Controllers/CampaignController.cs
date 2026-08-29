@@ -40,7 +40,7 @@ namespace RpgDex.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateCampaignRequest request)
         {
-            var result = await _campaignService.Create(request);
+            var result = await _campaignService.Create(currentUser, request);
             return result.ToIActionResult();
         }
         [HttpPut]

@@ -42,18 +42,22 @@ namespace RpgDex.Application.Services
             }
             return true;
         }
-        public async Task<Result<CampaignResponse>> Create(CreateCampaignRequest request)
+        public async Task<Result<CampaignResponse>> Create(string userId, CreateCampaignRequest request)
         {
             var checkCreateCampaignRequest = createCampaignRequestValidator.Validate(request);
             if (!checkCreateCampaignRequest.IsValid) return checkCreateCampaignRequest.ReturnErrors<CampaignResponse>();
-            var userExisits = await userRepository.GetByIdAsync(request.GameMasterId);
+
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<CampaignResponse>.Failure("Invalid User ID format.");
+
+
+            var userExisits = await userRepository.GetByIdAsync(guidUserId);
             if(userExisits is null)
             {
                 return Result<CampaignResponse>.Failure("User Not Logged In");
             }
 
             var campaign = request.Adapt<Campaign>();
-
+            campaign.GameMasterId = guidUserId;
             campaign.SetPasswordHash(HashPassword(campaign,request.Password));
 
             //Temporary, change when subscriptions are defined

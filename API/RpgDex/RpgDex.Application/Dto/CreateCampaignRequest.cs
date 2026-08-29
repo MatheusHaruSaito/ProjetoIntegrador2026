@@ -12,7 +12,6 @@ namespace RpgDex.Application.Dto
         public string? Password { get; set; }
         public int MaxPlayers { get; set; }
         public IFormFile? Icon { get; set; }
-        public Guid GameMasterId { get; set; }
 
     }
 }
