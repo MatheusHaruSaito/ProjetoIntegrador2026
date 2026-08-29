@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, Output, inject, ChangeDetectorRef, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  inject,
+  ChangeDetectorRef,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth-service';
@@ -47,7 +56,7 @@ export class SettingsModalComponent implements OnChanges {
           this.cdr.detectChanges();
         }
       },
-      error: (err) => console.error('Erro ao recarregar opções de auth:', err)
+      error: (err) => console.error('Erro ao recarregar opções de auth:', err),
     });
   }
 
@@ -72,7 +81,7 @@ export class SettingsModalComponent implements OnChanges {
     this.isSending2FAEmail = true;
     this.settingsMessage = { text: '', type: '' };
 
-    this.authService.SendTwoFactorAuthEmail({ userId }).subscribe({
+    this.authService.SendTwoFactorAuthEmail().subscribe({
       next: (response: any) => {
         this.isSending2FAEmail = false;
 
@@ -86,7 +95,8 @@ export class SettingsModalComponent implements OnChanges {
           };
         } else {
           this.settingsMessage = {
-            text: response?.message || response?.error || 'Erro ao solicitar código de verificação.',
+            text:
+              response?.message || response?.error || 'Erro ao solicitar código de verificação.',
             type: 'error',
           };
         }
