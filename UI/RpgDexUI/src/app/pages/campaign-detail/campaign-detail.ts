@@ -115,7 +115,8 @@ export class CampaignDetailComponent implements OnInit {
         this.campaign = res.data;
         if (this.campaign) {
           this.isGameMaster = this.campaign.gameMasterId === this.currentUserId;
-          this.isPlayerInCampaign = !!this.campaign.playerIds?.includes(this.currentUserId) || this.isGameMaster;
+          this.isPlayerInCampaign =
+            !!this.campaign.playerIds?.includes(this.currentUserId) || this.isGameMaster;
 
           // Sincroniza a configuração de aprovação sem sobrescrever seleções pendentes de tela
           this.requireApproval = this.campaign.requireApprovalForCharacters ?? true;
@@ -167,8 +168,7 @@ export class CampaignDetailComponent implements OnInit {
   }
 
   loadMyCharacters(): void {
-    if (!this.currentUserId) return;
-    this.characterService.GetAll(this.currentUserId).subscribe({
+    this.characterService.GetAll().subscribe({
       next: (res) => {
         this.myCharacters = res.data ?? [];
         this.cdr.detectChanges();
@@ -276,7 +276,7 @@ export class CampaignDetailComponent implements OnInit {
         error: (err) =>
           this.showFeedback(
             this.getErrorMessage(err, 'Erro ao entrar na campanha. Verifique a senha.'),
-            true
+            true,
           ),
       });
   }
@@ -295,14 +295,14 @@ export class CampaignDetailComponent implements OnInit {
           this.selectedGmCharacterId = '';
           this.selectedCharacterId = '';
           this.showFeedback('Ficha vinculada/enviada com sucesso!');
-          
+
           // Atualiza apenas as listas sem resetar o layout
           this.loadCampaign(true);
         },
         error: (err) =>
           this.showFeedback(
             this.getErrorMessage(err, 'Não foi possível vincular o personagem.'),
-            true
+            true,
           ),
       });
   }
@@ -325,7 +325,7 @@ export class CampaignDetailComponent implements OnInit {
         error: (err) =>
           this.showFeedback(
             this.getErrorMessage(err, 'Erro ao processar solicitação de personagem.'),
-            true
+            true,
           ),
       });
   }
@@ -333,9 +333,10 @@ export class CampaignDetailComponent implements OnInit {
   removePlayer(userId: string): void {
     if (!this.campaign) return;
 
-    const confirmMsg = userId === this.currentUserId 
-      ? 'Tem certeza de que deseja sair desta campanha?' 
-      : 'Tem certeza de que deseja remover este jogador?';
+    const confirmMsg =
+      userId === this.currentUserId
+        ? 'Tem certeza de que deseja sair desta campanha?'
+        : 'Tem certeza de que deseja remover este jogador?';
 
     if (!confirm(confirmMsg)) return;
 
@@ -396,7 +397,7 @@ export class CampaignDetailComponent implements OnInit {
         this.showFeedback(
           this.requireApproval
             ? 'Aprovação manual ativada com sucesso!'
-            : 'Aprovação manual desativada. Novos personagens entrarão diretamente.'
+            : 'Aprovação manual desativada. Novos personagens entrarão diretamente.',
         );
       },
       error: (err) => {
@@ -405,7 +406,7 @@ export class CampaignDetailComponent implements OnInit {
         this.cdr.detectChanges();
         this.showFeedback(
           this.getErrorMessage(err, 'Erro ao atualizar configurações da campanha.'),
-          true
+          true,
         );
       },
     });

@@ -1,4 +1,12 @@
-import { Component, OnDestroy, OnInit, signal, computed, inject, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  signal,
+  computed,
+  inject,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
@@ -75,7 +83,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       band: 'linear-gradient(90deg, #3d2b1f, #8b4513)',
     },
     {
-      // TEMA 3: CYBERPUNK 
+      // TEMA 3: CYBERPUNK
       tag: '⚡ Cyberpunk',
       phrase: 'Um final feliz? Para gente como nós? Cidade errada, pessoas erradas.',
       font: "'Orbitron', sans-serif",
@@ -99,7 +107,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       gc: 'rgba(255, 0, 0, 0.15)',
       tagBg: 'rgba(255, 0, 0, 0.2)',
       tagC: '#ff4d4d',
-      titleC: '#ff2828', 
+      titleC: '#ff2828',
       phraseC: '#ff4d4d',
       subC: '#999',
       ctaBg: '#cc0000',
@@ -127,15 +135,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private loadCharacterPreview(): void {
-    const userId = this.authService.getLoggedUserId();
-    this.characterService.GetAll(userId!).subscribe({
+    this.characterService.GetAll().subscribe({
       next: (response) => {
         const all: Character[] = response.data ?? [];
         this.characterTotal = all.length;
         this.characterPreview = all.slice(0, 4);
         this.cdr.detectChanges();
       },
-      error: () => {}
+      error: () => {},
     });
   }
 

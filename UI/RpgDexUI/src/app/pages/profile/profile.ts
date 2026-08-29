@@ -106,10 +106,7 @@ export class ProfileComponent implements OnInit {
   }
 
   private loadCharacterPreview(): void {
-    const userId = this.authService.getLoggedUserId();
-    if (!userId) return;
-
-    this.characterService.GetAll(userId).subscribe({
+    this.characterService.GetAll().subscribe({
       next: (response) => {
         const all: Character[] = response.data ?? [];
         this.characterTotal = all.length;

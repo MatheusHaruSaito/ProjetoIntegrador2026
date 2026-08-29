@@ -16,7 +16,7 @@ const LAST_ACCESSED_KEY = 'rpgdex-last-accessed-chars';
   standalone: true,
   imports: [CommonModule, RouterModule, CreateJoinCampaignModalComponent],
   templateUrl: './campaigns.html',
-  styleUrls: ['./campaigns.css']
+  styleUrls: ['./campaigns.css'],
 })
 export class CampaignsComponent implements OnInit {
   private characterService = inject(CharacterService);
@@ -44,27 +44,30 @@ export class CampaignsComponent implements OnInit {
     this.campaignService.GetAll().subscribe({
       next: (r) => {
         const allCampaigns: Campaign[] = r.data ?? [];
-        this.myCampaigns = allCampaigns.filter(c => 
-          c.gameMasterId === this.currentUserId || (c.playerIds && c.playerIds.includes(this.currentUserId))
+        this.myCampaigns = allCampaigns.filter(
+          (c) =>
+            c.gameMasterId === this.currentUserId ||
+            (c.playerIds && c.playerIds.includes(this.currentUserId)),
         );
 
         this.cdr.detectChanges();
       },
-      error: () => { }
+      error: () => {},
     });
   }
 
   private loadCharacters(): void {
-    this.characterService.GetAll(this.currentUserId).subscribe({
+    this.characterService.GetAll().subscribe({
       next: (r) => {
         const all = r.data ?? [];
-        const filtered = all.filter(c => c.userId === this.currentUserId);
-        
+        const filtered = all.filter((c) => c.userId === this.currentUserId);
+
+        //Criar paginamento na api dps (Refatorar)
         // Ordena por último acesso e limita aos 5 mais recentes
         this.myCharacters = this.sortByLastAccessed(filtered).slice(0, 5);
         this.cdr.detectChanges();
       },
-      error: () => { }
+      error: () => {},
     });
   }
 
@@ -118,22 +121,24 @@ export class CampaignsComponent implements OnInit {
     formData.append('gameMasterId', this.currentUserId);
     this.campaignService.Post(formData as any).subscribe({
       next: () => this.loadCampaigns(),
-      error: () => { }
+      error: () => {},
     });
   }
 
   handleJoinCampaign(payload: { campaignId: string; password?: string }): void {
-    this.campaignService.AddPlayer({
-      campaignId: payload.campaignId,
-      playerId: this.currentUserId,
-      password: payload.password
-    }).subscribe({
-      next: () => {
-        alert('Você entrou na campanha!');
-        this.loadCampaigns();
-      },
-      error: () => alert('Erro ao entrar na campanha. Verifique o ID e Senha.')
-    });
+    this.campaignService
+      .AddPlayer({
+        campaignId: payload.campaignId,
+        playerId: this.currentUserId,
+        password: payload.password,
+      })
+      .subscribe({
+        next: () => {
+          alert('Você entrou na campanha!');
+          this.loadCampaigns();
+        },
+        error: () => alert('Erro ao entrar na campanha. Verifique o ID e Senha.'),
+      });
   }
 
   goToCampaignDetail(id: string): void {
@@ -150,6 +155,10 @@ export class CampaignsComponent implements OnInit {
       return 'A Definir';
     }
 
-    return sessionDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+    return sessionDate.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+    });
   }
 }

@@ -30,9 +30,7 @@ export class CharacterList implements OnInit {
   }
 
   GetAllCharacters(): void {
-    const userId = this.authService.getLoggedUserId();
-    if (!userId) return;
-    this.characterService.GetAll(userId).subscribe({
+    this.characterService.GetAll().subscribe({
       next: (response) => {
         this.characterList = response.data ?? [];
         this.onSearch();
@@ -49,7 +47,7 @@ export class CharacterList implements OnInit {
       return;
     }
     this.filteredList = this.characterList.filter((char) =>
-      char.name.toLowerCase().includes(query)
+      char.name.toLowerCase().includes(query),
     );
   }
 
