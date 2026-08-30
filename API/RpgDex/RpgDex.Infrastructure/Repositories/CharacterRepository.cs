@@ -38,7 +38,13 @@ namespace RpgDex.Infrastructure.Services
                 .Limit(pageSize)
                 .ToListAsync();
         }
-
+        public async Task<IEnumerable<Character>> GetAllByUserIdAsync(Guid userId)
+        {
+            var filter = Builders<Character>.Filter.Eq(c => c.UserId, userId)
+                & Builders<Character>.Filter.Eq(c => c.IsActive, true);
+            return await _entitie.Find(filter)
+                .ToListAsync();
+        }
         public async Task<Character> GetByIdAsync(Guid Id)
         {
             return await _entitie.Find(u => u.Id == Id).FirstOrDefaultAsync();
