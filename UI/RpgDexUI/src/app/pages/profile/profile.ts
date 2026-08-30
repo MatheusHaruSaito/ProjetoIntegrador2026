@@ -106,11 +106,11 @@ export class ProfileComponent implements OnInit {
   }
 
   private loadCharacterPreview(): void {
-    this.characterService.GetAll().subscribe({
+    this.characterService.GetAllByPage(1, 3).subscribe({
       next: (response) => {
         const all: Character[] = response.data ?? [];
         this.characterTotal = all.length;
-        this.characterPreview = all.slice(0, 3);
+        this.characterPreview = all;
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Erro ao carregar personagens', err),
