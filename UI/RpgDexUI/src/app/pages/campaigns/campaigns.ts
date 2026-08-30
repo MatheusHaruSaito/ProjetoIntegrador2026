@@ -29,6 +29,8 @@ export class CampaignsComponent implements OnInit {
   myCharacters: Character[] = [];
   currentUserId = '';
 
+  showCharactersCount = 5;
+
   isModalOpen = false;
   activeModalTab: 'create' | 'join' = 'create';
 
@@ -52,14 +54,15 @@ export class CampaignsComponent implements OnInit {
   }
 
   private loadCharacters(): void {
-    this.characterService.GetAll().subscribe({
+    this.characterService.GetAllByPage(1, this.showCharactersCount).subscribe({
       next: (r) => {
         const all = r.data ?? [];
         const filtered = all.filter((c) => c.userId === this.currentUserId);
 
         //Criar paginamento na api dps (Refatorar)
         // Ordena por último acesso e limita aos 5 mais recentes
-        this.myCharacters = this.sortByLastAccessed(filtered).slice(0, 5);
+        //Fazer o filtro pela api
+        this.myCharacters = this.sortByLastAccessed(filtered);
         this.cdr.detectChanges();
       },
       error: () => {},

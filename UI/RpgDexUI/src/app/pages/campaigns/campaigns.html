@@ -1,6 +1,5 @@
 <div class="campaigns-wrapper">
   <div class="cmp-container">
-
     <!-- ── HEADER ── -->
     <div class="cmp-page-header">
       <div>
@@ -15,7 +14,10 @@
     <!-- ── GRID DE CAMPANHAS ── -->
     <div class="cmp-grid" *ngIf="myCampaigns.length > 0">
       <div class="cmp-card" *ngFor="let camp of myCampaigns" (click)="goToCampaignDetail(camp.id)">
-        <div class="cmp-card__cover" [style.background-image]="camp.iconPath ? 'url(' + camp.iconPath + ')' : ''">
+        <div
+          class="cmp-card__cover"
+          [style.background-image]="camp.iconPath ? 'url(' + camp.iconPath + ')' : ''"
+        >
           <div class="cmp-card__cover-fallback" *ngIf="!camp.iconPath">
             <i class="fa fa-map-location-dot"></i>
           </div>
@@ -27,10 +29,12 @@
           <h3 class="cmp-card__title">{{ camp.title }}</h3>
           <p class="cmp-card__desc" *ngIf="camp.description">{{ camp.description }}</p>
           <div class="cmp-card__meta">
-            <span><i class="fa fa-users"></i> {{ camp.playerIds?.length || 0 }}/{{ camp.maxPlayers }}</span>
-            <span>
-              <i class="fa fa-calendar"></i> {{ formatNextSession(camp.nextSession) }}
-            </span>
+            <span
+              ><i class="fa fa-users"></i> {{ camp.playerIds?.length || 0 }}/{{
+                camp.maxPlayers
+              }}</span
+            >
+            <span> <i class="fa fa-calendar"></i> {{ formatNextSession(camp.nextSession) }} </span>
           </div>
         </div>
       </div>
@@ -52,7 +56,9 @@
     </div>
 
     <div class="cmp-section-header-actions">
-      <p class="cmp-section-sub">Exibindo os 5 mais recentes. Clique para abrir diretamente.</p>
+      <p class="cmp-section-sub">
+        Exibindo os {{ showCharactersCount }} mais recentes. Clique para abrir diretamente.
+      </p>
       <a routerLink="/personagens" class="char-see-all-link">
         Ver todos <i class="fa fa-arrow-right"></i>
       </a>
@@ -68,15 +74,24 @@
         </a>
       </div>
 
-      <!-- Item da Lista de Personagens (Máx. 5) -->
-      <div class="char-session-card" *ngFor="let char of myCharacters" (click)="openCharacter(char.id)">
+      <!-- Item da Lista de Personagens (Máx. de {showCharactersCount}) -->
+      <div
+        class="char-session-card"
+        *ngFor="let char of myCharacters"
+        (click)="openCharacter(char.id)"
+      >
         <div class="char-session-card__left">
-          <div class="char-session-avatar" [style.background-image]="char.iconPath ? 'url(' + char.iconPath + ')' : ''">
+          <div
+            class="char-session-avatar"
+            [style.background-image]="char.iconPath ? 'url(' + char.iconPath + ')' : ''"
+          >
             <i class="fa fa-shield-halved" *ngIf="!char.iconPath"></i>
           </div>
           <div class="char-session-card__info">
             <span class="char-session-card__name">{{ char.name }}</span>
-            <span class="char-session-card__desc" *ngIf="char.description">{{ char.description }}</span>
+            <span class="char-session-card__desc" *ngIf="char.description">{{
+              char.description
+            }}</span>
           </div>
         </div>
 
@@ -89,11 +104,14 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <!-- Modal isolado reutilizável -->
-<app-create-join-campaign-modal [(isOpen)]="isModalOpen" [activeTab]="activeModalTab"
-  (onCreate)="handleCreateCampaign($event)" (onJoin)="handleJoinCampaign($event)">
+<app-create-join-campaign-modal
+  [(isOpen)]="isModalOpen"
+  [activeTab]="activeModalTab"
+  (onCreate)="handleCreateCampaign($event)"
+  (onJoin)="handleJoinCampaign($event)"
+>
 </app-create-join-campaign-modal>
