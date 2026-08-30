@@ -23,6 +23,9 @@ export class CharacterService {
   public GetAll(): Observable<ApiResponse<Character[]>> {
     return this.http.get<ApiResponse<Character[]>>(`${this.env}/All`);
   }
+  public GetAllByPage(page: number, pageSize: number): Observable<ApiResponse<Character[]>> {
+    return this.http.get<ApiResponse<Character[]>>(`${this.env}/All/${page}/${pageSize}`);
+  }
 
   public GetById(Id: String): Observable<ApiResponse<Character>> {
     return this.http.get<ApiResponse<Character>>(`${this.env}/${Id}`);
