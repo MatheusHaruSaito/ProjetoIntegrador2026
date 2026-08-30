@@ -81,12 +81,12 @@ namespace RpgDex.Application.Services
             return Result<CharacterResponse>.Success(characterFound.Adapt<CharacterResponse>());
         }
 
-        public async Task<Result<IEnumerable<CharacterResponse>>> GetAllByUserIdAsync(string userId)
+        public async Task<Result<IEnumerable<CharacterResponse>>> GetAllByUserIdAsync(string userId, int page=1, int pageSize=3)
         {
             if (!Guid.TryParse(userId, out var guidUserId)) return Result<IEnumerable<CharacterResponse>>.Failure("Invalid User ID format.");
 
             //Return all characters
-            var characters =  await _character.GetAllByUserIdAsync(guidUserId);
+            var characters =  await _character.GetAllByUserIdAsync(guidUserId,page,pageSize);
             if (characters is null) return Result<IEnumerable<CharacterResponse>>.Failure("Failed to get character");
 
             var response = characters.Adapt<List<CharacterResponse>>();

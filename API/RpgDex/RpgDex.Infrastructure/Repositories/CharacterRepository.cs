@@ -27,11 +27,16 @@ namespace RpgDex.Infrastructure.Services
             return await _entitie.Find(o => o.Id == character.Id).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Character>> GetAllByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<Character>> GetAllByUserIdAsync(Guid userId, int page=1,int pageSize =3)
         {
+            page = page < 1 ? 1 : page;
+            pageSize = pageSize < 1 ? 1 : pageSize;
             var filter = Builders<Character>.Filter.Eq(c => c.UserId, userId) 
                 & Builders<Character>.Filter.Eq(c => c.IsActive, true);
-            return await _entitie.Find(filter).ToListAsync();
+            return await _entitie.Find(filter)
+                .Skip((page -1)*pageSize)
+                .Limit(pageSize)
+                .ToListAsync();
         }
 
         public async Task<Character> GetByIdAsync(Guid Id)

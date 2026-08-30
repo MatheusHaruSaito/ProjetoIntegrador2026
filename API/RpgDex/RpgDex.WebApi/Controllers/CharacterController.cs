@@ -30,10 +30,17 @@ namespace RpgDex.WebApi.Controllers
                 return result.ToIActionResult();
             }
 
-            [HttpGet("All")]
+            [HttpGet("All/")]
             public async Task<IActionResult> GetAllByUserId()
             {
-            var result = await _characterSevice.GetAllByUserIdAsync(currentUser);
+                var result = await _characterSevice.GetAllByUserIdAsync(currentUser);
+                return result.ToIActionResult();
+
+            }
+            [HttpGet("All/{page}/{pageSize}")]
+            public async Task<IActionResult> GetAllByUserId(int page = 1, int pageSize = 3)
+            {
+            var result = await _characterSevice.GetAllByUserIdAsync(currentUser,page,pageSize);
                 return result.ToIActionResult();
 
             }
