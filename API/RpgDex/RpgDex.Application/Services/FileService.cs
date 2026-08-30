@@ -26,20 +26,7 @@ namespace RpgDex.Application.Services
 
         public async Task<string> UploadFileAsync(IFormFile file, string fileName)
         {
-            //if (file != null && file.Length > 0)
-            //{
-            //    using (var memoryStream = new MemoryStream())
-            //    {
-            //        await file.CopyToAsync(memoryStream);
-            //        memoryStream.Position = 0;
 
-            //        var Extension = Path.GetExtension(file.FileName);
-            //        var ServerfileName = $"{fileName}_icon{Extension}";
-            //        return await _fileRepository.UploadFileAsync(ServerfileName, memoryStream);
-            //    }
-            //}
-            //throw new ArgumentException("File is null or empty");
-            
             if (file == null || file.Length == 0)
             {
                 throw new ArgumentException("File is null or empty");
