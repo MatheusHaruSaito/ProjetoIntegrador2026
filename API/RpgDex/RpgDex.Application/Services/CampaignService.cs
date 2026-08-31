@@ -232,7 +232,7 @@ namespace RpgDex.Application.Services
             //Character found
 
             if (!Guid.TryParse(userId, out var guidUserId)) return Result<string>.Failure("Invalid User ID format");
-            if(!characterFound.Id.Equals(guidUserId)) return Result<string>.Failure("Character isn't from logged user");
+            if(!characterFound.UserId.Equals(guidUserId)) return Result<string>.Failure("Character isn't from logged user");
 
             var campaignFound = await campaignRepository.GetByIdAsync(request.CampaignId);
             if(campaignFound is null) {
