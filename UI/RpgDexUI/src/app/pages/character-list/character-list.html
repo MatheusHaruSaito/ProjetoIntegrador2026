@@ -19,27 +19,25 @@
     </button>
   </div>
 
-<div class="cl-table-wrapper">
-  <table>
-    <thead>
-      <tr>
-        <!-- REMOVIDO: <th>#</th> -->
-        <th>Personagem</th>
-        <th>Descrição</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (character of filteredList; track character.id) {
+  <div class="cl-table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <!-- REMOVIDO: <th>#</th> -->
+          <th>Personagem</th>
+          <th>Descrição</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (character of filteredList; track character.id) {
         <tr (click)="navigateToEditor(character.id)" style="cursor: pointer">
           <!-- REMOVIDO: <td><span class="id-tag">#{{ character.id }}</span></td> -->
-          
+
           <td>
             <div class="char-name-cell">
-              <div
-                class="char-avatar-thumb"
-                [style.background-image]="character.iconPath ? 'url(' + character.iconPath + ')' : ''"
-              >
+              <div class="char-avatar-thumb"
+                [style.background-image]="character.iconPath ? 'url(' + character.iconPath + ')' : ''">
                 <i class="fa fa-shield-halved" *ngIf="!character.iconPath"></i>
               </div>
               <span class="char-name">{{ character.name }}</span>
@@ -48,28 +46,33 @@
           <td><span class="char-desc">{{ character.description }}</span></td>
           <td>
             <div class="action-btns">
-              <button
-                class="btn-icon danger"
-                title="Excluir"
-                (click)="$event.stopPropagation(); DeleteCharacter(character.id)"
-              >
+              <button class="btn-icon danger" title="Excluir"
+                (click)="$event.stopPropagation(); DeleteCharacter(character.id)">
                 <i class="fa fa-trash"></i>
               </button>
             </div>
           </td>
         </tr>
-      } @empty {
+        } @empty {
         <tr class="empty-row">
-          <td colspan="3"> 
+          <td colspan="3">
             <div class="empty-content">
+              <div class="empty-icon">
+                <i class="fa fa-ghost"></i>
+              </div>
+              <p class="empty-text">Nenhum personagem encontrado</p>
+              <p class="empty-sub">
+                {{ searchQuery ? 'Tente buscar por outro nome.' : 'Clique em "Novo Personagem" para criar sua primeira
+                ficha.' }}
+              </p>
             </div>
           </td>
         </tr>
-      }
-    </tbody>
-  </table>
-</div>
+        }
+      </tbody>
+    </table>
+  </div>
 
-<!-- Modal Criar -->
-<app-create-character-modal [visible]="showCreateModal" (close)="showCreateModal = false"
-  (created)="GetAllCharacters()" />
+  <!-- Modal Criar -->
+  <app-create-character-modal [visible]="showCreateModal" (close)="showCreateModal = false"
+    (created)="GetAllCharacters()" />

@@ -1,3 +1,10 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--rpg-shadow-nav);
+}
+
 .main-nav {
   display: flex;
   justify-content: space-between;
@@ -6,10 +13,6 @@
   height: 80px;
   background: var(--rpg-gradient-nav);
   color: white;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: var(--rpg-shadow-nav);
 }
 
 .logo {
@@ -17,6 +20,7 @@
   font-size: 1.8rem;
   font-weight: 900;
   color: white;
+  text-decoration: none;
   cursor: pointer;
   letter-spacing: -1px;
   transition: transform 0.3s ease;
@@ -67,6 +71,7 @@
   border-radius: 2px;
 }
 
+/* ── PERFIL DO USUÁRIO ── */
 .user-profile {
   width: 45px;
   height: 45px;
@@ -78,6 +83,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
 }
 
 .user-profile:hover {
@@ -85,62 +92,112 @@
   transform: scale(1.05);
 }
 
-.menu-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 6px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 1100;
+.user-profile--image {
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
 }
 
-.menu-toggle span {
-  width: 30px;
-  height: 3px;
-  background-color: white;
-  border-radius: 3px;
-  transition: 0.3s;
+.user-profile__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
 }
 
+.user-profile i {
+  color: white;
+  font-size: 1.1rem;
+}
+
+/* ── BOTÕES DE AUTENTICAÇÃO (padronizados) ── */
 .auth-buttons {
   display: flex;
   gap: 15px;
   align-items: center;
 }
 
+.btn-login-nav,
+.btn-register-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 8px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s, border-color 0.3s;
+}
+
 .btn-login-nav {
   background: transparent;
-  border: none;
   color: white;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: 0.3s;
+  border: 2px solid rgba(255, 255, 255, 0.65);
 }
 
 .btn-login-nav:hover {
-  text-decoration: underline;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: white;
+  transform: scale(1.05);
 }
 
 .btn-register-nav {
   background: white;
   color: var(--rpg-purple);
-  border: none;
-  padding: 8px 24px;
-  border-radius: 20px;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 800;
-  font-size: 0.95rem;
-  cursor: pointer;
+  border: 2px solid white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s;
 }
 
 .btn-register-nav:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* ── FOCO ACESSÍVEL ── */
+.nav-links a:focus-visible,
+.logo:focus-visible,
+.user-profile:focus-visible,
+.btn-login-nav:focus-visible,
+.btn-register-nav:focus-visible,
+.menu-toggle:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 3px;
+}
+
+/* ── MENU HAMBÚRGUER ── */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+  z-index: 1100;
+}
+
+.menu-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.menu-toggle span {
+  width: 26px;
+  height: 3px;
+  background-color: white;
+  border-radius: 3px;
+  transition: 0.3s;
+}
+
+/* ── OVERLAY DE FUNDO (mobile) ── */
+.nav-backdrop {
+  display: none;
 }
 
 @media (max-width: 900px) {
@@ -154,6 +211,22 @@
     display: flex;
   }
 
+  .nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 10, 30, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1050;
+  }
+
+  .nav-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
   .nav-container {
     position: fixed;
     top: 0;
@@ -165,7 +238,8 @@
     justify-content: center;
     gap: 50px;
     margin-left: 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1080;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
   }
 
@@ -191,24 +265,4 @@
   .menu-toggle.active span:nth-child(3) {
     transform: translateY(-9px) rotate(-45deg);
   }
-}
-
-/* --- AVATAR NA NAVBAR --- */
-.user-profile--image {
-  padding: 0;
-  overflow: hidden;
-  background: transparent;
-}
-
-.user-profile__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  display: block;
-}
-
-.user-profile i {
-  color: white;
-  font-size: 1.1rem;
 }
