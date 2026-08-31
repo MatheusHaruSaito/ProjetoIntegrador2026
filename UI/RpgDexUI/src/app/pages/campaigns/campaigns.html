@@ -12,80 +12,85 @@
       </button>
     </div>
 
-    <!-- ── GRID DE CAMPANHAS ── -->
-    <div class="cmp-grid" *ngIf="myCampaigns.length > 0">
-      <div class="cmp-card" *ngFor="let camp of myCampaigns" (click)="goToCampaignDetail(camp.id)">
-        <div class="cmp-card__cover" [style.background-image]="camp.iconPath ? 'url(' + camp.iconPath + ')' : ''">
-          <div class="cmp-card__cover-fallback" *ngIf="!camp.iconPath">
-            <i class="fa fa-map-location-dot"></i>
+    <!-- ── SEÇÃO: MINHAS CAMPANHAS ── -->
+    <div class="cmp-section-card">
+      <!-- ── GRID DE CAMPANHAS ── -->
+      <div class="cmp-grid" *ngIf="myCampaigns.length > 0">
+        <div class="cmp-card" *ngFor="let camp of myCampaigns" (click)="goToCampaignDetail(camp.id)">
+          <div class="cmp-card__cover" [style.background-image]="camp.iconPath ? 'url(' + camp.iconPath + ')' : ''">
+            <div class="cmp-card__cover-fallback" *ngIf="!camp.iconPath">
+              <i class="fa fa-map-location-dot"></i>
+            </div>
+            <div class="cmp-card__status" [class.cmp-card__status--inactive]="!camp.isActive">
+              {{ camp.isActive ? 'Ativa' : 'Inativa' }}
+            </div>
           </div>
-          <div class="cmp-card__status" [class.cmp-card__status--inactive]="!camp.isActive">
-            {{ camp.isActive ? 'Ativa' : 'Inativa' }}
-          </div>
-        </div>
-        <div class="cmp-card__body">
-          <h3 class="cmp-card__title">{{ camp.title }}</h3>
-          <p class="cmp-card__desc" *ngIf="camp.description">{{ camp.description }}</p>
-          <div class="cmp-card__meta">
-            <span><i class="fa fa-users"></i> {{ camp.playerIds?.length || 0 }}/{{ camp.maxPlayers }}</span>
-            <span>
-              <i class="fa fa-calendar"></i> {{ formatNextSession(camp.nextSession) }}
-            </span>
+          <div class="cmp-card__body">
+            <h3 class="cmp-card__title">{{ camp.title }}</h3>
+            <p class="cmp-card__desc" *ngIf="camp.description">{{ camp.description }}</p>
+            <div class="cmp-card__meta">
+              <span><i class="fa fa-users"></i> {{ camp.playerIds?.length || 0 }}/{{ camp.maxPlayers }}</span>
+              <span>
+                <i class="fa fa-calendar"></i> {{ formatNextSession(camp.nextSession) }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Vazio -->
-    <div class="cmp-empty" *ngIf="myCampaigns.length === 0">
-      <div class="cmp-empty__icon"><i class="fa fa-map"></i></div>
-      <p class="cmp-empty__title">Nenhuma campanha ainda.</p>
-      <p class="cmp-empty__sub">Crie sua própria aventura ou junte-se a uma existente.</p>
-      <button class="btn-primary" (click)="openModal('create')">
-        <i class="fa fa-plus"></i> Nova Campanha
-      </button>
-    </div>
-
-    <!-- ── ACESSO RÁPIDO AOS PERSONAGENS ── -->
-    <div class="cmp-section-divider">
-      <span>Acesso Rápido aos Personagens</span>
-    </div>
-
-    <div class="cmp-section-header-actions">
-      <p class="cmp-section-sub">Exibindo os 5 mais recentes. Clique para abrir diretamente.</p>
-      <a routerLink="/personagens" class="char-see-all-link">
-        Ver todos <i class="fa fa-arrow-right"></i>
-      </a>
-    </div>
-
-    <div class="char-session-list">
       <!-- Vazio -->
-      <div class="char-empty" *ngIf="myCharacters.length === 0">
-        <div class="char-empty__icon"><i class="fa fa-scroll"></i></div>
-        <p class="char-empty__text">Nenhum personagem encontrado.</p>
-        <a routerLink="/personagens" class="char-empty__link">
-          <i class="fa fa-plus"></i> Criar personagem
+      <div class="cmp-empty" *ngIf="myCampaigns.length === 0">
+        <div class="cmp-empty__icon"><i class="fa fa-map"></i></div>
+        <p class="cmp-empty__title">Nenhuma campanha ainda.</p>
+        <p class="cmp-empty__sub">Crie sua própria aventura ou junte-se a uma existente.</p>
+        <button class="btn-primary" (click)="openModal('create')">
+          <i class="fa fa-plus"></i> Nova Campanha
+        </button>
+      </div>
+    </div>
+
+    <!-- ── SEÇÃO: ACESSO RÁPIDO AOS PERSONAGENS ── -->
+    <div class="cmp-section-card">
+      <div class="cmp-section-divider">
+        <span>Acesso Rápido aos Personagens</span>
+      </div>
+
+      <div class="cmp-section-header-actions">
+        <p class="cmp-section-sub">Exibindo os 5 mais recentes. Clique para abrir diretamente.</p>
+        <a routerLink="/personagens" class="char-see-all-link">
+          Ver todos <i class="fa fa-arrow-right"></i>
         </a>
       </div>
 
-      <!-- Item da Lista de Personagens (Máx. 5) -->
-      <div class="char-session-card" *ngFor="let char of myCharacters" (click)="openCharacter(char.id)">
-        <div class="char-session-card__left">
-          <div class="char-session-avatar" [style.background-image]="char.iconPath ? 'url(' + char.iconPath + ')' : ''">
-            <i class="fa fa-shield-halved" *ngIf="!char.iconPath"></i>
-          </div>
-          <div class="char-session-card__info">
-            <span class="char-session-card__name">{{ char.name }}</span>
-            <span class="char-session-card__desc" *ngIf="char.description">{{ char.description }}</span>
-          </div>
+      <div class="char-session-list">
+        <!-- Vazio -->
+        <div class="char-empty" *ngIf="myCharacters.length === 0">
+          <div class="char-empty__icon"><i class="fa fa-scroll"></i></div>
+          <p class="char-empty__text">Nenhum personagem encontrado.</p>
+          <a routerLink="/personagens" class="char-empty__link">
+            <i class="fa fa-plus"></i> Criar personagem
+          </a>
         </div>
 
-        <div class="char-quick-meta">
-          <span class="char-quick-time" [class.never]="!wasAccessed(char.id)">
-            <i class="fa fa-clock"></i>
-            {{ lastAccessedLabel(char.id) }}
-          </span>
-          <i class="fa fa-chevron-right char-quick-arrow"></i>
+        <!-- Item da Lista de Personagens (Máx. 5) -->
+        <div class="char-session-card" *ngFor="let char of myCharacters" (click)="openCharacter(char.id)">
+          <div class="char-session-card__left">
+            <div class="char-session-avatar" [style.background-image]="char.iconPath ? 'url(' + char.iconPath + ')' : ''">
+              <i class="fa fa-shield-halved" *ngIf="!char.iconPath"></i>
+            </div>
+            <div class="char-session-card__info">
+              <span class="char-session-card__name">{{ char.name }}</span>
+              <span class="char-session-card__desc" *ngIf="char.description">{{ char.description }}</span>
+            </div>
+          </div>
+
+          <div class="char-quick-meta">
+            <span class="char-quick-time" [class.never]="!wasAccessed(char.id)">
+              <i class="fa fa-clock"></i>
+              {{ lastAccessedLabel(char.id) }}
+            </span>
+            <i class="fa fa-chevron-right char-quick-arrow"></i>
+          </div>
         </div>
       </div>
     </div>

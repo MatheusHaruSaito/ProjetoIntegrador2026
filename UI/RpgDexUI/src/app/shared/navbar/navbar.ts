@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
@@ -31,16 +31,30 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.isMenuOpen) {
+      this.closeMenu();
+    }
+  }
+
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
+    this.updateBodyScrollLock();
   }
 
   closeMenu() {
+    if (!this.isMenuOpen) return;
     this.isMenuOpen = false;
+    this.updateBodyScrollLock();
   }
 
   logout() {
     this.authService.Logout();
     this.closeMenu();
+  }
+
+  private updateBodyScrollLock(): void {
+    document.body.classList.toggle('nav-menu-open', this.isMenuOpen);
   }
 }
