@@ -2,8 +2,7 @@
 using RpgDex.Application.Interfaces;
 using RpgDex.Domain.Entities;
 using RpgDex.Domain.Interfaces;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Webp;
+using ImageMagick;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -32,16 +31,14 @@ namespace RpgDex.Application.Services
                 throw new ArgumentException("File is null or empty");
             }
             using var inputStream = file.OpenReadStream();
-            using var outputStream = new MemoryStream();
+            using var image = new MagickImage(inputStream);
 
-            using (var image = await Image.LoadAsync(inputStream))
-            {
-                var encoder = new WebpEncoder
-                {
-                    Quality = 80
-                };
-                await image.SaveAsync(outputStream, encoder);
-            }
+            image.Format = MagickFormat.WebP;
+            image.Quality = 80;
+
+            using var outputStream = new MemoryStream();
+            await image.WriteAsync(outputStream);
+
             outputStream.Position = 0;
                 var ServerfileName = $"{fileName}_icon.webp";
             return await _fileRepository.UploadFileAsync(ServerfileName, outputStream);
