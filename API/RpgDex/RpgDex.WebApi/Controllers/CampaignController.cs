@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
@@ -11,6 +12,7 @@ namespace RpgDex.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CampaignController : ControllerBase
     {
         private string currentUser => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
