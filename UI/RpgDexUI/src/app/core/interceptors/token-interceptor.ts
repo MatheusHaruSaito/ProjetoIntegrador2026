@@ -1,4 +1,9 @@
-import { HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpHandlerFn,
+  HttpInterceptorFn,
+  HttpRequest,
+} from '@angular/common/http';
 import { AuthService } from '../../services/auth-service';
 import { BehaviorSubject, catchError, filter, switchMap, take, throwError } from 'rxjs';
 import { inject } from '@angular/core';
@@ -12,52 +17,66 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   let currentUser = authService.currentUserValue;
 
-  if(currentUser && currentUser.accessToken) {
-    req = addToken(req, currentUser.accessToken);
+  if (req.url.includes('/Auth/RefreshToken')) {
+    return next(req);
   }
 
-  return next(req).pipe(
-    catchError(error => {
-      if(error instanceof HttpErrorResponse && error.status === 401){
-        return handle401Error(req, next, authService);
-      } else{
-        return throwError(() => error);
-      }
-    })
-  );
+  let authReq = req;
+  if (currentUser?.accessToken) {
+    authReq = addToken(req, currentUser.accessToken);
+  }
 
+  return next(authReq).pipe(
+    catchError((error) => {
+      if (error instanceof HttpErrorResponse && error.status === 401) {
+        return handle401Error(authReq, next, authService);
+      }
+      return throwError(() => error);
+    }),
+  );
 };
 
 function addToken(req: HttpRequest<any>, token: string) {
   return req.clone({
     setHeaders: {
-      Authorization: `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
   });
 }
 
-function handle401Error(req: HttpRequest<any>, next: HttpHandlerFn, authService :AuthService) {
-  if(!isRefreshing) {
+function handle401Error(req: HttpRequest<any>, next: HttpHandlerFn, authService: AuthService) {
+  if (!isRefreshing) {
     isRefreshing = true;
     refreshTokenSubject.next(null);
 
     return authService.RefreshToken().pipe(
       switchMap((response: ApiResponse<tokenModel>) => {
+        const newAccessToken = response.data?.accessToken;
+
+        if (!newAccessToken) {
+          throw new Error('Refresh token does not have returned');
+        }
+
         isRefreshing = false;
-        refreshTokenSubject.next(response.data!.accessToken);
-        return next(addToken(req, response.data!.accessToken));
+
+        refreshTokenSubject.next(newAccessToken);
+
+        return next(addToken(req, newAccessToken));
       }),
+
       catchError((err) => {
         isRefreshing = false;
         authService.Logout();
         return throwError(() => err);
-      })
-    );
-  } else {
-    return refreshTokenSubject.pipe(
-      filter((token): token is string => !!token),
-      take(1),
-      switchMap((accesstoken) => next(addToken(req, accesstoken)))
+      }),
     );
   }
+
+  return refreshTokenSubject.pipe(
+    filter((token): token is string => token !== null),
+    take(1),
+    switchMap((accessToken) => {
+      return next(addToken(req, accessToken));
+    }),
+  );
 }
