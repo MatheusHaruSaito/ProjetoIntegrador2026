@@ -2,9 +2,7 @@
 
   <!-- ── TOPBAR ── -->
   <div class="ce-topbar">
-    <button class="ce-back-btn" (click)="goBack()">
-      <i class="fa fa-arrow-left"></i> Voltar
-    </button>
+    <div></div> <!-- Elemento invisível para manter o flex-between dos botões de ação -->
     <div class="ce-topbar-actions">
       <ng-container *ngIf="isEditing">
         <button class="btn-danger-outline" (click)="confirmDelete()">
@@ -24,7 +22,7 @@
     </div>
   </div>
 
-  <!-- ── HERO ── (igual nos dois modos, só o nome muda de input para texto) -->
+  <!-- ── HERO ── -->
   <div class="ce-hero">
     <div class="ce-avatar-wrap">
       <div class="ce-avatar"
@@ -60,7 +58,7 @@
     <i class="fa fa-circle-check"></i> {{ successMessage }}
   </div>
 
-  <!-- ── CORPO: mesma grade nos dois modos ── -->
+  <!-- ── CORPO ── -->
   <div class="ce-body">
 
     <!-- Coluna esquerda: descrição -->
@@ -70,13 +68,11 @@
           <h3 class="ce-section-title"><i class="fa fa-align-left"></i> Descrição</h3>
         </div>
 
-        <!-- Visualização -->
         <p *ngIf="!isEditing" class="ce-view-text"
           [class.ce-view-text--empty]="!editForm.description">
           {{ editForm.description || 'Nenhuma descrição.' }}
         </p>
 
-        <!-- Edição -->
         <ng-container *ngIf="isEditing">
           <textarea class="ce-textarea"
             placeholder="Descreva a origem, aparência ou personalidade do personagem..."
@@ -90,7 +86,6 @@
     <!-- Coluna direita: grupos de atributos -->
     <div class="ce-col ce-col--attrs">
 
-      <!-- Header da coluna só aparece no modo edição -->
       <div class="ce-groups-header" *ngIf="isEditing">
         <h3 class="ce-section-title"><i class="fa fa-list-check"></i> Atributos</h3>
         <button class="btn-add-property" (click)="addGroup()">
@@ -98,30 +93,24 @@
         </button>
       </div>
 
-      <!-- Vazio (visualização) -->
       <div class="ce-groups-empty-view"
         *ngIf="!isEditing && groups.length === 0">
         <i class="fa fa-layer-group"></i>
         <span>Nenhum atributo registrado.</span>
       </div>
 
-      <!-- Vazio (edição) -->
       <div class="ce-groups-empty" *ngIf="isEditing && groups.length === 0">
         <i class="fa fa-layer-group"></i>
         <span>Clique em <strong>+ Novo grupo</strong> para começar.</span>
       </div>
 
-      <!-- Grupos -->
       @for (group of groups; track $index) {
         <section class="ce-section ce-group">
 
-          <!-- Header do grupo -->
           <div class="ce-group-header">
-            <!-- Visualização: título estático -->
             <h4 *ngIf="!isEditing" class="ce-group-title-view">
               {{ group.title || 'Grupo' }}
             </h4>
-            <!-- Edição: título editável -->
             <input *ngIf="isEditing"
               class="ce-group-title-input"
               [(ngModel)]="group.title"
@@ -140,7 +129,6 @@
             </div>
           </div>
 
-          <!-- Campos -->
           <div class="ce-attrs-list">
 
             <p class="ce-attrs-empty"
@@ -150,13 +138,11 @@
 
             @for (entry of group.entries; track $index) {
 
-              <!-- Visualização: chip de atributo -->
               <div *ngIf="!isEditing && entry.key.trim()" class="ce-attr-chip">
                 <span class="ce-attr-chip-key">{{ entry.key }}</span>
                 <span class="ce-attr-chip-value">{{ entry.value }}</span>
               </div>
 
-              <!-- Edição: inputs lado a lado -->
               <div *ngIf="isEditing" class="ce-attr-row">
                 <input class="ce-attr-key" type="text"
                   placeholder="Atributo"
@@ -191,7 +177,6 @@
     <i class="fa fa-spinner fa-spin"></i>
     <span>Carregando personagem...</span>
   </div>
-
 </ng-template>
 
 <!-- SUB-MODAL: CORTE DA IMAGEM -->
@@ -225,4 +210,3 @@
     </div>
   </div>
 }
-

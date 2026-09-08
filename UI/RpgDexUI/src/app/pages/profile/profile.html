@@ -1,132 +1,135 @@
-<div class="profile-container">
-  <header class="profile-header">
-    <div class="user-main-info">
-      <div class="avatar-wrapper">
-        <div class="avatar-placeholder avatar-placeholder--image" *ngIf="user?.iconPath">
-          <img class="avatar-img" [src]="user!.iconPath" alt="Foto de perfil" />
-        </div>
-        <div class="avatar-placeholder" *ngIf="!user?.iconPath">
-          {{ user?.displayName?.substring(0, 2)?.toUpperCase() || '??' }}
-        </div>
-      </div>
+<div class="profile-wrapper">
+  <div class="profile-container">
 
-      <div class="user-text">
-        <h1 class="username">{{ user?.displayName || 'Viajante' }}</h1>
-        <p class="email">{{ user?.email }}</p>
-        <span class="badge">Aventureiro</span>
-      </div>
+    <div class="profile-card">
+      <header class="profile-header">
+        <div class="user-main-info">
+          <div class="avatar-wrapper">
+            <div class="avatar-placeholder avatar-placeholder--image" *ngIf="user?.iconPath">
+              <img class="avatar-img" [src]="user!.iconPath" alt="Foto de perfil" />
+            </div>
+            <div class="avatar-placeholder" *ngIf="!user?.iconPath">
+              {{ user?.displayName?.substring(0, 2)?.toUpperCase() || '??' }}
+            </div>
+          </div>
+
+          <div class="user-text">
+            <h1 class="username">{{ user?.displayName || 'Viajante' }}</h1>
+            <p class="email">{{ user?.email }}</p>
+            <span class="badge">Aventureiro</span>
+          </div>
+        </div>
+
+        <div class="profile-controls">
+          <div class="main-btns">
+            <button class="btn-edit" (click)="editProfile()">
+              <i class="fa-solid fa-pen"></i> Editar Perfil
+            </button>
+            <button class="btn-logout" (click)="logout()">Sair</button>
+          </div>
+
+          <div class="tool-btns">
+            <button
+              class="icon-btn"
+              (click)="toggleTheme()"
+              [title]="isDarkMode ? 'Modo Claro' : 'Modo Escuro'"
+            >
+              <i class="fa-solid" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
+            </button>
+            <button class="icon-btn" title="Configurações" (click)="openSettingsModal()">
+              <i class="fa-solid fa-gear"></i>
+            </button>
+          </div>
+        </div>
+      </header>
     </div>
 
-    <div class="profile-controls">
-      <div class="main-btns">
-        <button class="btn-edit" (click)="editProfile()">
-          <i class="fa-solid fa-pen"></i> Editar Perfil
-        </button>
-        <button class="btn-logout" (click)="logout()">Sair</button>
-      </div>
-
-      <div class="tool-btns">
-        <button
-          class="icon-btn"
-          (click)="toggleTheme()"
-          [title]="isDarkMode ? 'Modo Claro' : 'Modo Escuro'"
-        >
-          <i class="fa-solid" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
-        </button>
-        <button class="icon-btn" title="Configurações" (click)="openSettingsModal()">
-          <i class="fa-solid fa-gear"></i>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <hr class="divider" />
-
-  <!-- SEÇÃO DE CAMPANHAS -->
-  <section class="campaigns-section">
-    <div class="section-header">
-      <div>
-        <h2 class="section-title">Minhas Campanhas</h2>
-        <span class="section-count" *ngIf="campaignTotal > 0">
-          {{ campaignTotal }} {{ campaignTotal === 1 ? 'campanha' : 'campanhas' }}
-        </span>
-      </div>
-      <!-- 🟢 Ajustado de /jogar para /campanhas -->
-      <a routerLink="/campanhas" class="section-link" *ngIf="campaignTotal > 0">
-        Ver todas <i class="fa-solid fa-arrow-right"></i>
-      </a>
-    </div>
-
-    <div class="campaigns-grid">
-      <!-- 🟢 Ajustado de /jogar para /campanhas -->
-      <div class="campaign-card add-card" routerLink="/campanhas">
-        <i class="fa-solid fa-plus"></i>
-        <span>Nova Campanha</span>
-      </div>
-
-      <!-- Cards Dinâmicos de Campanha -->
-      <!-- 🟢 Ajustado de /jogar/campanha para /campanha -->
-      <div
-        class="campaign-card"
-        *ngFor="let camp of campaignPreview"
-        [routerLink]="['/campanha', camp.id]"
-      >
-        <div class="card-image-placeholder campaign-avatar--image" *ngIf="camp.iconPath">
-          <img class="campaign-avatar-img" [src]="camp.iconPath" [alt]="camp.title">
-        </div>
-        <div class="card-image-placeholder" *ngIf="!camp.iconPath">
-          <i class="fa-solid fa-map-location-dot"></i>
+    <!-- SEÇÃO DE CAMPANHAS -->
+    <div class="profile-card">
+      <section class="campaigns-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Minhas Campanhas</h2>
+            <span class="section-count" *ngIf="campaignTotal > 0">
+              {{ campaignTotal }} {{ campaignTotal === 1 ? 'campanha' : 'campanhas' }}
+            </span>
+          </div>
+          <a routerLink="/campanhas" class="section-link" *ngIf="campaignTotal > 0">
+            Ver todas <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
 
-        <div class="card-info">
-          <span class="camp-name">{{ camp.title }}</span>
-          <span class="camp-role" [class.camp-role--gm]="camp.role === 'Mestre'">{{ camp.role }}</span>
+        <div class="campaigns-grid">
+          <div class="campaign-card add-card" routerLink="/campanhas">
+            <i class="fa-solid fa-plus"></i>
+            <span>Nova Campanha</span>
+          </div>
+
+          <!-- Cards Dinâmicos de Campanha -->
+          <div
+            class="campaign-card"
+            *ngFor="let camp of campaignPreview"
+            [routerLink]="['/campanha', camp.id]"
+          >
+            <div class="card-image-placeholder campaign-avatar--image" *ngIf="camp.iconPath">
+              <img class="campaign-avatar-img" [src]="camp.iconPath" [alt]="camp.title">
+            </div>
+            <div class="card-image-placeholder" *ngIf="!camp.iconPath">
+              <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+
+            <div class="card-info">
+              <span class="camp-name">{{ camp.title }}</span>
+              <span class="camp-role" [class.camp-role--gm]="camp.role === 'Mestre'">{{ camp.role }}</span>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="divider" />
-
-  <!-- SEÇÃO DE PERSONAGENS -->
-  <section class="characters-section">
-    <div class="section-header">
-      <div>
-        <h2 class="section-title">Meus Personagens</h2>
-        <span class="section-count" *ngIf="characterTotal > 0">
-          {{ characterTotal }} {{ characterTotal === 1 ? 'personagem' : 'personagens' }}
-        </span>
-      </div>
-      <a routerLink="/personagens" class="section-link" *ngIf="characterTotal > 0">
-        Ver todos <i class="fa-solid fa-arrow-right"></i>
-      </a>
+      </section>
     </div>
 
-    <div class="campaigns-grid">
-      <div class="campaign-card add-card" routerLink="/personagens">
-        <i class="fa-solid fa-plus"></i>
-        <span>Novo Personagem</span>
-      </div>
-
-      <div
-        class="campaign-card character-card"
-        *ngFor="let char of characterPreview"
-        routerLink="/personagens"
-      >
-        <div class="card-image-placeholder character-avatar character-avatar--image" *ngIf="char.iconPath">
-          <img class="character-avatar-img" [src]="char.iconPath" [alt]="char.name">
-        </div>
-        <div class="card-image-placeholder character-avatar" *ngIf="!char.iconPath">
-          <i class="fa-solid fa-shield-halved"></i>
+    <!-- SEÇÃO DE PERSONAGENS -->
+    <div class="profile-card">
+      <section class="characters-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Meus Personagens</h2>
+            <span class="section-count" *ngIf="characterTotal > 0">
+              {{ characterTotal }} {{ characterTotal === 1 ? 'personagem' : 'personagens' }}
+            </span>
+          </div>
+          <a routerLink="/personagens" class="section-link" *ngIf="characterTotal > 0">
+            Ver todos <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
 
-        <div class="card-info">
-          <span class="camp-name">{{ char.name }}</span>
-          <span class="char-desc-preview">{{ char.description }}</span>
+        <div class="campaigns-grid">
+          <div class="campaign-card add-card" routerLink="/personagens">
+            <i class="fa-solid fa-plus"></i>
+            <span>Novo Personagem</span>
+          </div>
+
+          <div
+            class="campaign-card character-card"
+            *ngFor="let char of characterPreview"
+            routerLink="/personagens"
+          >
+            <div class="card-image-placeholder character-avatar character-avatar--image" *ngIf="char.iconPath">
+              <img class="character-avatar-img" [src]="char.iconPath" [alt]="char.name">
+            </div>
+            <div class="card-image-placeholder character-avatar" *ngIf="!char.iconPath">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div class="card-info">
+              <span class="camp-name">{{ char.name }}</span>
+              <span class="char-desc-preview">{{ char.description }}</span>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
-  </section>
+
+  </div>
 </div>
 
 <app-settings-modal

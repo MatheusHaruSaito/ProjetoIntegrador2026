@@ -43,7 +43,7 @@ export class UserRegisterComponent {
           this.router.navigate(['/home']);
         },
         error: () => {
-          alert('Falha ao entrar com o Google. Verifique seu email e senha.');
+          this.errorMessage = 'Falha ao entrar com o Google. Verifique seu email e senha.';
         },
       });
     });

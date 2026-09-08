@@ -17,6 +17,10 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'login', component: UserLoginComponent },
   { path: 'cadastro', component: UserRegisterComponent },
+  { path: 'emailConfirmation', component: EmailConfirmation },
+  { path: 'verificar-email', component: EmailPending },
+  { path: 'auth/callback', component: DiscordAuth },
+
   {
     path: 'perfil',
     component: ProfileComponent,
@@ -48,23 +52,8 @@ export const routes: Routes = [
       import('./pages/campaign-detail/campaign-detail').then(
         (m) => m.CampaignDetailComponent
       ),
+    canActivate: [authGuard],
   },
-  {
-    path: 'emailConfirmation',
-    component: EmailConfirmation,
-  },
-  {
-    path: 'verificar-email',
-    component: EmailPending,
-  },
-  {
-    path: 'auth/callback',
-    component: DiscordAuth,
-  },
-  {
-    path: 'campanha/:id',
-    loadComponent: () =>
-      import('./pages/campaign-detail/campaign-detail').then((m) => m.CampaignDetailComponent),
-  },
+
   { path: '**', redirectTo: '/home' },
 ];

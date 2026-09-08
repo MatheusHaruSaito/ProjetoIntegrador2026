@@ -39,7 +39,7 @@ namespace RpgDex.Infrastructure.Repositories
             page = page < 1 ? 1 : page;
             pageSize = pageSize < 1 ? 1 : pageSize;
             var filter = Builders<Campaign>.Filter.Eq(c => c.GameMasterId, userId)
-                        | Builders<Campaign>.Filter.AnyEq(c =>c.PlayerIds, userId);
+                        | Builders<Campaign>.Filter.AnyEq("PlayerIds", userId);
             return await _entitie.Find(filter)
                 .Skip((page - 1) * pageSize)
                 .Limit(pageSize)

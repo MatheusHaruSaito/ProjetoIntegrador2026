@@ -24,6 +24,7 @@ export class UserLoginComponent implements OnInit {
   };
 
   showPasswordHint = false;
+  errorMessage = '';
 
   ngOnInit(): void {
     this.googleAuth.initLogin((response: any) => {
@@ -34,7 +35,7 @@ export class UserLoginComponent implements OnInit {
           this.router.navigate(['/home']);
         },
         error: () => {
-          alert('Falha ao entrar com o Google. Verifique seu email e senha.');
+          this.errorMessage = 'Falha ao entrar com o Google. Verifique seu email e senha.';
         },
       });
     });
@@ -56,12 +57,14 @@ export class UserLoginComponent implements OnInit {
   }
 
   Login() {
+    this.errorMessage = '';
+
     this.authService.Login(this.authUserForm).subscribe({
       next: () => {
         this.router.navigate(['/home']);
       },
-      error: (err) => {
-        alert('Falha ao entrar. Verifique seu email e senha.');
+      error: () => {
+        this.errorMessage = 'Falha ao entrar. Verifique seu email e senha.';
       },
     });
   }

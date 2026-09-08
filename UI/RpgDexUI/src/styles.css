@@ -111,6 +111,9 @@
 body {
   font-family: 'Nunito', sans-serif;
   background-color: var(--rpg-bg);
+  background-image:
+    repeating-linear-gradient(0deg, var(--rpg-purple-15) 0, var(--rpg-purple-15) 1px, transparent 1px, transparent 40px),
+    repeating-linear-gradient(90deg, var(--rpg-purple-15) 0, var(--rpg-purple-15) 1px, transparent 1px, transparent 40px);
   color: var(--rpg-text-body);
   min-height: 100vh;
   line-height: 1.5;
@@ -228,4 +231,8 @@ main {
 image-cropper {
   max-height: 320px;
   width: 100%;
+}
+
+body.nav-menu-open {
+  overflow: hidden;
 }

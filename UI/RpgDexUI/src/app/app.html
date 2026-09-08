@@ -1,5 +1,14 @@
 <app-navbar></app-navbar>
 
+<div class="global-back-container" *ngIf="showBackButton">
+  <div class="global-back-wrapper">
+    <button class="global-back-btn" (click)="goBack()">
+      <i class="fa fa-arrow-left"></i>
+      <span>Voltar</span>
+    </button>
+  </div>
+</div>
+
 <main>
   <router-outlet></router-outlet>
 </main>

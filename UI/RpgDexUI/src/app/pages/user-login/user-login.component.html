@@ -66,6 +66,10 @@
           <a href="#" class="forgot-link">Esqueceu a senha?</a>
         </div>
 
+        <div class="feedback-message error-message" *ngIf="errorMessage">
+          <i class="fa fa-circle-exclamation"></i> {{ errorMessage }}
+        </div>
+
         <button type="submit" class="btn-login">ENTRAR</button>
       </form>
 
