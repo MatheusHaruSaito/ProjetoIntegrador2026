@@ -9,7 +9,6 @@ namespace RpgDex.Application.Interfaces
     public interface ICampaignService
     {
         public Task<Result<CampaignResponse>> Create(string userId, CreateCampaignRequest request);
-        public Task<Result<IEnumerable<CampaignResponse>>> GetAll();
         public Task<Result<IEnumerable<CampaignResponse>>> GetAllByUserId(string userId);
         public Task<Result<IEnumerable<CampaignResponse>>> GetAllByUserId(string userId, int page, int pageSizes);
 

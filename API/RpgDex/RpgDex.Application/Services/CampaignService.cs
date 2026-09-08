@@ -85,18 +85,6 @@ namespace RpgDex.Application.Services
             }
             return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
         }
-
-        public async Task<Result<IEnumerable<CampaignResponse>>> GetAll()
-        {
-            var response = await campaignRepository.GetAllAsync();
-            if (!response.Any())
-            {
-                return Result<IEnumerable<CampaignResponse>>.Failure("Failed to retrieve campaigns");
-            }
-
-            return Result<IEnumerable<CampaignResponse>>.Success(response.Adapt<IEnumerable<CampaignResponse>>());
-        }
-
         public async Task<Result<IEnumerable<CampaignResponse>>> GetAllByUserId(string userId)
         {
             if(!Guid.TryParse(userId,out var guidUserId)) return Result<IEnumerable<CampaignResponse>>.Failure("Invalid User ID format.");

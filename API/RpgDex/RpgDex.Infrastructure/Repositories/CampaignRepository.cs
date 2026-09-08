@@ -24,10 +24,6 @@ namespace RpgDex.Infrastructure.Repositories
             return await _entitie.Find(o => o.Id == campaign.Id).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Campaign>> GetAllAsync()
-        {
-            return await _entitie.Find(_ => true).ToListAsync();
-        }
         public async Task<IEnumerable<Campaign>> GetAllAsync(Guid userId)
         {
             var filter = Builders<Campaign>.Filter.Eq(c => c.GameMasterId, userId);
