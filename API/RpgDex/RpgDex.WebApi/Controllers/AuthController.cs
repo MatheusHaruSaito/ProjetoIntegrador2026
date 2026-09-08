@@ -49,6 +49,7 @@ namespace RpgDex.WebApi.Controllers
 
         }
         [HttpPost("RefreshToken")]
+        [AllowAnonymous]
         public async Task<IActionResult> RefreshToken(RefreshTokenModel refreshToken)
         {
 

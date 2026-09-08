@@ -131,9 +131,9 @@ namespace RpgDex.Application.Services
                 return Result<RefreshTokenModel>.Failure("Invalid token");
             }
             var token = await tokenService.GetRefreshTokenByToken(tokenModel.RefreshToken);
-            if(token is null)
+            if(token is null || token.ExpiryDate <= DateTime.UtcNow)
             {
-                return Result<RefreshTokenModel>.Failure("Invalid token");
+                return Result<RefreshTokenModel>.Failure("Expired or invalid refresh token");
             }
 
             var principal = tokenService.GetPrincipalFromExpiredToken(tokenModel.AccessToken);
@@ -145,6 +145,10 @@ namespace RpgDex.Application.Services
 
             string userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            if (token.UserId.ToString() != userId)
+            {
+                return Result<RefreshTokenModel>.Failure("Invalid user token");
+            }
             var user = await userManager.FindByIdAsync(userId);
             if (user is null|| tokenModel.RefreshToken != token.Token)
             {
