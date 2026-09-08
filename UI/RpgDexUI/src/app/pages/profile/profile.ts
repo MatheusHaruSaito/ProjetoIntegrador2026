@@ -134,13 +134,12 @@ export class ProfileComponent implements OnInit {
     const userId = this.authService.getLoggedUserId();
     if (!userId) return;
 
-    this.campaignService.GetAllByUser().subscribe({
+    this.campaignService.GetAllByUserPage(0, 3).subscribe({
       next: (response) => {
         const allCampaigns: Campaign[] = response.data ?? [];
-
+        //Refatorar
         this.campaignTotal = allCampaigns.length;
-
-        this.campaignPreview = allCampaigns.slice(0, 3).map((c) => ({
+        this.campaignPreview = allCampaigns.map((c) => ({
           id: c.id,
           title: c.title,
           role: c.gameMasterId === userId ? 'Mestre' : 'Jogador',
