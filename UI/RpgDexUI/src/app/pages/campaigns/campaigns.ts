@@ -34,6 +34,7 @@ export class CampaignsComponent implements OnInit {
   campaingPageCount = 1;
   campaingsPerPage = 4;
 
+  showMoreButton = false;
   isModalOpen = false;
   activeModalTab: 'create' | 'join' = 'create';
 
@@ -52,10 +53,7 @@ export class CampaignsComponent implements OnInit {
         this.myCampaigns.push(...(result.data ? result.data : []));
         this.campaingPageCount++;
         if (result.data!.length < 3) {
-          const buttonContainer = document.getElementById('btn-show-more');
-          if (buttonContainer) {
-            buttonContainer.style.display = 'none';
-          }
+          this.showMoreButton = false;
         }
         this.cdr.detectChanges();
       },
@@ -66,6 +64,9 @@ export class CampaignsComponent implements OnInit {
   private loadCampaigns(): void {
     this.campaignService.GetAllByUserPage(0, this.campaingsPerPage).subscribe({
       next: (r) => {
+        if (r.data!.length > this.campaingsPerPage - 1) {
+          this.showMoreButton = true;
+        }
         this.myCampaigns = r.data ?? [];
 
         this.cdr.detectChanges();
