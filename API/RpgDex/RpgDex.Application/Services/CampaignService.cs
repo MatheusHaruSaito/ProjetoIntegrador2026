@@ -109,6 +109,19 @@ namespace RpgDex.Application.Services
             var response = await campaignRepository.GetAllAsync(guidUserId);
             return Result<IEnumerable<CampaignResponse>>.Success(response.Adapt<IEnumerable<CampaignResponse>>());
         }
+        public async Task<Result<IEnumerable<CampaignResponse>>> GetAllByUserId(string userId, int page,int pageSize)
+        {
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<IEnumerable<CampaignResponse>>.Failure("Invalid User ID format.");
+            var user = await userRepository.GetByIdAsync(guidUserId);
+            if (user is null)
+            {
+                return Result<IEnumerable<CampaignResponse>>.Failure("User Not Logged In");
+            }
+
+            var response = await campaignRepository.GetAllAsync(guidUserId, page, pageSize);
+            return Result<IEnumerable<CampaignResponse>>.Success(response.Adapt<IEnumerable<CampaignResponse>>());
+        }
+
 
         public async Task<Result<CampaignResponse>> GetById(Guid id)
         {

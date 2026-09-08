@@ -11,6 +11,8 @@ namespace RpgDex.Application.Interfaces
         public Task<Result<CampaignResponse>> Create(string userId, CreateCampaignRequest request);
         public Task<Result<IEnumerable<CampaignResponse>>> GetAll();
         public Task<Result<IEnumerable<CampaignResponse>>> GetAllByUserId(string userId);
+        public Task<Result<IEnumerable<CampaignResponse>>> GetAllByUserId(string userId, int page, int pageSizes);
+
         public Task<Result<CampaignResponse>> GetById(Guid id);
         public Task<Result<CampaignResponse>> Update(string userId ,UpdateCampaignRequest request);
         public Task<Result<bool>> SetActiveState(string userId, CampaignSetActiveStateRequest request);

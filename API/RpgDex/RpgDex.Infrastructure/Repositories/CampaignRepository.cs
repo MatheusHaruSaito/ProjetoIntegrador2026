@@ -38,7 +38,17 @@ namespace RpgDex.Infrastructure.Repositories
         {
             return await _entitie.Find(u => u.Id == id).FirstOrDefaultAsync();
         }
+        public async Task<IEnumerable<Campaign>> GetAllAsync(Guid userId, int page = 1, int pageSize = 5)
+        {
+            page = page < 1 ? 1 : page;
+            pageSize = pageSize < 1 ? 1 : pageSize;
+            var filter = Builders<Campaign>.Filter.Eq(c => c.GameMasterId, userId);
+            return await _entitie.Find(filter)
+                .Skip((page - 1) * pageSize)
+                .Limit(pageSize)
+                .ToListAsync();
 
+        }
         public async Task<Campaign> UpdateAsync(Campaign newCampaign)
         {
             var filter = Builders<Campaign>.Filter.Eq(c => c.Id, newCampaign.Id);
@@ -61,5 +71,7 @@ namespace RpgDex.Infrastructure.Repositories
             var result = await _entitie.UpdateOneAsync(filter, updatedCampaign);
             return result.MatchedCount > 0;
         }
+
+
     }
 }
