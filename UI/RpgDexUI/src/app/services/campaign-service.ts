@@ -27,9 +27,9 @@ export class CampaignService {
   GetAll(): Observable<ApiResponse<Campaign[]>> {
     return this.http.get<ApiResponse<Campaign[]>>(`${this.env}`);
   }
-  GetAllByUser(): Observable<ApiResponse<Campaign[]>> {
-    return this.http.get<ApiResponse<Campaign[]>>(`${this.env}/All`);
-  }
+  // GetAllByUser(): Observable<ApiResponse<Campaign[]>> {
+  //   return this.http.get<ApiResponse<Campaign[]>>(`${this.env}/All`);
+  // }
   GetAllByUserPage(page: number, pageSize: number): Observable<ApiResponse<Campaign[]>> {
     return this.http.get<ApiResponse<Campaign[]>>(`${this.env}/All/${page}/${pageSize}`);
   }

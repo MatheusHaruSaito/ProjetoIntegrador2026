@@ -2,8 +2,20 @@
   min-height: calc(100vh - 80px);
   background-color: var(--rpg-bg);
   background-image:
-    repeating-linear-gradient(0deg, var(--rpg-purple-10) 0, var(--rpg-purple-10) 1px, transparent 1px, transparent 40px),
-    repeating-linear-gradient(90deg, var(--rpg-purple-10) 0, var(--rpg-purple-10) 1px, transparent 1px, transparent 40px);
+    repeating-linear-gradient(
+      0deg,
+      var(--rpg-purple-10) 0,
+      var(--rpg-purple-10) 1px,
+      transparent 1px,
+      transparent 40px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--rpg-purple-10) 0,
+      var(--rpg-purple-10) 1px,
+      transparent 1px,
+      transparent 40px
+    );
   padding: 50px 20px 80px;
 }
 
@@ -51,7 +63,10 @@
   overflow: hidden;
   border: 2px solid var(--rpg-border-light);
   cursor: pointer;
-  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  transition:
+    transform 0.25s,
+    border-color 0.25s,
+    box-shadow 0.25s;
 }
 
 .cmp-card:hover {
@@ -98,7 +113,9 @@
   border-color: var(--rpg-error-border);
 }
 
-.cmp-card__body { padding: 16px 18px; }
+.cmp-card__body {
+  padding: 16px 18px;
+}
 
 .cmp-card__title {
   font-family: 'Exo 2', sans-serif;
@@ -130,7 +147,10 @@
   color: var(--rpg-text-faint);
 }
 
-.cmp-card__meta i { color: var(--rpg-purple); margin-right: 4px; }
+.cmp-card__meta i {
+  color: var(--rpg-purple);
+  margin-right: 4px;
+}
 
 /* ── VAZIO ── */
 .cmp-empty {
@@ -220,7 +240,9 @@
   align-items: center;
   gap: 6px;
   white-space: nowrap;
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
 }
 
 .char-see-all-link:hover {
@@ -261,7 +283,11 @@
   opacity: 0.7;
 }
 
-.char-empty__text { font-weight: 700; margin: 0; color: var(--rpg-text-faint); }
+.char-empty__text {
+  font-weight: 700;
+  margin: 0;
+  color: var(--rpg-text-faint);
+}
 
 .char-empty__link {
   color: var(--rpg-purple);
@@ -272,7 +298,9 @@
   gap: 6px;
   transition: opacity 0.2s;
 }
-.char-empty__link:hover { opacity: 0.75; }
+.char-empty__link:hover {
+  opacity: 0.75;
+}
 
 .char-session-card {
   display: flex;
@@ -284,7 +312,10 @@
   border: 2px solid var(--rpg-border-light);
   border-radius: 14px;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 
 .char-session-card:hover {
@@ -331,7 +362,12 @@
   transition: border-color 0.2s;
 }
 
-.char-session-card__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.char-session-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
 
 .char-session-card__name {
   font-family: 'Exo 2', sans-serif;
@@ -359,7 +395,9 @@
   transition: color 0.2s;
 }
 
-.char-session-card.expanded .char-session-card__toggle { color: var(--rpg-purple); }
+.char-session-card.expanded .char-session-card__toggle {
+  color: var(--rpg-purple);
+}
 
 /* ── ACESSO RÁPIDO — GRID ── */
 .char-quick-grid {
@@ -379,7 +417,10 @@
   border-radius: 14px;
   padding: 14px 18px;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.15s;
   text-decoration: none;
   overflow: hidden;
 }
@@ -466,7 +507,9 @@
 .char-quick-arrow {
   color: var(--rpg-text-faint);
   font-size: 0.85rem;
-  transition: color 0.2s, transform 0.2s;
+  transition:
+    color 0.2s,
+    transform 0.2s;
 }
 
 /* ── BOTÕES ── */
@@ -493,14 +536,28 @@
   transform: translateY(-2px);
   box-shadow: var(--rpg-shadow-btn-hov);
 }
-
+.btn-show-more-container {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  margin-bottom: 25px;
+}
 /* ── RESPONSIVO ── */
 @media (max-width: 640px) {
-  .cmp-page-header { flex-direction: column; align-items: flex-start; }
-  .cmp-grid { grid-template-columns: 1fr 1fr; }
-  .char-quick-time { display: none; }
+  .cmp-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .cmp-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .char-quick-time {
+    display: none;
+  }
 }
 
 @media (max-width: 400px) {
-  .cmp-grid { grid-template-columns: 1fr; }
+  .cmp-grid {
+    grid-template-columns: 1fr;
+  }
 }
