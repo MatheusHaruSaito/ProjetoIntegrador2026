@@ -85,29 +85,31 @@ namespace RpgDex.Application.Services
             }
             return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
         }
-        public async Task<Result<IEnumerable<CampaignResponse>>> GetAllByUserId(string userId)
+        public async Task<Result<GetAllCampaignResponse>> GetAllByUserId(string userId)
         {
-            if(!Guid.TryParse(userId,out var guidUserId)) return Result<IEnumerable<CampaignResponse>>.Failure("Invalid User ID format.");
+            if(!Guid.TryParse(userId,out var guidUserId)) return Result<GetAllCampaignResponse>.Failure("Invalid User ID format.");
             var user = await userRepository.GetByIdAsync(guidUserId);
             if (user is null)
             {
-                return Result<IEnumerable<CampaignResponse>>.Failure("User Not Logged In");
+                return Result<GetAllCampaignResponse>.Failure("User Not Logged In");
             }
 
-            var response = await campaignRepository.GetAllAsync(guidUserId);
-            return Result<IEnumerable<CampaignResponse>>.Success(response.Adapt<IEnumerable<CampaignResponse>>());
+            var result = await campaignRepository.GetAllAsync(guidUserId);
+            var response = new GetAllCampaignResponse(result.Adapt<IEnumerable<CampaignResponse>>(), result.campaignLenght);
+            return Result<GetAllCampaignResponse>.Success(response);
         }
-        public async Task<Result<IEnumerable<CampaignResponse>>> GetAllByUserId(string userId, int page,int pageSize)
+        public async Task<Result<GetAllCampaignResponse>> GetAllByUserId(string userId, int page,int pageSize)
         {
-            if (!Guid.TryParse(userId, out var guidUserId)) return Result<IEnumerable<CampaignResponse>>.Failure("Invalid User ID format.");
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<GetAllCampaignResponse>.Failure("Invalid User ID format.");
             var user = await userRepository.GetByIdAsync(guidUserId);
             if (user is null)
             {
-                return Result<IEnumerable<CampaignResponse>>.Failure("User Not Logged In");
+                return Result<GetAllCampaignResponse>.Failure("User Not Logged In");
             }
 
-            var response = await campaignRepository.GetAllAsync(guidUserId, page, pageSize);
-            return Result<IEnumerable<CampaignResponse>>.Success(response.Adapt<IEnumerable<CampaignResponse>>());
+            var result = await campaignRepository.GetAllAsync(guidUserId, page, pageSize);
+            var response = new GetAllCampaignResponse(result.campaign.Adapt<IEnumerable<CampaignResponse>>(), result.campaignLenght);
+            return Result<GetAllCampaignResponse>.Success(response);
         }
 
 
