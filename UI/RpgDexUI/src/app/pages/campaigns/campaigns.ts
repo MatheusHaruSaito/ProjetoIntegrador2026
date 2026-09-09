@@ -50,9 +50,9 @@ export class CampaignsComponent implements OnInit {
     this.campaignService.GetAllByUserPage(this.campaingPageCount, this.campaingsPerPage).subscribe({
       next: (result) => {
         console.log(this.myCampaigns);
-        this.myCampaigns.push(...(result.data ? result.data : []));
+        this.myCampaigns.push(...(result.data?.campaigns ? result.data.campaigns : []));
         this.campaingPageCount++;
-        if (result.data!.length < 3) {
+        if (result.data!.campaigns.length < 3) {
           this.showMoreButton = false;
         }
         this.cdr.detectChanges();
@@ -64,10 +64,10 @@ export class CampaignsComponent implements OnInit {
   private loadCampaigns(): void {
     this.campaignService.GetAllByUserPage(0, this.campaingsPerPage).subscribe({
       next: (r) => {
-        if (r.data!.length > this.campaingsPerPage - 1) {
+        if (r.data!.campaigns.length > this.campaingsPerPage - 1) {
           this.showMoreButton = true;
         }
-        this.myCampaigns = r.data ?? [];
+        this.myCampaigns = r.data?.campaigns ?? [];
 
         this.cdr.detectChanges();
       },

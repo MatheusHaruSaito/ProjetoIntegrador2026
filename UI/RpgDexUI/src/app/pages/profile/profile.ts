@@ -136,9 +136,9 @@ export class ProfileComponent implements OnInit {
 
     this.campaignService.GetAllByUserPage(0, 3).subscribe({
       next: (response) => {
-        const allCampaigns: Campaign[] = response.data ?? [];
+        const allCampaigns: Campaign[] = response.data?.campaigns ?? [];
         //Refatorar
-        this.campaignTotal = allCampaigns.length;
+        this.campaignTotal = response.data!.campaignLenght;
         this.campaignPreview = allCampaigns.map((c) => ({
           id: c.id,
           title: c.title,

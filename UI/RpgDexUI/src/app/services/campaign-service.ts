@@ -12,6 +12,7 @@ import { AcceptCharacterToCampaignRequest } from '../../models/AcceptCharacterTo
 import { RemovePlayerFromCampaignRequest } from '../../models/removePlayerFromCampaignRequest';
 import { UpdateCampaignSettingsRequest } from '../../models/updateCampaignSettingsRequest';
 import { CampaignSetActiveStateRequest } from '../../models/campaignSetActiveStateRequest';
+import { GetAllCampaignResponse } from '../../models/getAllCampaignResponse';
 @Injectable({
   providedIn: 'root',
 })
@@ -24,14 +25,19 @@ export class CampaignService {
   Post(request: CreateCampaignRequest | FormData): Observable<ApiResponse<Campaign>> {
     return this.http.post<ApiResponse<Campaign>>(`${this.env}`, request);
   }
-  GetAll(): Observable<ApiResponse<Campaign[]>> {
-    return this.http.get<ApiResponse<Campaign[]>>(`${this.env}`);
+  GetAll(): Observable<ApiResponse<GetAllCampaignResponse>> {
+    return this.http.get<ApiResponse<GetAllCampaignResponse>>(`${this.env}`);
   }
   // GetAllByUser(): Observable<ApiResponse<Campaign[]>> {
   //   return this.http.get<ApiResponse<Campaign[]>>(`${this.env}/All`);
   // }
-  GetAllByUserPage(page: number, pageSize: number): Observable<ApiResponse<Campaign[]>> {
-    return this.http.get<ApiResponse<Campaign[]>>(`${this.env}/All/${page}/${pageSize}`);
+  GetAllByUserPage(
+    page: number,
+    pageSize: number,
+  ): Observable<ApiResponse<GetAllCampaignResponse>> {
+    return this.http.get<ApiResponse<GetAllCampaignResponse>>(
+      `${this.env}/All/${page}/${pageSize}`,
+    );
   }
   GetById(Id: String): Observable<ApiResponse<Campaign>> {
     return this.http.get<ApiResponse<Campaign>>(`${this.env}/${Id}`);
