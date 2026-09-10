@@ -31,7 +31,7 @@ export class CampaignsComponent implements OnInit {
 
   showCharactersCount = 5;
 
-  campaingPageCount = 1;
+  campaingPageCount = 2;
   campaingsPerPage = 4;
 
   showMoreButton = false;
