@@ -13,6 +13,8 @@ namespace RpgDex.Domain.Interfaces
         Task<Character> GetByIdAsync(Guid id);
         Task<bool> UpdateAsync(Character NewCharacter);
         Task<bool> SetActiveState(Guid Id,bool ActiveState);
+        Task<bool> UpdateLastAccess(Guid id, DateTime DateNow);
+
 
     }
     public record GetAllCharactersResult(IEnumerable<Character> Characters,int CharactersLenght);

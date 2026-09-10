@@ -76,5 +76,14 @@ namespace RpgDex.Infrastructure.Services
             var result = await _entitie.UpdateOneAsync(filter, updateCharacter);
             return result.ModifiedCount > 0;
         }
+
+        public async Task<bool> UpdateLastAccess(Guid id, DateTime DateNow)
+        {
+            var filter = Builders<Character>.Filter.Eq(c=> c.Id, id);
+            var updateCharacter = Builders<Character>.Update.Set(c => c.LastAccess,DateNow);
+
+            var result = await _entitie.UpdateOneAsync(filter,updateCharacter);
+            return result.ModifiedCount > 0;
+        }
     }
 }
