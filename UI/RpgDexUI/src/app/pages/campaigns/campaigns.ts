@@ -82,7 +82,6 @@ export class CampaignsComponent implements OnInit {
         // Ordena por último acesso e limita aos 5 mais recentes
         //Fazer o filtro pela api
         this.myCharacters = this.sortByLastAccessed(filtered);
-        console.log(this.myCharacters);
         this.cdr.detectChanges();
       },
       error: () => {},
