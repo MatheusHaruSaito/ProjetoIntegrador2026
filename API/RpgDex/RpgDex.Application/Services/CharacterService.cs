@@ -81,27 +81,26 @@ namespace RpgDex.Application.Services
             return Result<CharacterResponse>.Success(characterFound.Adapt<CharacterResponse>());
         }
 
-        public async Task<Result<IEnumerable<CharacterResponse>>> GetAllByUserIdAsync(string userId, int page, int pageSize)
+        public async Task<Result<GetAllCharacterResponse>> GetAllByUserIdAsync(string userId, int page, int pageSize)
         {
-            if (!Guid.TryParse(userId, out var guidUserId)) return Result<IEnumerable<CharacterResponse>>.Failure("Invalid User ID format.");
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<GetAllCharacterResponse>.Failure("Invalid User ID format.");
 
             //Return all characters
-            var characters =  await _character.GetAllByUserIdAsync(guidUserId,page,pageSize);
-            if (characters is null) return Result<IEnumerable<CharacterResponse>>.Failure("Failed to get character");
+            var result =  await _character.GetAllByUserIdAsync(guidUserId,page,pageSize);
+            if (result is null) return Result<GetAllCharacterResponse>.Failure("Failed to get character");
 
-            var response = characters.Adapt<List<CharacterResponse>>();
-            return  Result<IEnumerable<CharacterResponse>>.Success(response);
+            var response = new GetAllCharacterResponse(result.Characters.Adapt<IEnumerable<CharacterResponse>>(),result.CharactersLenght);
+            return  Result<GetAllCharacterResponse>.Success(response);
         }
-        public async Task<Result<IEnumerable<CharacterResponse>>> GetAllByUserIdAsync(string userId)
+        public async Task<Result<GetAllCharacterResponse>> GetAllByUserIdAsync(string userId)
         {
-            if (!Guid.TryParse(userId, out var guidUserId)) return Result<IEnumerable<CharacterResponse>>.Failure("Invalid User ID format.");
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<GetAllCharacterResponse>.Failure("Invalid User ID format.");
 
             //Return all characters
-            var characters = await _character.GetAllByUserIdAsync(guidUserId);
-            if (characters is null) return Result<IEnumerable<CharacterResponse>>.Failure("Failed to get character");
-
-            var response = characters.Adapt<List<CharacterResponse>>();
-            return Result<IEnumerable<CharacterResponse>>.Success(response);
+            var result = await _character.GetAllByUserIdAsync(guidUserId);
+            if (result is null) return Result<GetAllCharacterResponse>.Failure("Failed to get character");
+            var response = new GetAllCharacterResponse(result.Characters.Adapt<IEnumerable<CharacterResponse>>(),result.CharactersLenght);
+            return Result<GetAllCharacterResponse>.Success(response);
         }
         public async Task<Result<CharacterResponse>> GetByIdAsync(Guid Id)
         {
