@@ -78,7 +78,7 @@ export class CampaignsComponent implements OnInit {
   private loadCharacters(): void {
     this.characterService.GetAllByPage(1, this.showCharactersCount).subscribe({
       next: (r) => {
-        const all = r.data ?? [];
+        const all = r.data?.characters ?? [];
         const filtered = all.filter((c) => c.userId === this.currentUserId);
 
         //Criar paginamento na api dps (Refatorar)

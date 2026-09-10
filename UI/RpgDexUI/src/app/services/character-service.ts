@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { UpdateCharacter } from '../../models/updateCharacter';
 import { ApiResponse } from '../../models/apiResponse';
 import { CreateCharacter } from '../../models/createCharacter';
+import { GetAllCharacterResponse } from '../../models/getAllCharacterResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -20,11 +21,11 @@ export class CharacterService {
     return this.http.post<ApiResponse<Character>>(this.env, character);
   }
 
-  public GetAll(): Observable<ApiResponse<Character[]>> {
-    return this.http.get<ApiResponse<Character[]>>(`${this.env}/All`);
+  public GetAll(): Observable<ApiResponse<GetAllCharacterResponse>> {
+    return this.http.get<ApiResponse<GetAllCharacterResponse>>(`${this.env}/All`);
   }
-  public GetAllByPage(page: number, pageSize: number): Observable<ApiResponse<Character[]>> {
-    return this.http.get<ApiResponse<Character[]>>(`${this.env}/All/${page}/${pageSize}`);
+  public GetAllByPage(page: number, pageSize: number): Observable<ApiResponse<GetAllCharacterResponse>> {
+    return this.http.get<ApiResponse<GetAllCharacterResponse>>(`${this.env}/All/${page}/${pageSize}`);
   }
 
   public GetById(Id: String): Observable<ApiResponse<Character>> {

@@ -32,7 +32,7 @@ export class CharacterList implements OnInit {
   GetAllCharacters(): void {
     this.characterService.GetAll().subscribe({
       next: (response) => {
-        this.characterList = response.data ?? [];
+        this.characterList = response.data?.characters ?? [];
         this.onSearch();
         this.cdr.detectChanges();
       },

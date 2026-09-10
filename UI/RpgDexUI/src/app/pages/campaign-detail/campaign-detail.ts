@@ -171,7 +171,7 @@ export class CampaignDetailComponent implements OnInit {
   loadMyCharacters(): void {
     this.characterService.GetAll().subscribe({
       next: (res) => {
-        this.myCharacters = res.data ?? [];
+        this.myCharacters = res.data?.characters ?? [];
         this.cdr.detectChanges();
       },
     });
