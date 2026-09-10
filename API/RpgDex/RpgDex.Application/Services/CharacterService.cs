@@ -151,5 +151,19 @@ namespace RpgDex.Application.Services
             if (!response) return Result<bool>.Failure("It was not possible to update character");
             return Result<bool>.Success(response);
         }
+
+        public async Task<Result<bool>> UpdateLastAccess(Guid id)
+        {
+            var character = await _character.GetByIdAsync(id);
+            if (character is null) return Result<bool>.Failure("Failed to get character");
+
+
+            var isSuccess = await _character.UpdateLastAccessAsync(id,DateTime.Now);
+            if (!isSuccess)
+            {
+                return Result<bool>.Failure($"Failed to update last access on: {character.Name}");
+            }
+            return Result<bool>.Success(true);
+        }
     }
 }

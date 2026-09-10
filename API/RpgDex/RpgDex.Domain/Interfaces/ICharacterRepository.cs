@@ -13,7 +13,7 @@ namespace RpgDex.Domain.Interfaces
         Task<Character> GetByIdAsync(Guid id);
         Task<bool> UpdateAsync(Character NewCharacter);
         Task<bool> SetActiveState(Guid Id,bool ActiveState);
-        Task<bool> UpdateLastAccess(Guid id, DateTime DateNow);
+        Task<bool> UpdateLastAccessAsync(Guid id, DateTime DateNow);
 
 
     }

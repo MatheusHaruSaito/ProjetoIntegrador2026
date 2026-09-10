@@ -77,7 +77,7 @@ namespace RpgDex.Infrastructure.Services
             return result.ModifiedCount > 0;
         }
 
-        public async Task<bool> UpdateLastAccess(Guid id, DateTime DateNow)
+        public async Task<bool> UpdateLastAccessAsync(Guid id, DateTime DateNow)
         {
             var filter = Builders<Character>.Filter.Eq(c=> c.Id, id);
             var updateCharacter = Builders<Character>.Update.Set(c => c.LastAccess,DateNow);
