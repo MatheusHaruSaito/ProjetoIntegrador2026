@@ -68,7 +68,7 @@ namespace RpgDex.WebApi.Controllers
                 return result.ToIActionResult();
             }
 
-            [HttpPatch("{id}")]
+            [HttpPatch("LastAccess/{id}")]
             public async Task<IActionResult> PatchCharacterLastAccess(Guid id)
             {
                 var result = await _characterSevice.UpdateLastAccess(id);
