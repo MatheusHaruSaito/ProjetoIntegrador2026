@@ -13,8 +13,8 @@ namespace RpgDex.Application.Dto
         public string IconPath { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime LastAccess { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; }
+        public DateTime LastAccess { get; set; }
         public Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
 
     }

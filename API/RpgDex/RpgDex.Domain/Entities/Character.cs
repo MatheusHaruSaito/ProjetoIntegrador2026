@@ -16,7 +16,7 @@ namespace RpgDex.Domain.Entities
         public string Name { get; set; }
         public string Description { get; set; } = String.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime LastAccess { get; set; } = DateTime.UtcNow;
+        public DateTime LastAccess { get; set; }
         public bool IsActive { get; set; } = true;
         public BsonDocument Properties { get; set; } = new BsonDocument();
 
