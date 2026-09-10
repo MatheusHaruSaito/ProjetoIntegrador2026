@@ -81,7 +81,7 @@ export class CharacterEditor implements OnInit {
         this.selectedIconFile = null;
         this.iconPreviewUrl = '';
         this.captureSavedState();
-        this.characterService.PatchLastAccess(id);
+        this.characterService.PatchLastAccess(id).subscribe();
         this.cdr.detectChanges();
       },
       error: () => this.router.navigate(['/personagens']),

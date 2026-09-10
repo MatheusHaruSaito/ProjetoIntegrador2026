@@ -9,8 +9,6 @@ import { Character } from '../../../models/character';
 import { Campaign } from '../../../models/campaign';
 import { CreateJoinCampaignModalComponent } from '../../modals/create-join-campaign-modal/create-join-campaign-modal';
 
-const LAST_ACCESSED_KEY = 'rpgdex-last-accessed-chars';
-
 @Component({
   selector: 'app-campaigns',
   standalone: true,
@@ -49,7 +47,6 @@ export class CampaignsComponent implements OnInit {
   public showMoreCampaigns(): void {
     this.campaignService.GetAllByUserPage(this.campaingPageCount, this.campaingsPerPage).subscribe({
       next: (result) => {
-        console.log(this.myCampaigns);
         this.myCampaigns.push(...(result.data?.campaigns ? result.data.campaigns : []));
         this.campaingPageCount++;
         if (result.data!.campaigns.length < 3) {
@@ -85,6 +82,7 @@ export class CampaignsComponent implements OnInit {
         // Ordena por último acesso e limita aos 5 mais recentes
         //Fazer o filtro pela api
         this.myCharacters = this.sortByLastAccessed(filtered);
+        console.log(this.myCharacters);
         this.cdr.detectChanges();
       },
       error: () => {},
@@ -93,42 +91,42 @@ export class CampaignsComponent implements OnInit {
 
   // --- LÓGICA DE ÚLTIMO ACESSO ---
   private sortByLastAccessed(chars: Character[]): Character[] {
-    const accessed = this.getLastAccessedMap();
     return [...chars].sort((a, b) => {
-      const ta = accessed[a.id] ?? 0;
-      const tb = accessed[b.id] ?? 0;
-      return tb - ta;
+      const timeA = a.lastAccess ? new Date(a.lastAccess).getTime() : 0;
+      const timeB = b.lastAccess ? new Date(b.lastAccess).getTime() : 0;
+
+      return timeB - timeA;
     });
   }
 
-  private getLastAccessedMap(): Record<string, number> {
-    try {
-      return JSON.parse(localStorage.getItem(LAST_ACCESSED_KEY) ?? '{}');
-    } catch {
-      return {};
-    }
-  }
-
   openCharacter(id: string): void {
-    const map = this.getLastAccessedMap();
-    map[id] = Date.now();
-    localStorage.setItem(LAST_ACCESSED_KEY, JSON.stringify(map));
     this.router.navigate(['/personagens', id]);
   }
 
   lastAccessedLabel(id: string): string {
-    const map = this.getLastAccessedMap();
-    const ts = map[id];
-    if (!ts) return 'Nunca acessado';
-    const diff = Math.floor((Date.now() - ts) / 1000);
-    if (diff < 60) return 'Agora mesmo';
-    if (diff < 3600) return `${Math.floor(diff / 60)} min atrás`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}h atrás`;
-    return `${Math.floor(diff / 86400)}d atrás`;
+    const character = this.myCharacters.find((c) => c.id == id);
+
+    if (!character || !character.lastAccess) {
+      return 'Nunca acessado';
+    }
+    const diffInSeconds = Math.floor(
+      (Date.now() - new Date(character!.lastAccess).getTime()) / 1000,
+    );
+    if (!this.wasAccessed(id)) return 'Nunca acessado';
+    if (diffInSeconds < 60) return 'Agora mesmo';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min atrás`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h atrás`;
+    return `${Math.floor(diffInSeconds / 86400)}d atrás`;
   }
 
   wasAccessed(id: string): boolean {
-    return !!this.getLastAccessedMap()[id];
+    const char = this.myCharacters.find((c) => c.id == id);
+    if (!char || !char.lastAccess) {
+      return false;
+    }
+
+    const accessDate = new Date(char.lastAccess);
+    return !isNaN(accessDate.getTime()) && accessDate.getFullYear() > 1;
   }
 
   // --- MODAL & CAMPANHAS ---
