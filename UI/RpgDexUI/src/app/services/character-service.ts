@@ -24,8 +24,13 @@ export class CharacterService {
   public GetAll(): Observable<ApiResponse<GetAllCharacterResponse>> {
     return this.http.get<ApiResponse<GetAllCharacterResponse>>(`${this.env}/All`);
   }
-  public GetAllByPage(page: number, pageSize: number): Observable<ApiResponse<GetAllCharacterResponse>> {
-    return this.http.get<ApiResponse<GetAllCharacterResponse>>(`${this.env}/All/${page}/${pageSize}`);
+  public GetAllByPage(
+    page: number,
+    pageSize: number,
+  ): Observable<ApiResponse<GetAllCharacterResponse>> {
+    return this.http.get<ApiResponse<GetAllCharacterResponse>>(
+      `${this.env}/All/${page}/${pageSize}`,
+    );
   }
 
   public GetById(Id: String): Observable<ApiResponse<Character>> {
@@ -38,5 +43,8 @@ export class CharacterService {
 
   public Update(character: UpdateCharacter): Observable<ApiResponse<Character>> {
     return this.http.put<ApiResponse<Character>>(this.env, character);
+  }
+  public PatchLastAccess(id: string): Observable<ApiResponse<Character>> {
+    return this.http.patch<ApiResponse<Character>>(`${this.env}/LastAccess/${id}`, '');
   }
 }

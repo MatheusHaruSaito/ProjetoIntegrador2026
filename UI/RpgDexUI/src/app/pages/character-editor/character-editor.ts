@@ -6,8 +6,14 @@ import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 import { CharacterService } from '../../services/character-service';
 import { Character } from '../../../models/character';
 
-export interface AttrEntry { key: string; value: string; }
-export interface AttrGroup  { title: string; entries: AttrEntry[]; }
+export interface AttrEntry {
+  key: string;
+  value: string;
+}
+export interface AttrGroup {
+  title: string;
+  entries: AttrEntry[];
+}
 
 @Component({
   selector: 'app-character-editor',
@@ -17,11 +23,11 @@ export interface AttrGroup  { title: string; entries: AttrEntry[]; }
   styleUrl: './character-editor.css',
 })
 export class CharacterEditor implements OnInit {
-  private route            = inject(ActivatedRoute);
-  private router           = inject(Router);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private characterService = inject(CharacterService);
-  private cdr              = inject(ChangeDetectorRef);
-  private location         = inject(Location);
+  private cdr = inject(ChangeDetectorRef);
+  private location = inject(Location);
 
   character: Character | null = null;
   editForm = { name: '', description: '' };
@@ -43,17 +49,19 @@ export class CharacterEditor implements OnInit {
 
   selectedIconFile: File | null = null;
   iconPreviewUrl = '';
-  isSaving       = false;
-  errorMessage   = '';
+  isSaving = false;
+  errorMessage = '';
   successMessage = '';
-  isEditing      = false;
+  isEditing = false;
 
-  private readonly GUID_RE =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  private readonly GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (!id) { this.router.navigate(['/personagens']); return; }
+    if (!id) {
+      this.router.navigate(['/personagens']);
+      return;
+    }
     this.loadCharacter(id);
   }
 
@@ -61,12 +69,19 @@ export class CharacterEditor implements OnInit {
     this.characterService.GetById(id).subscribe({
       next: (res) => {
         this.character = res.data ?? null;
-        if (!this.character) { this.router.navigate(['/personagens']); return; }
-        this.editForm = { name: this.character.name, description: this.character.description ?? '' };
+        if (!this.character) {
+          this.router.navigate(['/personagens']);
+          return;
+        }
+        this.editForm = {
+          name: this.character.name,
+          description: this.character.description ?? '',
+        };
         this.groups = this.buildGroups((this.character as any).properties);
         this.selectedIconFile = null;
         this.iconPreviewUrl = '';
         this.captureSavedState();
+        this.characterService.PatchLastAccess(id);
         this.cdr.detectChanges();
       },
       error: () => this.router.navigate(['/personagens']),
@@ -122,7 +137,10 @@ export class CharacterEditor implements OnInit {
       if (parentKey) out.push({ key: parentKey, value: String(node) });
       return;
     }
-    if (Array.isArray(node)) { for (const i of node) this.walkNode(i, parentKey, out); return; }
+    if (Array.isArray(node)) {
+      for (const i of node) this.walkNode(i, parentKey, out);
+      return;
+    }
     if ('Name' in node || 'Value' in node) {
       out.push({
         key: String((node.Name ?? node.name ?? parentKey) || 'Atributo'),
@@ -148,10 +166,18 @@ export class CharacterEditor implements OnInit {
   }
 
   // ── Grupos ─────────────────────────────────────────────
-  addGroup(): void              { this.groups.push({ title: '', entries: [] }); }
-  removeGroup(i: number): void  { this.groups.splice(i, 1); }
-  addEntry(g: AttrGroup): void  { g.entries.push({ key: '', value: '' }); }
-  removeEntry(g: AttrGroup, i: number): void { g.entries.splice(i, 1); }
+  addGroup(): void {
+    this.groups.push({ title: '', entries: [] });
+  }
+  removeGroup(i: number): void {
+    this.groups.splice(i, 1);
+  }
+  addEntry(g: AttrGroup): void {
+    g.entries.push({ key: '', value: '' });
+  }
+  removeEntry(g: AttrGroup, i: number): void {
+    g.entries.splice(i, 1);
+  }
 
   // ── Ícone e Cortador de Imagem ──────────────────────────
   onIconSelected(event: Event): void {
@@ -209,15 +235,15 @@ export class CharacterEditor implements OnInit {
     for (const group of this.groups) {
       const key = group.title.trim() || 'Grupo';
       propertiesObj[key] = group.entries
-        .filter(e => e.key.trim())
-        .map(e => ({ Name: e.key.trim(), Value: e.value }));
+        .filter((e) => e.key.trim())
+        .map((e) => ({ Name: e.key.trim(), Value: e.value }));
     }
 
     const form = new FormData();
-    form.append('id',          this.character!.id);
-    form.append('name',        this.editForm.name.trim());
+    form.append('id', this.character!.id);
+    form.append('name', this.editForm.name.trim());
     form.append('description', this.editForm.description ?? '');
-    form.append('properties',  JSON.stringify(propertiesObj));
+    form.append('properties', JSON.stringify(propertiesObj));
     if (this.selectedIconFile) {
       form.append('icon', this.selectedIconFile, this.selectedIconFile.name);
     }
@@ -241,24 +267,32 @@ export class CharacterEditor implements OnInit {
         this.isEditing = false;
         this.successMessage = 'Personagem salvo com sucesso!';
         this.cdr.detectChanges();
-        setTimeout(() => { this.successMessage = ''; this.cdr.detectChanges(); }, 3000);
+        setTimeout(() => {
+          this.successMessage = '';
+          this.cdr.detectChanges();
+        }, 3000);
       },
       error: (err) => {
         this.isSaving = false;
         const body = err?.error;
         this.errorMessage =
-          (body?.errors ? (Object.values(body.errors).flat() as string[])[0] : null)
-          ?? body?.message ?? body?.title ?? 'Erro ao salvar.';
+          (body?.errors ? (Object.values(body.errors).flat() as string[])[0] : null) ??
+          body?.message ??
+          body?.title ??
+          'Erro ao salvar.';
         this.cdr.detectChanges();
       },
     });
   }
 
   confirmDelete(): void {
-    if (!confirm('Tem certeza que deseja excluir este personagem? Esta ação é irreversível.')) return;
+    if (!confirm('Tem certeza que deseja excluir este personagem? Esta ação é irreversível.'))
+      return;
     this.characterService.Delete(this.character!.id).subscribe({
-      next:  () => this.router.navigate(['/personagens']),
-      error: () => { this.errorMessage = 'Erro ao excluir personagem.'; },
+      next: () => this.router.navigate(['/personagens']),
+      error: () => {
+        this.errorMessage = 'Erro ao excluir personagem.';
+      },
     });
   }
 
