@@ -22,14 +22,14 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
+  background: var(--rpg-gradient);
   background-size: cover;
   background-position: center;
-  background-color: var(--rpg-purple-tint);
   border: 2px solid var(--rpg-border-purple);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--rpg-purple);
+  color: white;
   font-size: 1.4rem;
   flex-shrink: 0;
 }

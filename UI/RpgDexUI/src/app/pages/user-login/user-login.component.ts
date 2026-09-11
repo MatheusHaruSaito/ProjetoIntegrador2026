@@ -18,13 +18,20 @@ export class UserLoginComponent implements OnInit {
   private router = inject(Router);
   private googleAuth = inject(GoogleAuthService);
 
+  private emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   authUserForm: LoginUser = {
     email: '',
     password: '',
   };
 
-  showPasswordHint = false;
+  showPassword = false;
+  isLoading = false;
   errorMessage = '';
+
+  get emailInvalid(): boolean {
+    return this.authUserForm.email.length > 0 && !this.emailRegex.test(this.authUserForm.email);
+  }
 
   ngOnInit(): void {
     this.googleAuth.initLogin((response: any) => {
@@ -35,7 +42,7 @@ export class UserLoginComponent implements OnInit {
           this.router.navigate(['/home']);
         },
         error: () => {
-          this.errorMessage = 'Falha ao entrar com o Google. Verifique seu email e senha.';
+          this.errorMessage = 'Falha ao entrar com o Google. Tente novamente.';
         },
       });
     });
@@ -43,8 +50,8 @@ export class UserLoginComponent implements OnInit {
     this.googleAuth.renderButton('google-btn');
   }
 
-  togglePasswordHint() {
-    this.showPasswordHint = !this.showPasswordHint;
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   loginComGoogle(): void {
@@ -56,19 +63,34 @@ export class UserLoginComponent implements OnInit {
     }
   }
 
-  Login() {
+  Login(): void {
     this.errorMessage = '';
+
+    if (!this.emailRegex.test(this.authUserForm.email)) {
+      this.errorMessage = 'Informe um email válido.';
+      return;
+    }
+
+    if (!this.authUserForm.password) {
+      this.errorMessage = 'Informe a sua senha.';
+      return;
+    }
+
+    this.isLoading = true;
 
     this.authService.Login(this.authUserForm).subscribe({
       next: () => {
+        this.isLoading = false;
         this.router.navigate(['/home']);
       },
       error: () => {
+        this.isLoading = false;
         this.errorMessage = 'Falha ao entrar. Verifique seu email e senha.';
       },
     });
   }
-  onDiscordLogin() {
+
+  onDiscordLogin(): void {
     this.authService.DiscordSingUp('');
   }
 }

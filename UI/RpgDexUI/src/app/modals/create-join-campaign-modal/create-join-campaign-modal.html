@@ -17,6 +17,10 @@
     <!-- ABA 1: CRIAR CAMPANHA -->
     <div class="modal-body" *ngIf="activeTab === 'create'">
 
+      <p class="modal-tab-intro">
+        Preencha os dados abaixo para fundar sua própria aventura do zero.
+      </p>
+
       <div class="input-group">
         <label class="input-label">Imagem de Capa <span class="required">*</span></label>
         <div class="cover-upload" (click)="coverInput.click()" [class.has-preview]="coverPreviewUrl">
@@ -70,7 +74,11 @@
 
     <!-- ABA 2: ENTRAR EM UMA CAMPANHA -->
     <div class="modal-body" *ngIf="activeTab === 'join'">
-      
+
+      <p class="modal-tab-intro">
+        Peça ao Mestre o código da campanha e informe abaixo para entrar.
+      </p>
+
       <div class="input-group">
         <label class="input-label">Código / ID da Campanha <span class="required">*</span></label>
         <div class="input-field-wrapper">

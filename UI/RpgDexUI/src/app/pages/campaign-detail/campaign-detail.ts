@@ -67,6 +67,8 @@ export class CampaignDetailComponent implements OnInit {
   errorMessage: string | null = null;
   private feedbackTimeout: any;
 
+  isGmSettingsOpen = false;
+
   ngOnInit(): void {
     this.currentUserId = this.authService.getLoggedUserId() ?? '';
     this.campaignId = this.route.snapshot.paramMap.get('id') ?? '';
@@ -295,7 +297,7 @@ export class CampaignDetailComponent implements OnInit {
           this.selectedGmCharacterId = '';
           this.selectedCharacterId = '';
           this.showFeedback('Ficha vinculada/enviada com sucesso!');
-          
+
           // Atualiza apenas as listas sem resetar o layout
           this.loadCampaign(true);
         },
@@ -333,8 +335,8 @@ export class CampaignDetailComponent implements OnInit {
   removePlayer(userId: string): void {
     if (!this.campaign) return;
 
-    const confirmMsg = userId === this.currentUserId 
-      ? 'Tem certeza de que deseja sair desta campanha?' 
+    const confirmMsg = userId === this.currentUserId
+      ? 'Tem certeza de que deseja sair desta campanha?'
       : 'Tem certeza de que deseja remover este jogador?';
 
     if (!confirm(confirmMsg)) return;
@@ -413,9 +415,21 @@ export class CampaignDetailComponent implements OnInit {
 
   saveCampaignChanges(eventData: any): void {
     this.campaignService.Update(eventData).subscribe({
-      next: () => {
+      next: (res) => {
         this.isEditModalOpen = false;
+
+        if (res && res.data) {
+          this.campaign = res.data;
+
+          if (this.campaign.iconPath) {
+            const separator = this.campaign.iconPath.includes('?') ? '&' : '?';
+            this.campaign.iconPath = `${this.campaign.iconPath}${separator}t=${new Date().getTime()}`;
+          }
+        }
+
         this.showFeedback('Campanha atualizada com sucesso!');
+
+        this.cdr.detectChanges();
         this.loadCampaign(true);
       },
       error: (err) =>

@@ -45,11 +45,13 @@
             required
           />
         </div>
+        <span class="field-hint" *ngIf="emailInvalid">Informe um email válido.</span>
 
+        <!-- Campo de Senha com Alternância de Visibilidade -->
         <div class="input-group">
           <i class="fa fa-lock icon-field"></i>
           <input
-            type="password"
+            [type]="showPassword ? 'text' : 'password'"
             placeholder="Senha"
             name="password"
             [(ngModel)]="registerForm.password"
@@ -58,41 +60,60 @@
           />
           <button
             type="button"
-            class="password-hint-btn"
-            (click)="togglePasswordHint()"
-            [class.active]="showPasswordHint"
-            aria-label="Dicas de senha"
+            class="password-toggle-btn"
+            (click)="togglePasswordVisibility()"
+            [aria-label]="showPassword ? 'Ocultar senha' : 'Exibir senha'"
           >
-            ?
+            <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
           </button>
-          <div class="password-hint-box" *ngIf="showPasswordHint">
-            <p class="hint-title"><i class="fa fa-shield-halved"></i> Requisitos de senha</p>
-            <ul class="hint-list">
-              <li><i class="fa fa-check"></i> Mínimo de 8 caracteres</li>
-              <li><i class="fa fa-check"></i> Pelo menos uma letra maiúscula (A–Z)</li>
-              <li><i class="fa fa-check"></i> Pelo menos uma letra minúscula (a–z)</li>
-              <li><i class="fa fa-check"></i> Pelo menos um número (0–9)</li>
-              <li><i class="fa fa-check"></i> Pelo menos um caracter especial</li>
-            </ul>
-          </div>
         </div>
-        <span class="field-hint" *ngIf="passwordTooShort"
-          >A senha deve ter pelo menos 8 caracteres.</span
-        >
-        <span class="field-hint" *ngIf="!passwordTooShort && passwordStrengthError">{{
-          passwordStrengthError
-        }}</span>
 
+        <!-- Lista de Requisitos de Senha Sempre Visível (Estilo Spotify) -->
+        <div class="password-requirements">
+          <p class="requirements-title">A sua senha deve conter pelo menos:</p>
+          <ul class="requirements-list">
+            <li [class.valid]="hasMinLength">
+              <i class="fa" [ngClass]="hasMinLength ? 'fa-circle-check' : 'fa-circle-dot'"></i>
+              8 caracteres
+            </li>
+            <li [class.valid]="hasUpper">
+              <i class="fa" [ngClass]="hasUpper ? 'fa-circle-check' : 'fa-circle-dot'"></i>
+              1 letra maiúscula (A–Z)
+            </li>
+            <li [class.valid]="hasLower">
+              <i class="fa" [ngClass]="hasLower ? 'fa-circle-check' : 'fa-circle-dot'"></i>
+              1 letra minúscula (a–z)
+            </li>
+            <li [class.valid]="hasNumber">
+              <i class="fa" [ngClass]="hasNumber ? 'fa-circle-check' : 'fa-circle-dot'"></i>
+              1 número (0–9)
+            </li>
+            <li [class.valid]="hasSpecial">
+              <i class="fa" [ngClass]="hasSpecial ? 'fa-circle-check' : 'fa-circle-dot'"></i>
+              1 caráter especial (ex: # ! ? @)
+            </li>
+          </ul>
+        </div>
+
+        <!-- Campo de Confirmação de Senha -->
         <div class="input-group">
           <i class="fa fa-lock icon-field"></i>
           <input
-            type="password"
+            [type]="showConfirmPassword ? 'text' : 'password'"
             placeholder="Confirmar Senha"
             name="confirmPassword"
             [(ngModel)]="confirmPassword"
             autocomplete="new-password"
             required
           />
+          <button
+            type="button"
+            class="password-toggle-btn"
+            (click)="toggleConfirmPasswordVisibility()"
+            [aria-label]="showConfirmPassword ? 'Ocultar senha' : 'Exibir senha'"
+          >
+            <i class="fa" [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+          </button>
         </div>
         <span class="field-hint" *ngIf="passwordsMismatch">As senhas não coincidem.</span>
 

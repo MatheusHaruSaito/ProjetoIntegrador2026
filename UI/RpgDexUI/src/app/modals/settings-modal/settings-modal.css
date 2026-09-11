@@ -88,6 +88,9 @@
 }
 
 .settings-group h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 0.95rem;
   color: var(--rpg-text-muted);
   margin: 0 0 12px;
@@ -213,3 +216,61 @@
   outline: none;
   border-color: var(--rpg-purple);
 }
+
+/* ── AJUDA / EXPLICAÇÃO (mesmo padrão do hint de senha no login/cadastro) ── */
+.info-hint-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--rpg-border);
+  background: var(--rpg-surface);
+  color: var(--rpg-text-faint);
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  text-transform: none;
+  letter-spacing: normal;
+  flex-shrink: 0;
+}
+
+.info-hint-btn:hover,
+.info-hint-btn.active {
+  border-color: var(--rpg-purple);
+  background: var(--rpg-purple);
+  color: white;
+}
+
+.info-hint-box {
+  background: var(--rpg-bg);
+  border: 1px solid var(--rpg-border-light);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: -6px;
+  animation: fadeIn 0.18s ease;
+}
+
+.info-hint-box .hint-title {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: var(--rpg-purple);
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.info-hint-box .hint-text {
+  font-size: 0.85rem;
+  color: var(--rpg-text-muted);
+  line-height: 1.55;
+  margin: 0;
+} 

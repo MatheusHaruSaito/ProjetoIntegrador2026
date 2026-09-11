@@ -28,6 +28,7 @@ export class SettingsModalComponent implements OnChanges {
   twoFactorTokenInput = '';
   twoFactorStep: 'idle' | 'code-sent' = 'idle';
   settingsMessage = { text: '', type: '' };
+  show2FAHint = false;
 
   ngOnChanges(changes: SimpleChanges): void {
     // Sempre que o modal for aberto (isOpen mudou para true), busca os dados atualizados
@@ -55,7 +56,12 @@ export class SettingsModalComponent implements OnChanges {
     this.twoFactorStep = 'idle';
     this.twoFactorTokenInput = '';
     this.settingsMessage = { text: '', type: '' };
+    this.show2FAHint = false;
     this.closeModal.emit();
+  }
+
+  toggle2FAHint(): void {
+    this.show2FAHint = !this.show2FAHint;
   }
 
   request2FACode(): void {

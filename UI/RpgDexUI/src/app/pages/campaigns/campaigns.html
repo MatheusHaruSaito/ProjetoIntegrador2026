@@ -7,9 +7,14 @@
         <h1 class="cmp-page-title">Campanhas</h1>
         <p class="cmp-page-sub">Gerencie suas aventuras e sessões.</p>
       </div>
-      <button class="btn-primary" (click)="openModal('create')">
-        <i class="fa fa-plus"></i> Nova Campanha
-      </button>
+      <div class="cmp-header-actions">
+        <button class="btn-secondary" (click)="openModal('join')">
+          <i class="fa fa-right-to-bracket"></i> Entrar em uma Campanha
+        </button>
+        <button class="btn-primary" (click)="openModal('create')">
+          <i class="fa fa-plus"></i> Nova Campanha
+        </button>
+      </div>
     </div>
 
     <!-- ── SEÇÃO: MINHAS CAMPANHAS ── -->
@@ -43,9 +48,14 @@
         <div class="cmp-empty__icon"><i class="fa fa-map"></i></div>
         <p class="cmp-empty__title">Nenhuma campanha ainda.</p>
         <p class="cmp-empty__sub">Crie sua própria aventura ou junte-se a uma existente.</p>
-        <button class="btn-primary" (click)="openModal('create')">
-          <i class="fa fa-plus"></i> Nova Campanha
-        </button>
+        <div class="cmp-empty-actions">
+          <button class="btn-secondary" (click)="openModal('join')">
+            <i class="fa fa-right-to-bracket"></i> Entrar em uma Campanha
+          </button>
+          <button class="btn-primary" (click)="openModal('create')">
+            <i class="fa fa-plus"></i> Nova Campanha
+          </button>
+        </div>
       </div>
     </div>
 
@@ -98,7 +108,6 @@
   </div>
 </div>
 
-<!-- Modal isolado reutilizável -->
 <app-create-join-campaign-modal [(isOpen)]="isModalOpen" [activeTab]="activeModalTab"
   (onCreate)="handleCreateCampaign($event)" (onJoin)="handleJoinCampaign($event)">
 </app-create-join-campaign-modal>

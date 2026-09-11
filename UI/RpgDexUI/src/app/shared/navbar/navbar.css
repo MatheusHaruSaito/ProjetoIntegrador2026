@@ -38,7 +38,7 @@
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 40px;
+  gap: 16px;
   margin: 0 auto;
   padding: 0;
 }
@@ -48,38 +48,36 @@
   text-decoration: none;
   font-family: 'Nunito', sans-serif;
   font-weight: 700;
-  font-size: 1.05rem;
-  opacity: 0.85;
-  transition: all 0.3s ease;
+  font-size: 1rem;
+  opacity: 0.8;
+  padding: 8px 18px;
+  border-radius: 20px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  display: inline-block;
 }
 
-.nav-links a:hover,
+.nav-links a:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.12);
+}
+
 .nav-links a.active {
   opacity: 1;
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.22);
+  font-weight: 800;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
 }
 
-.nav-links a.active::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: white;
-  border-radius: 2px;
-}
-
-/* ── PERFIL DO USUÁRIO ── */
 .user-profile {
+  position: relative;
   width: 45px;
   height: 45px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid white;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -88,8 +86,9 @@
 }
 
 .user-profile:hover {
-  background: rgba(255, 255, 255, 0.4);
-  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
 }
 
 .user-profile--image {
@@ -111,7 +110,17 @@
   font-size: 1.1rem;
 }
 
-/* ── BOTÕES DE AUTENTICAÇÃO (padronizados) ── */
+.user-profile.active {
+  border-color: white;
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.user-profile.active::after {
+  display: none;
+}
+
 .auth-buttons {
   display: flex;
   gap: 15px;
@@ -157,7 +166,6 @@
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* ── FOCO ACESSÍVEL ── */
 .nav-links a:focus-visible,
 .logo:focus-visible,
 .user-profile:focus-visible,
@@ -168,7 +176,6 @@
   outline-offset: 3px;
 }
 
-/* ── MENU HAMBÚRGUER ── */
 .menu-toggle {
   display: none;
   flex-direction: column;
@@ -195,7 +202,6 @@
   transition: 0.3s;
 }
 
-/* ── OVERLAY DE FUNDO (mobile) ── */
 .nav-backdrop {
   display: none;
 }
@@ -251,7 +257,7 @@
     flex-direction: column;
     align-items: center;
     margin: 0;
-    gap: 30px;
+    gap: 16px;
   }
 
   .menu-toggle.active span:nth-child(1) {

@@ -31,6 +31,7 @@
       <a
         class="user-profile user-profile--image"
         routerLink="/perfil"
+        routerLinkActive="active"
         (click)="closeMenu()"
         aria-label="Meu perfil"
         *ngIf="authService.isLoggedIn() && userAvatarUrl"
@@ -41,6 +42,7 @@
       <a
         class="user-profile"
         routerLink="/perfil"
+        routerLinkActive="active"
         (click)="closeMenu()"
         aria-label="Meu perfil"
         *ngIf="authService.isLoggedIn() && !userAvatarUrl"

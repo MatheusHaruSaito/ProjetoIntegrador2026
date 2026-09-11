@@ -117,9 +117,13 @@ export class EditProfileComponent implements OnInit {
 
     this.isLoading = true;
     this.userService.Update(formData, userId).subscribe({
-      next: (r) => {
+      next: () => {
         this.isLoading = false;
         this.successMessage = 'Perfil atualizado com sucesso!';
+        this.selectedFile = null;
+
+        this.authService.GetLoggedUser().subscribe();
+
         this.cdr.detectChanges();
       },
       error: (err) => {

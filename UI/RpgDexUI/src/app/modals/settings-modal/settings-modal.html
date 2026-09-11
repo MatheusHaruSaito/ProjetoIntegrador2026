@@ -37,7 +37,30 @@
 
       <!-- Seção 2FA -->
       <div class="settings-group">
-        <h3>Autenticação em Duas Etapas (2FA)</h3>
+        <h3>
+          Autenticação em Duas Etapas (2FA)
+          <button
+            type="button"
+            class="info-hint-btn"
+            (click)="toggle2FAHint()"
+            [class.active]="show2FAHint"
+            aria-label="O que é a autenticação em duas etapas?"
+          >
+            ?
+          </button>
+        </h3>
+
+        <div class="info-hint-box" *ngIf="show2FAHint">
+          <p class="hint-title">
+            <i class="fa-solid fa-shield-halved"></i> O que é isso?
+          </p>
+          <p class="hint-text">
+            A autenticação em duas etapas adiciona uma camada extra de segurança à sua conta.
+            Além da senha, você confirma sua identidade com um código enviado por e-mail a cada
+            login. Assim, mesmo que alguém descubra sua senha, não conseguirá acessar sua conta
+            sem esse código.
+          </p>
+        </div>
 
         <div class="twofa-status-box">
           <div class="twofa-info">

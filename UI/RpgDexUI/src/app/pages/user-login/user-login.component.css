@@ -3,7 +3,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--rpg-bg);
     padding: 40px 20px;
 }
 
@@ -131,14 +130,13 @@
     transform: translateY(-50%);
     color: var(--rpg-text-faint);
     font-size: 1.1rem;
-    /* prevent icon from sitting on top of hint box */
     pointer-events: none;
 }
 
 .input-group input {
     width: 100%;
     font-family: 'Nunito', sans-serif;
-    padding: 15px 48px 15px 45px; /* right padding reserves space for hint btn */
+    padding: 15px 48px 15px 45px;
     border: 2px solid var(--rpg-border);
     border-radius: 10px;
     font-size: 1rem;
@@ -153,105 +151,26 @@
     background-color: var(--rpg-surface);
 }
 
-/* --- PASSWORD HINT BUTTON --- */
-.password-hint-btn {
+/* --- BOTÃO ALTERNAR VISIBILIDADE DA SENHA (OLHO) --- */
+.password-toggle-btn {
     position: absolute;
-    right: 12px;
+    right: 14px;
     top: 50%;
     transform: translateY(-50%);
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 2px solid var(--rpg-border);
-    background: var(--rpg-surface);
+    background: transparent;
+    border: none;
     color: var(--rpg-text-faint);
-    font-family: 'Exo 2', sans-serif;
-    font-weight: 800;
-    font-size: 0.85rem;
-    line-height: 1;
+    font-size: 1.1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
+    transition: color 0.2s ease;
+    padding: 4px;
 }
 
-.password-hint-btn:hover,
-.password-hint-btn.active {
-    border-color: var(--rpg-purple);
-    background: var(--rpg-purple);
-    color: white;
-}
-
-/* --- PASSWORD HINT BOX --- */
-.password-hint-box {
-    position: absolute;
-    top: calc(100% + 10px);
-    right: 0;
-    z-index: 100;
-    width: 280px;
-    background: var(--rpg-surface);
-    border: 1px solid var(--rpg-border);
-    border-radius: 12px;
-    padding: 16px 18px;
-    box-shadow: var(--rpg-shadow-lg);
-    animation: hintFadeIn 0.18s ease;
-}
-
-.password-hint-box::before {
-    content: '';
-    position: absolute;
-    top: -7px;
-    right: 16px;
-    width: 12px;
-    height: 12px;
-    background: var(--rpg-surface);
-    border-left: 1px solid var(--rpg-border);
-    border-top: 1px solid var(--rpg-border);
-    transform: rotate(45deg);
-}
-
-@keyframes hintFadeIn {
-    from { opacity: 0; transform: translateY(-6px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-.hint-title {
-    font-family: 'Exo 2', sans-serif;
-    font-weight: 800;
-    font-size: 0.82rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+.password-toggle-btn:hover {
     color: var(--rpg-purple);
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.hint-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.hint-list li {
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.88rem;
-    color: var(--rpg-text-body);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.hint-list li .fa-check {
-    color: var(--rpg-purple);
-    font-size: 0.75rem;
-    flex-shrink: 0;
 }
 
 /* --- FORM OPTIONS & LINKS --- */
@@ -266,6 +185,10 @@
     font-size: 0.9rem;
     text-decoration: none;
     font-weight: 600;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
 }
 
 /* --- BUTTONS --- */
@@ -290,7 +213,24 @@
     box-shadow: var(--rpg-shadow-btn-hov);
 }
 
+.btn-login:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    filter: none;
+}
+
 /* --- FEEDBACK --- */
+.field-hint {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    color: var(--rpg-error-text);
+    margin-top: -12px;
+    padding-left: 4px;
+    display: block;
+}
+
 .feedback-message {
     font-family: 'Nunito', sans-serif;
     font-size: 0.95rem;
@@ -413,14 +353,4 @@
     }
 
     .form-options { text-align: center; }
-
-    .password-hint-box {
-        right: auto;
-        left: 0;
-    }
-
-    .password-hint-box::before {
-        right: auto;
-        left: 16px;
-    }
 }

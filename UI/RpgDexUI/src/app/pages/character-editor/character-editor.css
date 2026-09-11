@@ -22,6 +22,7 @@
   gap: 10px;
   align-items: center;
   margin-left: auto; 
+  flex-wrap: wrap;
 }
 
 .ce-back-btn {
@@ -43,12 +44,6 @@
 .ce-back-btn:hover {
   color: var(--rpg-purple);
   background: var(--rpg-purple-tint);
-}
-
-.ce-topbar-actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
 }
 
 .btn-danger-outline {
@@ -137,22 +132,57 @@
   min-width: 0;
 }
 
+/* Container do campo de nome editável */
+.ce-name-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
 .ce-name-input {
   font-family: 'Exo 2', sans-serif;
   font-weight: 800;
   font-size: 1.8rem;
   color: var(--rpg-text-dark);
   border: none;
-  border-bottom: 2px solid transparent;
-  background: transparent;
+  border-bottom: 2px dashed var(--rpg-border);
+  background: var(--rpg-surface-tint);
   outline: none;
-  padding: 4px 0;
+  padding: 6px 36px 6px 10px;
+  border-radius: 8px 8px 0 0;
   width: 100%;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
 }
 
-.ce-name-input:focus { border-bottom-color: var(--rpg-purple); }
-.ce-name-input::placeholder { color: var(--rpg-text-faint); font-weight: 400; }
+.ce-name-input:hover {
+  border-bottom-color: var(--rpg-purple);
+  background: var(--rpg-purple-tint);
+}
+
+.ce-name-input:focus {
+  border-bottom: 2px solid var(--rpg-purple);
+  background: var(--rpg-surface);
+}
+
+.ce-name-input::placeholder {
+  color: var(--rpg-text-faint);
+  font-weight: 400;
+}
+
+.ce-name-edit-icon {
+  position: absolute;
+  right: 12px;
+  color: var(--rpg-text-faint);
+  font-size: 0.95rem;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.ce-name-input-wrapper:hover .ce-name-edit-icon,
+.ce-name-input:focus + .ce-name-edit-icon {
+  color: var(--rpg-purple);
+}
 
 .ce-id-badge {
   display: inline-block;
@@ -223,6 +253,7 @@
   padding: 14px;
   resize: vertical;
   min-height: 180px;
+  max-height: 500px;
   transition: border-color 0.2s;
   box-sizing: border-box;
 }
@@ -265,6 +296,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 
 .ce-attrs-empty {
@@ -287,8 +319,10 @@
   border-radius: 10px;
   padding: 8px 10px;
   transition: border-color 0.2s;
+  min-width: 0;
 }
 
+.ce-attr-row input { min-width: 0; }
 .ce-attr-row--focus { border-color: var(--rpg-purple); }
 
 .ce-attr-key,
@@ -364,98 +398,6 @@
 
 .ce-loading i { font-size: 2rem; color: var(--rpg-purple); opacity: 0.5; }
 
-/* ── RESPONSIVO ── */
-@media (max-width: 860px) {
-  .ce-body { grid-template-columns: 1fr; }
-  .ce-hero { flex-direction: column; align-items: flex-start; gap: 20px; }
-  .ce-name-input { font-size: 1.4rem; }
-}
-
-@media (max-width: 520px) {
-  .ce-topbar { flex-direction: column; align-items: flex-start; }
-  .ce-topbar-actions { width: 100%; justify-content: flex-end; }
-}
-/* ── GRUPOS ── */
-.ce-groups-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.ce-groups-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 30px 20px;
-  text-align: center;
-  color: var(--rpg-text-faint);
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.88rem;
-  background: var(--rpg-surface);
-  border: 1.5px dashed var(--rpg-border);
-  border-radius: 14px;
-}
-
-.ce-groups-empty i {
-  font-size: 1.6rem;
-  color: var(--rpg-purple);
-  opacity: 0.4;
-}
-
-.ce-group {
-  margin-bottom: 14px;
-}
-
-.ce-group-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-bottom: 10px;
-  border-bottom: 1.5px solid var(--rpg-border-purple);
-  margin-bottom: 10px;
-}
-
-.ce-group-title {
-  flex: 1;
-  font-family: 'Exo 2', sans-serif;
-  font-weight: 800;
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--rpg-purple);
-  border: none;
-  background: transparent;
-  outline: none;
-  min-width: 0;
-}
-
-.ce-group-title::placeholder {
-  color: var(--rpg-text-faint);
-  font-weight: 400;
-  text-transform: none;
-  letter-spacing: 0;
-  font-style: italic;
-}
-
-.ce-group-actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-shrink: 0;
-}
-
-.btn-remove-group:hover {
-  background: var(--rpg-error-bg) !important;
-  color: var(--rpg-error) !important;
-}
-
-.btn-add-sm {
-  padding: 5px 9px !important;
-  font-size: 0.75rem !important;
-}
 /* ── HERO: nome como texto no modo visualização ── */
 .ce-name-view {
   font-family: 'Exo 2', sans-serif;
@@ -465,6 +407,8 @@
   margin: 0;
   padding: 4px 0;
   line-height: 1.2;
+  word-break: break-word;
+  min-width: 0;
 }
 
 .ce-edit-hint {
@@ -525,6 +469,9 @@
   white-space: pre-wrap;
   word-break: break-word;
   min-height: 60px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .ce-view-text--empty {
@@ -571,7 +518,10 @@
   font-style: italic;
 }
 
-.ce-group { margin-bottom: 14px; }
+.ce-group {
+  margin-bottom: 14px;
+  min-width: 0;
+}
 
 /* Header do grupo */
 .ce-group-header {
@@ -593,6 +543,8 @@
   letter-spacing: 0.08em;
   color: var(--rpg-purple);
   margin: 0;
+  word-break: break-word;
+  min-width: 0;
 }
 
 /* Título do grupo — edição */
@@ -608,6 +560,7 @@
   background: transparent;
   outline: none;
   min-width: 0;
+  word-break: break-word;
 }
 
 .ce-group-title-input::placeholder {
@@ -622,11 +575,7 @@
 .btn-remove-group:hover { background: var(--rpg-error-bg) !important; color: var(--rpg-error) !important; }
 .btn-add-sm { padding: 5px 9px !important; font-size: 0.75rem !important; }
 
-/* ── CHIP de atributo (visualização) ──
-   Chave e valor ficam empilhados (chave em cima, valor embaixo) em vez de
-   lado a lado. Lado a lado, um valor grande não tinha como encolher
-   (flex-shrink:0) e sempre estourava a largura do chip. Empilhado, os dois
-   usam a largura inteira disponível e só quebram linha normalmente. */
+/* ── CHIP de atributo (visualização) ── */
 .ce-attr-chip {
   display: flex;
   flex-direction: column;
@@ -635,6 +584,7 @@
   background: var(--rpg-surface-tint);
   border: 1.5px solid var(--rpg-border-light);
   border-radius: 8px;
+  min-width: 0;
 }
 
 .ce-attr-chip-key {
@@ -659,48 +609,14 @@
   min-width: 0;
   text-align: left;
 }
-/* ── OVERFLOW FIXES ── */
-/* min-width:0 continua necessário (flex/grid) pra permitir quebra de linha,
-   mas overflow:hidden foi removido dos containers de conteúdo — ele estava
-   cortando texto em vez de deixar tudo visível. Quem precisa de limite
-   vira scroll interno (ver seção "SCROLL LIMITADO" abaixo). */
+
+/* ── OVERFLOW FIXES & SCROLL LIMITADO ── */
 .ce-col,
 .ce-col--main,
 .ce-col--attrs {
   min-width: 0;
 }
 
-.ce-group {
-  min-width: 0;
-}
-
-.ce-attrs-list {
-  min-width: 0;
-}
-
-.ce-attr-row {
-  min-width: 0;
-}
-
-/* Inputs dentro do grid não podem estourar */
-.ce-attr-row input {
-  min-width: 0;
-}
-
-/* Chips de visualização */
-.ce-attr-chip {
-  min-width: 0;
-}
-
-.ce-attr-chip-key,
-.ce-attr-chip-value {
-  min-width: 0;
-}
-
-/* ── SCROLL LIMITADO ──
-   Em vez de deixar a coluna de atributos crescer infinitamente (empurrando
-   o layout) ou cortar conteúdo com overflow:hidden, ela cresce até um
-   limite e depois vira scroll interno. */
 .ce-col--attrs {
   max-height: calc(100vh - 180px);
   overflow-y: auto;
@@ -716,37 +632,6 @@
   border-radius: 8px;
 }
 .ce-col--attrs::-webkit-scrollbar-thumb:hover { background: var(--rpg-purple); }
-
-/* Descrição longa (modo visualização) também cresce até um teto e depois
-   rola, ao invés de esticar a página inteira */
-.ce-view-text {
-  max-height: 420px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-/* Textarea de edição: mantém resize manual, mas com teto de altura */
-.ce-textarea {
-  max-height: 500px;
-}
-
-/* Nome e descrição do hero */
-.ce-name-view {
-  word-break: break-word;
-  min-width: 0;
-}
-
-/* Títulos dos grupos */
-.ce-group-title-view,
-.ce-group-title-input {
-  word-break: break-word;
-  min-width: 0;
-}
-
-/* Wrapper da topbar não deixa botões quebrarem o layout */
-.ce-topbar-actions {
-  flex-wrap: wrap;
-}
 
 /* ── CROPPER SUB-MODAL ── */
 .cropper-backdrop {
@@ -893,4 +778,16 @@ image-cropper {
   transform: translateY(-2px);
   filter: brightness(1.1);
   box-shadow: var(--rpg-shadow-btn-hov);
+}
+
+/* ── RESPONSIVO ── */
+@media (max-width: 860px) {
+  .ce-body { grid-template-columns: 1fr; }
+  .ce-hero { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .ce-name-input { font-size: 1.4rem; }
+}
+
+@media (max-width: 520px) {
+  .ce-topbar { flex-direction: column; align-items: flex-start; }
+  .ce-topbar-actions { width: 100%; justify-content: flex-end; }
 }

@@ -3,7 +3,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--rpg-bg);
     padding: 40px 20px;
 }
 

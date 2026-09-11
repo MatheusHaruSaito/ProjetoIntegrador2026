@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
@@ -13,10 +13,12 @@ import { GoogleAuthService } from '../../services/google-auth-service';
   templateUrl: './user-register.component.html',
   styleUrl: './user-register.component.css',
 })
-export class UserRegisterComponent {
+export class UserRegisterComponent implements OnInit {
   authService = inject(AuthService);
   private googleAuth = inject(GoogleAuthService);
   private router = inject(Router);
+
+  private emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   registerForm: RegisterUser = {
     userName: '',
@@ -28,7 +30,9 @@ export class UserRegisterComponent {
   termsAccepted = false;
   hasReadTerms = false;
   isTermsModalOpen = false;
-  showPasswordHint = false;
+
+  showPassword = false;
+  showConfirmPassword = false;
 
   isLoading = false;
   errorMessage = '';
@@ -51,8 +55,37 @@ export class UserRegisterComponent {
     this.googleAuth.renderButton('google-btn');
   }
 
-  get passwordTooShort(): boolean {
-    return this.registerForm.password.length > 0 && this.registerForm.password.length < 8;
+  // Métodos para alternar a visibilidade da senha
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  get hasMinLength(): boolean {
+    return this.registerForm.password.length >= 8;
+  }
+
+  get hasUpper(): boolean {
+    return /[A-Z]/.test(this.registerForm.password);
+  }
+
+  get hasLower(): boolean {
+    return /[a-z]/.test(this.registerForm.password);
+  }
+
+  get hasNumber(): boolean {
+    return /[0-9]/.test(this.registerForm.password);
+  }
+
+  get hasSpecial(): boolean {
+    return /[^a-zA-Z0-9 ]/.test(this.registerForm.password);
+  }
+
+  get emailInvalid(): boolean {
+    return this.registerForm.email.length > 0 && !this.emailRegex.test(this.registerForm.email);
   }
 
   get passwordsMismatch(): boolean {
@@ -60,21 +93,15 @@ export class UserRegisterComponent {
   }
 
   get passwordStrengthError(): string {
-    const p = this.registerForm.password;
-    if (p.length === 0) return '';
-    if (!/[A-Z]/.test(p)) return 'A senha deve conter pelo menos uma letra maiúscula.';
-    if (!/[a-z]/.test(p)) return 'A senha deve conter pelo menos uma letra minúscula.';
-    if (!/[0-9]/.test(p)) return 'A senha deve conter pelo menos um número.';
-    if (!/[0-9]/.test(p)) return 'A senha deve conter pelo menos um número.';
-    if (!/[^a-zA-Z0-9 ]/.test(p)) return 'A senha deve conter pelo menos um caracter especial.';
+    if (this.registerForm.password.length === 0) return '';
+    if (!this.hasMinLength) return 'A senha deve conter pelo menos 8 caracteres.';
+    if (!this.hasUpper) return 'A senha deve conter pelo menos uma letra maiúscula.';
+    if (!this.hasLower) return 'A senha deve conter pelo menos uma letra minúscula.';
+    if (!this.hasNumber) return 'A senha deve conter pelo menos um número.';
+    if (!this.hasSpecial) return 'A senha deve conter pelo menos um caracter especial.';
     return '';
   }
 
-  togglePasswordHint() {
-    this.showPasswordHint = !this.showPasswordHint;
-  }
-
-  // CONTROLE DO MODAL E CHECKBOX DE TERMOS DE USO
   openTermsModal(event?: Event): void {
     if (event) event.preventDefault();
     this.isTermsModalOpen = true;
@@ -92,13 +119,12 @@ export class UserRegisterComponent {
   }
 
   onTermsCheckboxClick(event: MouseEvent): void {
-    event.preventDefault(); // Impede alteração do checkbox por clique direto sem validação
+    event.preventDefault();
 
     if (!this.hasReadTerms) {
       this.openTermsModal();
       this.errorMessage = 'Por favor, leia os Termos de Uso no modal antes de aceitá-los.';
     } else {
-      // Permite alternar o aceite apenas se já leu ao menos uma vez
       this.termsAccepted = !this.termsAccepted;
     }
   }
@@ -131,8 +157,8 @@ export class UserRegisterComponent {
       return;
     }
 
-    if (this.registerForm.password.length < 8) {
-      this.errorMessage = 'A senha deve ter pelo menos 8 caracteres.';
+    if (!this.emailRegex.test(this.registerForm.email)) {
+      this.errorMessage = 'Informe um email válido.';
       return;
     }
 
@@ -151,10 +177,6 @@ export class UserRegisterComponent {
       return;
     }
 
-    if (!/[^a-zA-Z0-9 ]/.test(this.registerForm.password)) {
-      this.errorMessage = 'A senha deve conter pelo menos um caracter especial.';
-      return;
-    }
     this.isLoading = true;
 
     this.authService.Register(this.registerForm).subscribe({

@@ -2,7 +2,7 @@
 
   <!-- ── TOPBAR ── -->
   <div class="ce-topbar">
-    <div></div> <!-- Elemento invisível para manter o flex-between dos botões de ação -->
+    <div></div> 
     <div class="ce-topbar-actions">
       <ng-container *ngIf="isEditing">
         <button class="btn-danger-outline" (click)="confirmDelete()">
@@ -39,10 +39,13 @@
       <input #iconInput type="file" accept="image/*" class="file-input-hidden" (change)="onIconSelected($event)"/>
     </div>
     <div class="ce-hero-info">
-      <input *ngIf="isEditing"
-        class="ce-name-input" type="text"
-        placeholder="Nome do personagem"
-        [(ngModel)]="editForm.name" maxlength="60"/>
+      <div class="ce-name-input-wrapper" *ngIf="isEditing">
+        <input
+          class="ce-name-input" type="text"
+          placeholder="Nome do personagem"
+          [(ngModel)]="editForm.name" maxlength="60"/>
+        <i class="fa fa-pen ce-name-edit-icon"></i>
+      </div>
       <h1 *ngIf="!isEditing" class="ce-name-view">{{ character.name }}</h1>
       <span class="ce-edit-hint" *ngIf="isEditing">
         <i class="fa fa-circle-info"></i> Modo edição ativo

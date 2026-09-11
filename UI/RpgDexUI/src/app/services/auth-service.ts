@@ -12,10 +12,8 @@ import { ApiResponse } from '../../models/apiResponse';
 import { UserResponse } from '../../models/userResponse';
 import { ValidateEmailByTokenRequest } from '../../models/validateEmailByTokenRequest';
 import { ResendEmailVerificationRequest } from '../../models/resendEmailVerificationRequest';
-import { request } from 'https';
 import { AuthOptionsResponse } from '../../models/authOptionsResponse';
 import { ValidateTwoFactorRequest } from '../../models/validateTwoFactorRequest';
-import { TwoFactorAuthEmailRequest } from '../../models/twoFactorAuthEmailRequest';
 import { LoginResponse } from '../../models/loginResponse';
 
 @Injectable({
@@ -41,12 +39,30 @@ export class AuthService {
       ? { accessToken: token, refreshToken: refreshToken }
       : null;
 
-    this.currentUserSubject = new BehaviorSubject<tokenModel | null>(initialValue);
+    this.currentUserSubject = new BehaviorSubject<any>(initialValue);
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
   public get currentUserValue() {
     return this.currentUserSubject.value;
+  }
+
+  public GetLoggedUser(): Observable<ApiResponse<UserResponse>> {
+    const jwtToken = this.cookieService.get(this.JWT_Token);
+    const decodedToken = jwtDecode<JwtPayload>(jwtToken);
+    return this.http
+      .get<ApiResponse<UserResponse>>(`${environment.RpxDexApi}/User/${decodedToken.sub}`)
+      .pipe(
+        tap((response) => {
+          if (response.success && response.data) {
+            const currentData = this.currentUserValue || {};
+            this.currentUserSubject.next({
+              ...currentData,
+              ...response.data,
+            });
+          }
+        })
+      );
   }
 
   public Register(authUser: RegisterUser): Observable<boolean> {
@@ -57,20 +73,13 @@ export class AuthService {
     return this.http.post<ApiResponse<LoginResponse>>(`${this.env}/Login`, user).pipe(
       tap((response: ApiResponse<LoginResponse>) => {
         if (response.success && response.data) {
-          this.cookieService.set(this.JWT_Token, response.data.accessToken, {
-            path: '/',
-          });
-          this.cookieService.set(this.REFRESH_Token, response.data.refreshToken, {
-            path: '/',
-          });
+          this.cookieService.set(this.JWT_Token, response.data.accessToken, { path: '/' });
+          this.cookieService.set(this.REFRESH_Token, response.data.refreshToken, { path: '/' });
           this.currentUserSubject.next(response.data);
+          this.GetLoggedUser().subscribe();
         }
         return response;
-      }),
-      // tap(token => {
-      //   this.cookieService.set(this.JWT_Token, token.data!.accessToken);
-      //   this.cookieService.set(this.REFRESH_Token, token.data!.refreshToken);
-      // })
+      })
     );
   }
 
@@ -82,36 +91,20 @@ export class AuthService {
     return this.http.post<ApiResponse<tokenModel>>(`${this.env}/RefreshToken`, tokenModel).pipe(
       map((response: ApiResponse<tokenModel>) => {
         if (response.success && response.data?.accessToken) {
-          const currentUser = this.currentUserValue;
+          const currentUser = this.currentUserValue || {};
           currentUser.accessToken = response.data.accessToken;
           this.cookieService.set(this.JWT_Token, response.data.accessToken);
           this.currentUserSubject.next(currentUser);
         }
         return response;
       }),
-      catchError(
-        (error) => {
-          this.Logout();
-          throw error;
-        },
-        // tap(newToken => {
-        //   this.cookieService.set(this.JWT_Token, newToken.data!.accessToken);
-        //   this.cookieService.set(this.REFRESH_Token, newToken.data!.refreshToken);
-        // })
-      ),
+      catchError((error) => {
+        this.Logout();
+        throw error;
+      })
     );
   }
 
-  // Retorna Observable — o componente assina e recebe o dado quando chegar
-  public GetLoggedUser(): Observable<ApiResponse<UserResponse>> {
-    const jwtToken = this.cookieService.get(this.JWT_Token);
-    const decodedToken = jwtDecode<JwtPayload>(jwtToken);
-    return this.http.get<ApiResponse<UserResponse>>(
-      `${environment.RpxDexApi}/User/${decodedToken.sub}`,
-    );
-  }
-
-  // Utilitário para ler o sub do token sem fazer request (ex: filtros locais)
   public getLoggedUserId(): string | undefined {
     const jwtToken = this.cookieService.get(this.JWT_Token);
     if (!jwtToken) return undefined;
@@ -127,16 +120,19 @@ export class AuthService {
     this.cookieService.delete(this.REFRESH_Token, '/');
     this.currentUserSubject.next(null);
   }
+
   public ValidateEmailByToken(
     request: ValidateEmailByTokenRequest,
   ): Observable<ApiResponse<string>> {
     return this.http.put<ApiResponse<string>>(`${this.env}/ValidateEmail`, request);
   }
+
   public ResendEmailVerification(
     request: ResendEmailVerificationRequest,
   ): Observable<ApiResponse<string>> {
     return this.http.post<ApiResponse<string>>(`${this.env}/ResendEmailVerification`, request);
   }
+
   public GoogleSingUp(Token: string): Observable<ApiResponse<tokenModel>> {
     return this.http.post<ApiResponse<tokenModel>>(`${this.env}/Google/SignUp`, { Token }).pipe(
       map((response: ApiResponse<tokenModel>) => {
@@ -144,9 +140,10 @@ export class AuthService {
           this.cookieService.set(this.JWT_Token, response.data!.accessToken, { path: '/' });
           this.cookieService.set(this.REFRESH_Token, response.data!.refreshToken, { path: '/' });
           this.currentUserSubject.next(response.data);
+          this.GetLoggedUser().subscribe();
         }
         return response;
-      }),
+      })
     );
   }
 
@@ -159,22 +156,24 @@ export class AuthService {
     this.cookieService.set(this.REFRESH_Token, refreshToken, { path: '/' });
   }
 
-  //Ainda não implementado no site
   public GetUserAuthOptions(userId: string): Observable<ApiResponse<AuthOptionsResponse>> {
     return this.http.get<ApiResponse<AuthOptionsResponse>>(`${this.env}/AuthOptions/${userId}`);
   }
+
   public ValidateTwoFactor(request: ValidateTwoFactorRequest): Observable<ApiResponse<tokenModel>> {
     return this.http.post<ApiResponse<tokenModel>>(
       `${this.env}/SendTwoFactorAuthEmailRequest/`,
       request,
     );
   }
+
   public SendTwoFactorAuthEmail(request: { userId: string }): Observable<ApiResponse<tokenModel>> {
     return this.http.post<ApiResponse<tokenModel>>(
-      `${this.env}/SendTwoFactorAuthEmailRequest`, // Removida a barra extra do final
+      `${this.env}/SendTwoFactorAuthEmailRequest`,
       { userId: request.userId },
     );
   }
+
   public TwoFAActivation(request: ValidateTwoFactorRequest): Observable<ApiResponse<tokenModel>> {
     return this.http.post<ApiResponse<tokenModel>>(`${this.env}/ActiveTwoFactorAuth/`, request);
   }

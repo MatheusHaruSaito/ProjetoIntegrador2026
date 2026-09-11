@@ -29,48 +29,44 @@
             name="email"
             [(ngModel)]="authUserForm.email"
             autocomplete="username"
+            required
           />
         </div>
+        <span class="field-hint" *ngIf="emailInvalid">Informe um email válido.</span>
 
+        <!-- Campo de Senha com Alternância de Visibilidade -->
         <div class="input-group">
           <i class="fa fa-lock icon-field"></i>
           <input
-            type="password"
+            [type]="showPassword ? 'text' : 'password'"
             placeholder="Senha"
             name="password"
             [(ngModel)]="authUserForm.password"
             autocomplete="current-password"
+            required
           />
           <button
             type="button"
-            class="password-hint-btn"
-            (click)="togglePasswordHint()"
-            [class.active]="showPasswordHint"
-            aria-label="Dicas de senha"
+            class="password-toggle-btn"
+            (click)="togglePasswordVisibility()"
+            [aria-label]="showPassword ? 'Ocultar senha' : 'Exibir senha'"
           >
-            ?
+            <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
           </button>
-          <div class="password-hint-box" *ngIf="showPasswordHint">
-            <p class="hint-title"><i class="fa fa-shield-halved"></i> Requisitos de senha</p>
-            <ul class="hint-list">
-              <li><i class="fa fa-check"></i> Mínimo de 8 caracteres</li>
-              <li><i class="fa fa-check"></i> Pelo menos uma letra maiúscula (A–Z)</li>
-              <li><i class="fa fa-check"></i> Pelo menos uma letra minúscula (a–z)</li>
-              <li><i class="fa fa-check"></i> Pelo menos um número (0–9)</li>
-              <li><i class="fa fa-check"></i> Pelo menos um caracter especial</li>
-            </ul>
-          </div>
         </div>
 
         <div class="form-options">
-          <a href="#" class="forgot-link">Esqueceu a senha?</a>
+          <a routerLink="/esqueci-senha" class="forgot-link">Esqueceu a senha?</a>
         </div>
 
         <div class="feedback-message error-message" *ngIf="errorMessage">
           <i class="fa fa-circle-exclamation"></i> {{ errorMessage }}
         </div>
 
-        <button type="submit" class="btn-login">ENTRAR</button>
+        <button type="submit" class="btn-login" [disabled]="isLoading">
+          <span *ngIf="!isLoading">ENTRAR</span>
+          <span *ngIf="isLoading"><i class="fa fa-spinner fa-spin"></i> Entrando...</span>
+        </button>
       </form>
 
       <div class="login-separator">
@@ -78,7 +74,6 @@
       </div>
 
       <div class="social-logins">
-        <!-- Botão Google com visual do site; div oculta satisfaz o SDK -->
         <button
           type="button"
           class="social-btn"

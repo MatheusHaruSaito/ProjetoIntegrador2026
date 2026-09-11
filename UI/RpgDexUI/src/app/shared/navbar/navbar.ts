@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -10,24 +11,32 @@ import { AuthService } from '../../services/auth-service';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   isMenuOpen = false;
   userAvatarUrl: string = '';
+  private userSub!: Subscription;
 
   constructor(public authService: AuthService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
-      this.authService.GetLoggedUser().subscribe({
-        next: (response) => {
-          this.userAvatarUrl = response.data?.iconPath ?? '';
-          this.cdr.detectChanges();
-        },
-        error: () => {
-          this.userAvatarUrl = '';
-          this.cdr.detectChanges();
-        }
-      });
+      this.authService.GetLoggedUser().subscribe();
+    }
+
+    this.userSub = this.authService.currentUser.subscribe((user) => {
+      if (user?.iconPath) {
+        const separator = user.iconPath.includes('?') ? '&' : '?';
+        this.userAvatarUrl = `${user.iconPath}${separator}t=${new Date().getTime()}`;
+      } else {
+        this.userAvatarUrl = '';
+      }
+      this.cdr.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSub) {
+      this.userSub.unsubscribe();
     }
   }
 

@@ -1,6 +1,5 @@
 .campaigns-wrapper {
   min-height: calc(100vh - 80px);
-  background-color: var(--rpg-bg);
   padding: 50px 20px 80px;
 }
 
@@ -28,6 +27,19 @@
   flex-wrap: wrap;
   gap: 16px;
   margin-bottom: 36px;
+}
+
+.cmp-header-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cmp-header-actions .btn-secondary,
+.cmp-empty-actions .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 }
 
 .cmp-page-title {
@@ -177,6 +189,14 @@
   margin: 0;
 }
 
+.cmp-empty-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 6px;
+}
+
 /* ── DIVISOR SEÇÃO ── */
 .cmp-section-divider {
   display: flex;
@@ -324,13 +344,13 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--rpg-purple-tint);
+  background: var(--rpg-gradient);
   background-size: cover;
   background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--rpg-purple);
+  color: white;
   font-size: 1.1rem;
   flex-shrink: 0;
   border: 2px solid var(--rpg-border-light);
@@ -401,13 +421,13 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--rpg-purple-tint);
+  background: var(--rpg-gradient);
   background-size: cover;
   background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--rpg-purple);
+  color: white;
   font-size: 1.1rem;
   flex-shrink: 0;
   border: 2px solid var(--rpg-border-light);
@@ -491,7 +511,6 @@
   gap: 7px;
   box-shadow: var(--rpg-shadow-btn);
   transition: all 0.25s ease;
-  text-transform: uppercase;
 }
 
 .btn-primary:hover {
