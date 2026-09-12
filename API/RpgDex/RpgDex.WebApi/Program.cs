@@ -23,9 +23,11 @@ builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
-app.UseCors("PermitirTudo");
 
 app.UseForwardedHeaders();
+app.UseRouting();
+
+app.UseCors("PermitirTudo");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
