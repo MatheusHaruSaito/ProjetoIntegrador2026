@@ -1,0 +1,39 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: var(--rpg-error-bg, #fde8e8);
+  height: 100%;
+}
+.chat-container #title {
+  text-align: center;
+}
+.chat-container:hover {
+  cursor: pointer;
+}
+.chat-container .messages {
+  height: 20px;
+}
+.chat-container .chat-controls {
+  margin-top: auto;
+  padding: 1px 2px;
+}
+.chat-container .chat-controls .newMessageText {
+  width: 90%;
+  font-family: 'Nunito', sans-serif;
+  padding: 5px 46px 5px 14px;
+  border: 2px solid var(--rpg-border);
+  border-radius: 10px;
+  font-size: 1rem;
+  color: var(--rpg-text-strong);
+  transition:
+    border-color 0.3s,
+    background-color 0.3s;
+  background-color: var(--rpg-surface-2);
+}
+.chat-container .chat-controls .btn-secondary {
+  width: 10%;
+  height: 31px;
+  padding: 0%;
+}

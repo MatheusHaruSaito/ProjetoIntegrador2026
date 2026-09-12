@@ -1,0 +1,22 @@
+<div class="chat-container">
+  <div id="title" (click)="showChat()">Chat</div>
+  <hr />
+  <div class="messages" *ngFor="let msg of messages">
+    <strong>{{ msg.user }}:</strong>{{ msg.message }}
+  </div>
+  <div class="chat-controls">
+    <form (ngSubmit)="send()">
+      <input
+        class="newMessageText"
+        type="text"
+        name="newMessageText"
+        id="newMessageText"
+        [(ngModel)]="newMessageText"
+        placeholder="digite sua mensagem"
+        autocomplete="off"
+      />
+
+      <input class="btn-secondary" type="submit" value=">" />
+    </form>
+  </div>
+</div>
