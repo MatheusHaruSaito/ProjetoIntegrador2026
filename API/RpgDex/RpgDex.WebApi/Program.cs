@@ -4,6 +4,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using RpgDex.Application;
 using RpgDex.Application.Mapping;
 using RpgDex.Infrastructure;
+using RpgDex.Infrastructure.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
@@ -38,5 +39,6 @@ app.UseAuthentication();
 app.UseAuthorization();  
 
 app.MapControllers();
+app.MapHub<CampaignChatHub>("/hubs/campaign-chat");
 
 app.Run();

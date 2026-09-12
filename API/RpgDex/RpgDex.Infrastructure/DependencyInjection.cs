@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
@@ -28,6 +29,9 @@ namespace RpgDex.Infrastructure
         {
             //Database configuration
             services.AddSingleton<MongoDbContext>();
+            var redisConnection = configuration.GetConnectionString("Redis");
+            services.AddSignalR()
+                .AddStackExchangeRedis(redisConnection!);
 
             services.AddScoped<IMongoDatabase>(sp =>
             {
@@ -63,6 +67,7 @@ namespace RpgDex.Infrastructure
             services.AddScoped<ICampaignRepository, CampaignRepository>();
             services.AddScoped<IGoogleAuthService, GoogleAuthService>();
             services.AddScoped<IDiscordAuthService, DiscordAuthService>();
+            services.AddScoped<ICampaignChatService, CampaignChatService>();
 
             //Identity
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -140,7 +145,8 @@ namespace RpgDex.Infrastructure
                 options.AddPolicy("PermitirTudo", policy => {
                     policy.WithOrigins(configuration["ApiSettings:UIBaseUrl"], configuration["ApiSettings:BaseUrl"])
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowCredentials();
                 });
             });
 
