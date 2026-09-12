@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
@@ -16,6 +16,7 @@ using RpgDex.Infrastructure.Data;
 using RpgDex.Infrastructure.Repositories;
 using RpgDex.Infrastructure.Services;
 using RpgDex.Infrastructure.Settings;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -30,8 +31,18 @@ namespace RpgDex.Infrastructure
             //Database configuration
             services.AddSingleton<MongoDbContext>();
             var redisConnection = configuration.GetConnectionString("Redis");
-            services.AddSignalR()
-                .AddStackExchangeRedis(redisConnection!);
+            if (!string.IsNullOrEmpty(redisConnection))
+            {
+                var config = ConfigurationOptions.Parse(redisConnection);
+                config.AbortOnConnectFail = false;
+                config.ConnectTimeout = 5000;      
+
+                services.AddSignalR()
+                    .AddStackExchangeRedis(options =>
+                    {
+                        options.Configuration = config;
+                    });
+            }
 
             services.AddScoped<IMongoDatabase>(sp =>
             {
