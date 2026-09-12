@@ -1,5 +1,6 @@
 ﻿using AspNet.Security.OAuth.Discord;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
@@ -11,16 +12,18 @@ using RpgDex.Application.Interfaces;
 using RpgDex.Domain.Entities;
 using RpgDex.Infrastructure.Settings;
 using RpgDex.WebApi.Extensions;
+using System.Security.Claims;
 namespace RpgDex.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authSerice;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApiSettings _settings;
-
+        private  string currentUser => User.FindFirst(ClaimTypes.NameIdentifier).Value;
         private string[] authRedirectWhitelist = ["/","/perfil"];
 
         public AuthController(IAuthService authSerice, SignInManager<ApplicationUser> signInManager, IOptions<ApiSettings> settings)
@@ -30,12 +33,15 @@ namespace RpgDex.WebApi.Controllers
             _settings = settings.Value;
         }
         [HttpPost]
+        [AllowAnonymous]
+
         public async Task<IActionResult> Register(CreateUserDTO user)
         {
             var result = await _authSerice.RegisterUser(user);
             return result.ToIActionResult();
         }
         [HttpPost("Login")]
+        [AllowAnonymous]
         public async Task<IActionResult> LogIn(AuthUserDTO user)
         {
             var result = await _authSerice.LogIn(user);
@@ -43,6 +49,7 @@ namespace RpgDex.WebApi.Controllers
 
         }
         [HttpPost("RefreshToken")]
+        [AllowAnonymous]
         public async Task<IActionResult> RefreshToken(RefreshTokenModel refreshToken)
         {
 
@@ -51,6 +58,8 @@ namespace RpgDex.WebApi.Controllers
         }
 
         [HttpPut("ValidateEmail/")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> ValidateEmailByToken(ValidateEmailByTokenRequest request)
         {
             var result = await _authSerice.ValidateEmailByTokenAsync(request);
@@ -58,12 +67,16 @@ namespace RpgDex.WebApi.Controllers
         }
 
         [HttpPost("ResendEmailVerification")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> ResendEmailVerification(ResendEmailVerificationRequest request)
         {
             var result = await _authSerice.ResendEmailVerificationAsync(request);
             return result.ToIActionResult();
         }
         [HttpPost("Google/SignUp")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> GoogleSingUp(GoogleLoginRequest request)
         {
             var result = await _authSerice.GoogleSignUp(request);
@@ -72,6 +85,7 @@ namespace RpgDex.WebApi.Controllers
         }
 
         [HttpGet("discord")]
+        [AllowAnonymous]
         public IActionResult DiscordLogin([FromQuery] string? redirectUri)
         {
             var redirectUrl = Url.Action(nameof(DiscordSignUp), "Auth", new { customRedirect = redirectUri});
@@ -88,6 +102,8 @@ namespace RpgDex.WebApi.Controllers
             );
         }
         [HttpGet("DiscordSignUp")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> DiscordSignUp([FromQuery] string? customRedirect)
         {
             var result = await _authSerice.DiscordSignUp();
@@ -107,10 +123,10 @@ namespace RpgDex.WebApi.Controllers
             return Redirect($"{_settings.UIBaseUrl}/auth/callback?token={token}&refreshToken={refreshToken}&redirectPage={filteredRedirect()}");
         } 
 
-        [HttpGet("AuthOptions/{userId}")]
-        public async Task<IActionResult> GetUserAuthOptions(Guid userId)
+        [HttpGet("AuthOptions")]
+        public async Task<IActionResult> GetUserAuthOptions()
         {
-            var result = await _authSerice.GetUserAuthOptions(userId);
+            var result = await _authSerice.GetUserAuthOptions(currentUser);
             return result.ToIActionResult();
 
         }
@@ -122,9 +138,9 @@ namespace RpgDex.WebApi.Controllers
         }
 
         [HttpPost("SendTwoFactorAuthEmailRequest")]
-        public async Task<IActionResult> SendTwoFactorAuthEmailRequest(TwoFactorAuthEmailRequest request)
+        public async Task<IActionResult> SendTwoFactorAuthEmailRequest()
         {
-            var result = await _authSerice.SendTwoFactorAuthEmailRequest(request);
+            var result = await _authSerice.SendTwoFactorAuthEmailRequest(currentUser);
             return result.ToIActionResult();
         }
 

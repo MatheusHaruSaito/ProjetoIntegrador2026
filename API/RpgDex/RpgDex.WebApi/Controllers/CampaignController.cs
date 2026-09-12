@@ -1,32 +1,37 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
 using RpgDex.Application.Interfaces;
 using RpgDex.Application.Services;
 using RpgDex.WebApi.Extensions;
+using System.Security.Claims;
 
 namespace RpgDex.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CampaignController : ControllerBase
     {
+        private string currentUser => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         ICampaignService _campaignService;
         public CampaignController(ICampaignService campaignService)
         {
             _campaignService = campaignService;
         }
-        [HttpGet()]
-        public async Task<IActionResult> GetAll()
+
+        [HttpGet("All")]
+        public async Task<IActionResult> GetAllByUserId()
         {
-            var result = await _campaignService.GetAll();
+            var result = await _campaignService.GetAllByUserId(currentUser);
             return result.ToIActionResult();
         }
-        [HttpGet("{userId}/All")]
-        public async Task<IActionResult> GetAll(Guid userId)
+        [HttpGet("All/{page}/{pageSize}")]
+        public async Task<IActionResult> GetAllByUserId(int page, int pageSize)
         {
-            var result = await _campaignService.GetAll(userId);
+            var result = await _campaignService.GetAllByUserId(currentUser,page,pageSize);
             return result.ToIActionResult();
         }
         [HttpGet("{id}")]
@@ -38,41 +43,40 @@ namespace RpgDex.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateCampaignRequest request)
         {
-            var result = await _campaignService.Create(request);
+            var result = await _campaignService.Create(currentUser, request);
             return result.ToIActionResult();
         }
         [HttpPut]
         public async Task<IActionResult> Update(UpdateCampaignRequest request)
         {
-            var result = await _campaignService.Update(request);
+            var result = await _campaignService.Update(currentUser ,request);
             return result.ToIActionResult();
         }
-        [HttpPut("SetActiveState/{Id}")]
-        public async Task<IActionResult> SetActiveState(Guid Id, bool state)
+        [HttpPut("SetActiveState")]
+        public async Task<IActionResult> SetActiveState(CampaignSetActiveStateRequest request)
         {
 
-            var result = await _campaignService.SetActiveState(Id, state);
+            var result = await _campaignService.SetActiveState(currentUser, request);
             return result.ToIActionResult();
         }
         [HttpPut("AddPlayer")]
         public async Task<IActionResult> JoinCampaignRequest(JoinCampaignRequest request)
         {
 
-            var result = await _campaignService.AddPlayer(request);
+            var result = await _campaignService.AddPlayer(currentUser, request);
             return result.ToIActionResult();
         }
         [HttpPut("AddCharacter")]
         public async Task<IActionResult> AddCharacterRequest(AddCharacterToCampaignRequest request)
         {
 
-            var result = await _campaignService.AddCharacter(request);
+            var result = await _campaignService.AddCharacter(currentUser, request);
             return result.ToIActionResult();
         }
         [HttpPut("AcceptCharacter")]
         public async Task<IActionResult> AcceptCharacter(AcceptCharacterToCampaignRequest request)
         {
-
-            var result = await _campaignService.AcceptCharacter(request);
+            var result = await _campaignService.AcceptCharacter(currentUser, request);
             return result.ToIActionResult();
         }
 
@@ -80,14 +84,14 @@ namespace RpgDex.WebApi.Controllers
         public async Task<IActionResult> RemovePlayer(RemovePlayerFromCampaignRequest request)
         {
 
-            var result = await _campaignService.RemovePlayer(request);
+            var result = await _campaignService.RemovePlayer(currentUser, request);
             return result.ToIActionResult();
         }
         [HttpPut("UpdateSettings")]
         public async Task<IActionResult> UpdateSettings(UpdateCampaignSettingsRequest request)
         {
 
-            var result = await _campaignService.UpdateConfiguration(request);
+            var result = await _campaignService.UpdateConfiguration(currentUser,request);
             return result.ToIActionResult();
         }
     }

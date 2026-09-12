@@ -13,8 +13,8 @@ export class UserService {
   private readonly env = `${environment.RpxDexApi}/${this.controller}`;
   constructor(private http: HttpClient) {}
 
-  Update(user: FormData, Id: string): Observable<ApiResponse<string>> {
-    return this.http.put<ApiResponse<string>>(this.env + '/' + Id, user);
+  Update(user: FormData): Observable<ApiResponse<string>> {
+    return this.http.put<ApiResponse<string>>(`${this.env}`, user);
   }
   GetById(id: string): Observable<ApiResponse<UserResponse>> {
     return this.http.get<ApiResponse<UserResponse>>(`${this.env}/${id}`);

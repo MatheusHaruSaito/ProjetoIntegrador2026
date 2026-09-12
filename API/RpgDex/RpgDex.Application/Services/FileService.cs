@@ -2,6 +2,7 @@
 using RpgDex.Application.Interfaces;
 using RpgDex.Domain.Entities;
 using RpgDex.Domain.Interfaces;
+using ImageMagick;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,19 +25,24 @@ namespace RpgDex.Application.Services
 
         public async Task<string> UploadFileAsync(IFormFile file, string fileName)
         {
-            if (file != null && file.Length > 0)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await file.CopyToAsync(memoryStream);
-                    memoryStream.Position = 0;
 
-                    var Extension = Path.GetExtension(file.FileName);
-                    var ServerfileName = $"{fileName}_icon{Extension}";
-                    return await _fileRepository.UploadFileAsync(ServerfileName, memoryStream);
-                }
+            if (file == null || file.Length == 0)
+            {
+                throw new ArgumentException("File is null or empty");
             }
-            throw new ArgumentException("File is null or empty");
+            using var inputStream = file.OpenReadStream();
+            using var image = new MagickImage(inputStream);
+
+            image.Format = MagickFormat.WebP;
+            image.Quality = 80;
+
+            using var outputStream = new MemoryStream();
+            await image.WriteAsync(outputStream);
+
+            outputStream.Position = 0;
+                var ServerfileName = $"{fileName}_icon.webp";
+            return await _fileRepository.UploadFileAsync(ServerfileName, outputStream);
+
         }
         private string GetImageContentType(byte[] bytes)
         {

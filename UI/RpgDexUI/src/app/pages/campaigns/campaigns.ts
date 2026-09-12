@@ -9,14 +9,12 @@ import { Character } from '../../../models/character';
 import { Campaign } from '../../../models/campaign';
 import { CreateJoinCampaignModalComponent } from '../../modals/create-join-campaign-modal/create-join-campaign-modal';
 
-const LAST_ACCESSED_KEY = 'rpgdex-last-accessed-chars';
-
 @Component({
   selector: 'app-campaigns',
   standalone: true,
   imports: [CommonModule, RouterModule, CreateJoinCampaignModalComponent],
   templateUrl: './campaigns.html',
-  styleUrls: ['./campaigns.css']
+  styleUrls: ['./campaigns.css'],
 })
 export class CampaignsComponent implements OnInit {
   private characterService = inject(CharacterService);
@@ -29,6 +27,12 @@ export class CampaignsComponent implements OnInit {
   myCharacters: Character[] = [];
   currentUserId = '';
 
+  showCharactersCount = 5;
+
+  campaingPageCount = 2;
+  campaingsPerPage = 4;
+
+  showMoreButton = false;
   isModalOpen = false;
   activeModalTab: 'create' | 'join' = 'create';
 
@@ -40,72 +44,88 @@ export class CampaignsComponent implements OnInit {
     }
   }
 
+  public showMoreCampaigns(): void {
+    this.campaignService.GetAllByUserPage(this.campaingPageCount, this.campaingsPerPage).subscribe({
+      next: (result) => {
+        this.myCampaigns.push(...(result.data?.campaigns ? result.data.campaigns : []));
+        this.campaingPageCount++;
+        if (result.data!.campaigns.length < 3) {
+          this.showMoreButton = false;
+        }
+        this.cdr.detectChanges();
+      },
+      error: () => {},
+    });
+  }
+
   private loadCampaigns(): void {
-    this.campaignService.GetAll().subscribe({
+    this.campaignService.GetAllByUserPage(0, this.campaingsPerPage).subscribe({
       next: (r) => {
-        const allCampaigns: Campaign[] = r.data ?? [];
-        this.myCampaigns = allCampaigns.filter(c => 
-          c.gameMasterId === this.currentUserId || (c.playerIds && c.playerIds.includes(this.currentUserId))
-        );
+        if (r.data!.campaigns.length > this.campaingsPerPage - 1) {
+          this.showMoreButton = true;
+        }
+        this.myCampaigns = r.data?.campaigns ?? [];
 
         this.cdr.detectChanges();
       },
-      error: () => { }
+      error: () => {},
     });
   }
 
   private loadCharacters(): void {
-    this.characterService.GetAll(this.currentUserId).subscribe({
+    this.characterService.GetAllByPage(1, this.showCharactersCount).subscribe({
       next: (r) => {
-        const all = r.data ?? [];
-        const filtered = all.filter(c => c.userId === this.currentUserId);
-        
+        const all = r.data?.characters ?? [];
+        const filtered = all.filter((c) => c.userId === this.currentUserId);
+
+        //Criar paginamento na api dps (Refatorar)
         // Ordena por último acesso e limita aos 5 mais recentes
-        this.myCharacters = this.sortByLastAccessed(filtered).slice(0, 5);
+        //Fazer o filtro pela api
+        this.myCharacters = this.sortByLastAccessed(filtered);
         this.cdr.detectChanges();
       },
-      error: () => { }
+      error: () => {},
     });
   }
 
   // --- LÓGICA DE ÚLTIMO ACESSO ---
   private sortByLastAccessed(chars: Character[]): Character[] {
-    const accessed = this.getLastAccessedMap();
     return [...chars].sort((a, b) => {
-      const ta = accessed[a.id] ?? 0;
-      const tb = accessed[b.id] ?? 0;
-      return tb - ta;
+      const timeA = a.lastAccess ? new Date(a.lastAccess).getTime() : 0;
+      const timeB = b.lastAccess ? new Date(b.lastAccess).getTime() : 0;
+
+      return timeB - timeA;
     });
   }
 
-  private getLastAccessedMap(): Record<string, number> {
-    try {
-      return JSON.parse(localStorage.getItem(LAST_ACCESSED_KEY) ?? '{}');
-    } catch {
-      return {};
-    }
-  }
-
   openCharacter(id: string): void {
-    const map = this.getLastAccessedMap();
-    map[id] = Date.now();
-    localStorage.setItem(LAST_ACCESSED_KEY, JSON.stringify(map));
     this.router.navigate(['/personagens', id]);
   }
 
   lastAccessedLabel(id: string): string {
-    const map = this.getLastAccessedMap();
-    const ts = map[id];
-    if (!ts) return 'Nunca acessado';
-    const diff = Math.floor((Date.now() - ts) / 1000);
-    if (diff < 60) return 'Agora mesmo';
-    if (diff < 3600) return `${Math.floor(diff / 60)} min atrás`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}h atrás`;
-    return `${Math.floor(diff / 86400)}d atrás`;
+    const character = this.myCharacters.find((c) => c.id == id);
+
+    if (!character || !character.lastAccess) {
+      return 'Nunca acessado';
+    }
+    const diffInSeconds = Math.floor(
+      (Date.now() - new Date(character!.lastAccess).getTime()) / 1000,
+    );
+    if (!this.wasAccessed(id)) return 'Nunca acessado';
+    if (diffInSeconds < 60) return 'Agora mesmo';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min atrás`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h atrás`;
+    return `${Math.floor(diffInSeconds / 86400)}d atrás`;
   }
 
   wasAccessed(id: string): boolean {
-    return !!this.getLastAccessedMap()[id];
+    const char = this.myCharacters.find((c) => c.id == id);
+    if (!char || !char.lastAccess) {
+      return false;
+    }
+
+    const accessDate = new Date(char.lastAccess);
+    return !isNaN(accessDate.getTime()) && accessDate.getFullYear() > 1;
   }
 
   // --- MODAL & CAMPANHAS ---
@@ -115,25 +135,25 @@ export class CampaignsComponent implements OnInit {
   }
 
   handleCreateCampaign(formData: FormData): void {
-    formData.append('gameMasterId', this.currentUserId);
     this.campaignService.Post(formData as any).subscribe({
       next: () => this.loadCampaigns(),
-      error: () => { }
+      error: () => {},
     });
   }
 
   handleJoinCampaign(payload: { campaignId: string; password?: string }): void {
-    this.campaignService.AddPlayer({
-      campaignId: payload.campaignId,
-      playerId: this.currentUserId,
-      password: payload.password
-    }).subscribe({
-      next: () => {
-        alert('Você entrou na campanha!');
-        this.loadCampaigns();
-      },
-      error: () => alert('Erro ao entrar na campanha. Verifique o ID e Senha.')
-    });
+    this.campaignService
+      .AddPlayer({
+        campaignId: payload.campaignId,
+        password: payload.password,
+      })
+      .subscribe({
+        next: () => {
+          alert('Você entrou na campanha!');
+          this.loadCampaigns();
+        },
+        error: () => alert('Erro ao entrar na campanha. Verifique o ID e Senha.'),
+      });
   }
 
   goToCampaignDetail(id: string): void {
@@ -150,6 +170,10 @@ export class CampaignsComponent implements OnInit {
       return 'A Definir';
     }
 
-    return sessionDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+    return sessionDate.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+    });
   }
 }

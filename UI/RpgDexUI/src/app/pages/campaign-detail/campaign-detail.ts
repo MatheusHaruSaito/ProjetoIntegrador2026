@@ -12,6 +12,7 @@ import { UserResponse } from '../../../models/userResponse';
 import { UpdateCampaignSettingsRequest } from '../../../models/updateCampaignSettingsRequest';
 import { EditCampaignModalComponent } from '../../modals/edit-campaign-modal/edit-campaign-modal';
 import { CharacterViewerComponent } from '../../pages/character-viewer/character-viewer';
+import { CampaignSetActiveStateRequest } from '../../../models/campaignSetActiveStateRequest';
 
 @Component({
   selector: 'app-campaign-detail',
@@ -117,7 +118,8 @@ export class CampaignDetailComponent implements OnInit {
         this.campaign = res.data;
         if (this.campaign) {
           this.isGameMaster = this.campaign.gameMasterId === this.currentUserId;
-          this.isPlayerInCampaign = !!this.campaign.playerIds?.includes(this.currentUserId) || this.isGameMaster;
+          this.isPlayerInCampaign =
+            !!this.campaign.playerIds?.includes(this.currentUserId) || this.isGameMaster;
 
           // Sincroniza a configuração de aprovação sem sobrescrever seleções pendentes de tela
           this.requireApproval = this.campaign.requireApprovalForCharacters ?? true;
@@ -169,10 +171,9 @@ export class CampaignDetailComponent implements OnInit {
   }
 
   loadMyCharacters(): void {
-    if (!this.currentUserId) return;
-    this.characterService.GetAll(this.currentUserId).subscribe({
+    this.characterService.GetAll().subscribe({
       next: (res) => {
-        this.myCharacters = res.data ?? [];
+        this.myCharacters = res.data?.characters ?? [];
         this.cdr.detectChanges();
       },
     });
@@ -266,7 +267,6 @@ export class CampaignDetailComponent implements OnInit {
     this.campaignService
       .AddPlayer({
         campaignId: this.campaign.id,
-        playerId: this.currentUserId,
         password: this.joinPassword,
       })
       .subscribe({
@@ -278,7 +278,7 @@ export class CampaignDetailComponent implements OnInit {
         error: (err) =>
           this.showFeedback(
             this.getErrorMessage(err, 'Erro ao entrar na campanha. Verifique a senha.'),
-            true
+            true,
           ),
       });
   }
@@ -304,7 +304,7 @@ export class CampaignDetailComponent implements OnInit {
         error: (err) =>
           this.showFeedback(
             this.getErrorMessage(err, 'Não foi possível vincular o personagem.'),
-            true
+            true,
           ),
       });
   }
@@ -327,7 +327,7 @@ export class CampaignDetailComponent implements OnInit {
         error: (err) =>
           this.showFeedback(
             this.getErrorMessage(err, 'Erro ao processar solicitação de personagem.'),
-            true
+            true,
           ),
       });
   }
@@ -335,9 +335,10 @@ export class CampaignDetailComponent implements OnInit {
   removePlayer(userId: string): void {
     if (!this.campaign) return;
 
-    const confirmMsg = userId === this.currentUserId
-      ? 'Tem certeza de que deseja sair desta campanha?'
-      : 'Tem certeza de que deseja remover este jogador?';
+    const confirmMsg =
+      userId === this.currentUserId
+        ? 'Tem certeza de que deseja sair desta campanha?'
+        : 'Tem certeza de que deseja remover este jogador?';
 
     if (!confirm(confirmMsg)) return;
 
@@ -365,17 +366,12 @@ export class CampaignDetailComponent implements OnInit {
     if (!this.campaign) return;
 
     const newState = !this.campaign.isActive;
-    const updatePayload: any = {
+    const request: CampaignSetActiveStateRequest = {
       id: this.campaign.id,
-      title: this.campaign.title,
-      description: this.campaign.description,
-      maxPlayers: this.campaign.maxPlayers,
-      nextSession: this.campaign.nextSession,
-      isActive: newState,
-      icon: null,
+      state: newState,
     };
 
-    this.campaignService.Update(updatePayload).subscribe({
+    this.campaignService.SetActiveState(request).subscribe({
       next: () => {
         this.showFeedback(`Campanha ${newState ? 'reativada' : 'desativada'} com sucesso!`);
         this.loadCampaign(true);
@@ -398,7 +394,7 @@ export class CampaignDetailComponent implements OnInit {
         this.showFeedback(
           this.requireApproval
             ? 'Aprovação manual ativada com sucesso!'
-            : 'Aprovação manual desativada. Novos personagens entrarão diretamente.'
+            : 'Aprovação manual desativada. Novos personagens entrarão diretamente.',
         );
       },
       error: (err) => {
@@ -407,7 +403,7 @@ export class CampaignDetailComponent implements OnInit {
         this.cdr.detectChanges();
         this.showFeedback(
           this.getErrorMessage(err, 'Erro ao atualizar configurações da campanha.'),
-          true
+          true,
         );
       },
     });

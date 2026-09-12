@@ -8,17 +8,18 @@ namespace RpgDex.Application.Interfaces
 {
     public interface ICampaignService
     {
-        public Task<Result<CampaignResponse>> Create(CreateCampaignRequest request);
-        public Task<Result<IEnumerable<CampaignResponse>>> GetAll();
-        public Task<Result<IEnumerable<CampaignResponse>>> GetAll(Guid userId);
+        public Task<Result<CampaignResponse>> Create(string userId, CreateCampaignRequest request);
+        public Task<Result<GetAllCampaignResponse>> GetAllByUserId(string userId);
+        public Task<Result<GetAllCampaignResponse>> GetAllByUserId(string userId, int page, int pageSizes);
+
         public Task<Result<CampaignResponse>> GetById(Guid id);
-        public Task<Result<CampaignResponse>> Update(UpdateCampaignRequest request);
-        public Task<Result<bool>> SetActiveState(Guid Id, bool activeState);
-        public Task<Result<string>> AddPlayer(JoinCampaignRequest request);
-        public Task<Result<string>> AddCharacter(AddCharacterToCampaignRequest request);
-        public Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request);
-        public Task<Result<string>> RemovePlayer(RemovePlayerFromCampaignRequest request);
-        public Task<Result<string>> UpdateConfiguration(UpdateCampaignSettingsRequest request);
+        public Task<Result<CampaignResponse>> Update(string userId ,UpdateCampaignRequest request);
+        public Task<Result<bool>> SetActiveState(string userId, CampaignSetActiveStateRequest request);
+        public Task<Result<string>> AddPlayer(string userId, JoinCampaignRequest request);
+        public Task<Result<string>> AddCharacter(string userId, AddCharacterToCampaignRequest request);
+        public Task<Result<string>> AcceptCharacter(string userId, AcceptCharacterToCampaignRequest request);
+        public Task<Result<string>> RemovePlayer(string userId, RemovePlayerFromCampaignRequest request);
+        public Task<Result<string>> UpdateConfiguration(string userId ,UpdateCampaignSettingsRequest request);
 
 
 

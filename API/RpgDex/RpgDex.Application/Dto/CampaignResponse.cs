@@ -15,6 +15,7 @@ namespace RpgDex.Application.Dto
         public DateTime NextSession { get; set; }
         public DateTime CreatedAt { get; set; }
         public string? IconPath { get; set; }
+        public int CampaignLenght { get; set; }
         public IReadOnlyCollection<Guid>? PlayerIds { get; set; }
         public IReadOnlyCollection<Guid>? CharacterIds { get; set; }
         public IReadOnlyCollection<Guid>? CharacterRequests { get; set; }

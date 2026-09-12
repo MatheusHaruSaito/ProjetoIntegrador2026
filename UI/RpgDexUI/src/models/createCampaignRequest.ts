@@ -4,5 +4,4 @@ export interface CreateCampaignRequest {
   password: string;
   maxPlayers: number;
   icon: File;
-  gameMasterId: string;
 }

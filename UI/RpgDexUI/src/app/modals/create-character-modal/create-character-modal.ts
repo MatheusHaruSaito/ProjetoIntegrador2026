@@ -34,7 +34,7 @@ export class CreateCharacterModal implements OnInit {
   isLoading = false;
   errorMessage = '';
   newCharacter = { name: '', description: '' };
-  
+
   // Controle de imagem e do Cropper
   selectedIconFile: File | null = null;
   iconPreviewUrl = '';
@@ -64,9 +64,9 @@ export class CreateCharacterModal implements OnInit {
     const file = input.files?.[0];
     if (!file) return;
 
-    if (file.size > 2 * 1024 * 1024) { 
-      this.errorMessage = 'A imagem deve ter no máximo 2MB.'; 
-      return; 
+    if (file.size > 2 * 1024 * 1024) {
+      this.errorMessage = 'A imagem deve ter no máximo 2MB.';
+      return;
     }
 
     this.errorMessage = '';
@@ -93,13 +93,12 @@ export class CreateCharacterModal implements OnInit {
 
   CreateCharacter(): void {
     this.errorMessage = '';
-    if (!this.newCharacter.name.trim()) { 
-      this.errorMessage = 'O nome do personagem é obrigatório.'; 
-      return; 
+    if (!this.newCharacter.name.trim()) {
+      this.errorMessage = 'O nome do personagem é obrigatório.';
+      return;
     }
 
     const form = new FormData();
-    form.append('userId', this.authService.getLoggedUserId() ?? '');
     form.append('name', this.newCharacter.name.trim());
     form.append('description', this.newCharacter.description ?? '');
     if (this.selectedIconFile) {
@@ -121,9 +120,10 @@ export class CreateCharacterModal implements OnInit {
         this.isLoading = false;
         const body = err?.error;
         this.errorMessage =
-          (body?.errors ? (Object.values(body.errors).flat() as string[])[0] : null)
-          ?? body?.message ?? body?.title
-          ?? 'Erro ao criar personagem. Tente novamente.';
+          (body?.errors ? (Object.values(body.errors).flat() as string[])[0] : null) ??
+          body?.message ??
+          body?.title ??
+          'Erro ao criar personagem. Tente novamente.';
       },
     });
   }

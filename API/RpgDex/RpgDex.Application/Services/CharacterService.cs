@@ -1,8 +1,11 @@
-﻿using Mapster;
+﻿using FluentValidation;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
+using RpgDex.Application.Extension;
 using RpgDex.Application.Interfaces;
+using RpgDex.Application.Validators;
 using RpgDex.Domain.Entities;
 using RpgDex.Domain.Interfaces;
 using System;
@@ -12,64 +15,64 @@ using System.Text;
 
 namespace RpgDex.Application.Services
 {
-    public class CharacterService : ICharacterSevice
+    public class CharacterService(ICharacterRepository character, IUserRepository userRepository,
+        IFileService fileService, IValidator<CreateCharacterRequest> createCharacterRequestValidator,
+        IValidator<UpdateCharacterRequest> updateCharacterRequestValidator) : ICharacterService
     {
-        private readonly ICharacterRepository _character;
-        private readonly IUserRepository _userRepository;
-        private readonly IFileService _fileService;
+        private readonly ICharacterRepository _character = character;
 
-        public CharacterService(ICharacterRepository character, IUserRepository userRepository, IFileService fileService)
+        public async Task<Result<CharacterResponse>> Create(string userId,CreateCharacterRequest request)
         {
-            _character = character;
-            _userRepository = userRepository;
-            _fileService = fileService;
-        }
-        public async Task<Result<CharacterResponse>> Create(CreateCharacterRequest request)
-        {
-
-            //Converte a requisição em um objeto Character
+            var checkCharacterValid = createCharacterRequestValidator.Validate(request);
+            if (!checkCharacterValid.IsValid) return checkCharacterValid.ReturnErrors<CharacterResponse>();
+            //Converts request to character
             var character = request.Adapt<Character>();
             character.Id = Guid.NewGuid();
-            character.UserId = request.UserId;
 
-            //Verifica se o Usuario Existe
-            var user = await _userRepository.GetByIdAsync(request.UserId);
-            if (user is null) return Result<CharacterResponse>.Failure("Usuario não encontrado");
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<CharacterResponse>.Failure("Invalid User ID format.");
+
+            //Verifies if user exists
+            var user = await userRepository.GetByIdAsync(guidUserId);
+            if (user is null) return Result<CharacterResponse>.Failure("User Not Found");
+
+
+            character.UserId = guidUserId;
+
 
             if (request.Icon is not null)
             {
-                // Salva Imagem
+                // Icon save
                 try
                 {
-                    character.IconPath = await _fileService.UploadFileAsync(request.Icon, character.Id.ToString());
+                    character.IconPath = await fileService.UploadFileAsync(request.Icon, character.Id.ToString());
                 }
-                catch (Exception ex)
+                catch
                 {
-                    return Result<CharacterResponse>.Failure($"Erro ao salvar a imagem: {ex.Message}");
+                    return Result<CharacterResponse>.Failure("Error saving icon");
                 }
             }
             
-            // coloca o personagem no banco
+            // push character to database
             var response = await _character.InsertAsync(character);
 
-            //Adiciona o Personagem A lista do Usuario
-            var data = await _userRepository.PushCharacterAsync(request.UserId, response.Id);
-            if (!data) return Result<CharacterResponse>.Failure("Falha ao Adicionar personagem ao usuario");
+            //push character to user list
+            var data = await userRepository.PushCharacterAsync(guidUserId, response.Id);
+            if (!data) return Result<CharacterResponse>.Failure("Failed to add character to user");
 
             return Result<CharacterResponse>.Success(response.Adapt<CharacterResponse>());
         }
 
         public async Task<Result<CharacterResponse>> SetActiveState(Guid Id, bool ActiveState)
         {
-            //Verifica se o Personagem Existe
+            //Verifies if character exists
             var characterFound = await _character.GetByIdAsync(Id);
-            if(characterFound is null) return Result<CharacterResponse>.Failure("Falha ao achar personagem");
+            if(characterFound is null) return Result<CharacterResponse>.Failure("Failed to get character");
 
-            //Verifica se o Personagem foi deletado
+            //Verifies if character is deactivated
             bool modified = await _character.SetActiveState(Id,ActiveState);
-            if (!modified) return Result<CharacterResponse>.Failure("Falha ao desativar personagem");
+            if (!modified) return Result<CharacterResponse>.Failure("Failed to deactivate character");
 
-            //Verifica se o Personagem foi deletado do Usuario
+            //Verifies if the character is removed
             //bool deletedFromUser = await _userRepository.PullCharacterAsync(characterFound.UserId, Id);
             //if (!deletedFromUser)
             //{
@@ -78,54 +81,89 @@ namespace RpgDex.Application.Services
             return Result<CharacterResponse>.Success(characterFound.Adapt<CharacterResponse>());
         }
 
-        public async Task<Result<IEnumerable<CharacterResponse>>> GetAllByUserIdAsync(Guid userId)
+        public async Task<Result<GetAllCharacterResponse>> GetAllByUserIdAsync(string userId, int page, int pageSize)
         {
-            //Retorna Todos os Perosnagens
-            var characters =  await _character.GetAllByUserIdAsync(userId);
-            if (characters is null) return Result<IEnumerable<CharacterResponse>>.Failure("Falha ao Obter personagem");
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<GetAllCharacterResponse>.Failure("Invalid User ID format.");
 
-            var response = characters.Adapt<List<CharacterResponse>>();
-            return  Result<IEnumerable<CharacterResponse>>.Success(response);
+            //Return all characters
+            var result =  await _character.GetAllByUserIdAsync(guidUserId,page,pageSize);
+            if (result is null) return Result<GetAllCharacterResponse>.Failure("Failed to get character");
+
+            var response = new GetAllCharacterResponse(result.Characters.Adapt<IEnumerable<CharacterResponse>>(),result.CharactersLenght);
+            return  Result<GetAllCharacterResponse>.Success(response);
         }
+        public async Task<Result<GetAllCharacterResponse>> GetAllByUserIdAsync(string userId)
+        {
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<GetAllCharacterResponse>.Failure("Invalid User ID format.");
 
+            //Return all characters
+            var result = await _character.GetAllByUserIdAsync(guidUserId);
+            if (result is null) return Result<GetAllCharacterResponse>.Failure("Failed to get character");
+            var response = new GetAllCharacterResponse(result.Characters.Adapt<IEnumerable<CharacterResponse>>(),result.CharactersLenght);
+            return Result<GetAllCharacterResponse>.Success(response);
+        }
         public async Task<Result<CharacterResponse>> GetByIdAsync(Guid Id)
         {
-            //Retorna Um dos Perosnagens
+            //Return a character
             var data = await _character.GetByIdAsync(Id);
             if(data is null)
             {
-                return Result<CharacterResponse>.Failure($"Personagem de Id: {Id} Não Encontrado!!");
+                return Result<CharacterResponse>.Failure($"Character not found");
             }
             var response = data.Adapt<CharacterResponse>();
             return Result<CharacterResponse>.Success(response);
         }
 
-        public async Task<Result<bool>> UpdateAsync(UpdateCharacterRequest request)
+        public async Task<Result<bool>> UpdateAsync(string userId, UpdateCharacterRequest request)
         {
+           var checkUpdateCharacterRequest = updateCharacterRequestValidator.Validate(request);
+            if (!checkUpdateCharacterRequest.IsValid) return checkUpdateCharacterRequest.ReturnErrors<bool>();
+
             var updateCharacter = request.Adapt<Character>();
-            if(request.Icon is not null)
+
+            //Verifies if Character is really from user
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<bool>.Failure("Invalid User ID format.");
+            var characterFound = await _character.GetByIdAsync(request.Id);
+
+            if (!guidUserId.Equals(characterFound.UserId)) return Result<bool>.Failure("Unauthorized User");
+
+            if (request.Icon is not null)
             {
                 try
                 {
-                    updateCharacter.IconPath = await _fileService.UploadFileAsync(request.Icon, updateCharacter.Id.ToString());
+                    updateCharacter.IconPath = await fileService.UploadFileAsync(request.Icon, updateCharacter.Id.ToString());
                 }
-                catch (Exception ex)
+                catch
                 {
-                    return Result<bool>.Failure($"Erro ao salvar a imagem: {ex.Message}");
+                    return Result<bool>.Failure($"Error saving icon");
                 }
             }
             else
             {
-                var characterFound = await _character.GetByIdAsync(request.Id);
-                if (characterFound is null) return Result<bool>.Failure("Personagem Não Encontrado");
+              
+                if (characterFound is null) return Result<bool>.Failure("Character not found");
                 updateCharacter.IconPath = characterFound.IconPath;
             }
 
 
             var response = await _character.UpdateAsync(updateCharacter);
-            //Verifica se o Personagem foi atualizado
-            if (!response) return Result<bool>.Failure("Não foi possivel atualizar o personagem");
+            //Verifies if character was updated
+            if (!response) return Result<bool>.Failure("It was not possible to update character");
             return Result<bool>.Success(response);
+        }
+
+        public async Task<Result<bool>> UpdateLastAccess(Guid id)
+        {
+            var character = await _character.GetByIdAsync(id);
+            if (character is null) return Result<bool>.Failure("Failed to get character");
+
+
+            var isSuccess = await _character.UpdateLastAccessAsync(id,DateTime.Now);
+            if (!isSuccess)
+            {
+                return Result<bool>.Failure($"Failed to update last access on: {character.Name}");
+            }
+            return Result<bool>.Success(true);
         }
     }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
 import { RegisterUser } from '../../models/registerUser';
@@ -157,7 +157,7 @@ export class AuthService {
   }
 
   public GetUserAuthOptions(userId: string): Observable<ApiResponse<AuthOptionsResponse>> {
-    return this.http.get<ApiResponse<AuthOptionsResponse>>(`${this.env}/AuthOptions/${userId}`);
+    return this.http.get<ApiResponse<AuthOptionsResponse>>(`${this.env}/AuthOptions`);
   }
 
   public ValidateTwoFactor(request: ValidateTwoFactorRequest): Observable<ApiResponse<tokenModel>> {
@@ -166,12 +166,8 @@ export class AuthService {
       request,
     );
   }
-
-  public SendTwoFactorAuthEmail(request: { userId: string }): Observable<ApiResponse<tokenModel>> {
-    return this.http.post<ApiResponse<tokenModel>>(
-      `${this.env}/SendTwoFactorAuthEmailRequest`,
-      { userId: request.userId },
-    );
+  public SendTwoFactorAuthEmail(): Observable<ApiResponse<tokenModel>> {
+    return this.http.post<ApiResponse<tokenModel>>(`${this.env}/SendTwoFactorAuthEmailRequest`, '');
   }
 
   public TwoFAActivation(request: ValidateTwoFactorRequest): Observable<ApiResponse<tokenModel>> {

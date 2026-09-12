@@ -1,37 +1,28 @@
-﻿using Mapster;
+﻿using FluentValidation;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using RpgDex.Application.Common;
 using RpgDex.Application.Dto;
+using RpgDex.Application.Extension;
 using RpgDex.Application.Interfaces;
+using RpgDex.Application.Validators;
 using RpgDex.Domain.Entities;
 using RpgDex.Domain.Interfaces;
 using RpgDex.Domain.ValueObjects;
 
 namespace RpgDex.Application.Services   
 {
-    public class CampaignService : ICampaignService
+    public class CampaignService(ICampaignRepository campaignRepository, IFileService fileService, IUserRepository userRepository,
+        ICharacterRepository characterRepository, IPasswordHasher<Campaign> passwordHasher,
+        IValidator<CreateCampaignRequest> createCampaignRequestValidator, IValidator<UpdateCampaignRequest> updateCampaignRequestValidator) : ICampaignService
     {
-        private readonly ICampaignRepository _campaignRepository;
-        private readonly IFileService _fileService;
-        private readonly IUserRepository _userRepository;
-        private readonly ICharacterRepository _characterRepository;
-        private readonly IPasswordHasher<Campaign> _passwordHasher;
-        public CampaignService(ICampaignRepository campaignRepository, IFileService fileService, IUserRepository userRepository, ICharacterRepository characterRepository, IPasswordHasher<Campaign> passwordHasher)
-        {
-            _campaignRepository = campaignRepository;
-            _fileService = fileService;
-            _userRepository = userRepository;
-            _characterRepository = characterRepository;
-            _passwordHasher = passwordHasher;
-        }
-
         private string? HashPassword(Campaign campaign, string? password)
         {
             if (string.IsNullOrWhiteSpace(password))
             {
                 return null;
             }
-            return _passwordHasher.HashPassword(campaign, password);
+            return passwordHasher.HashPassword(campaign, password);
         }
         private bool ValidatePassword(Campaign campaign,string password)
         {
@@ -41,7 +32,7 @@ namespace RpgDex.Application.Services
             if (string.IsNullOrEmpty(password))
                 return false;
 
-            var result = _passwordHasher.VerifyHashedPassword(campaign, campaign.PasswordHash, password);
+            var result = passwordHasher.VerifyHashedPassword(campaign, campaign.PasswordHash, password);
 
             if (result == PasswordVerificationResult.Failed) return false;
 
@@ -51,16 +42,22 @@ namespace RpgDex.Application.Services
             }
             return true;
         }
-        public async Task<Result<CampaignResponse>> Create(CreateCampaignRequest request)
+        public async Task<Result<CampaignResponse>> Create(string userId, CreateCampaignRequest request)
         {
-            var userExisits = await _userRepository.GetByIdAsync(request.GameMasterId);
+            var checkCreateCampaignRequest = createCampaignRequestValidator.Validate(request);
+            if (!checkCreateCampaignRequest.IsValid) return checkCreateCampaignRequest.ReturnErrors<CampaignResponse>();
+
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<CampaignResponse>.Failure("Invalid User ID format.");
+
+
+            var userExisits = await userRepository.GetByIdAsync(guidUserId);
             if(userExisits is null)
             {
                 return Result<CampaignResponse>.Failure("User Not Logged In");
             }
 
             var campaign = request.Adapt<Campaign>();
-
+            campaign.GameMasterId = guidUserId;
             campaign.SetPasswordHash(HashPassword(campaign,request.Password));
 
             //Temporary, change when subscriptions are defined
@@ -73,7 +70,7 @@ namespace RpgDex.Application.Services
             {
                 try
                 {
-                    campaign.IconPath = await _fileService.UploadFileAsync(request.Icon, campaign.Id.ToString());
+                    campaign.IconPath = await fileService.UploadFileAsync(request.Icon, campaign.Id.ToString());
                 }
                 catch
                 {
@@ -81,44 +78,44 @@ namespace RpgDex.Application.Services
                 }
             }
 
-            var result = await _campaignRepository.InsertAsync(campaign);
+            var result = await campaignRepository.InsertAsync(campaign);
             if(result is null)
             {
                 return Result<CampaignResponse>.Failure("Failed to create campaign");
             }
             return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
         }
-
-        public async Task<Result<IEnumerable<CampaignResponse>>> GetAll()
+        public async Task<Result<GetAllCampaignResponse>> GetAllByUserId(string userId)
         {
-            var response = await _campaignRepository.GetAllAsync();
-            if (!response.Any())
-            {
-                return Result<IEnumerable<CampaignResponse>>.Failure("Failed to retrieve campaigns");
-            }
-
-            return Result<IEnumerable<CampaignResponse>>.Success(response.Adapt<IEnumerable<CampaignResponse>>());
-        }
-
-        public async Task<Result<IEnumerable<CampaignResponse>>> GetAll(Guid userId)
-        {
-            var user = await _userRepository.GetByIdAsync(userId);
+            if(!Guid.TryParse(userId,out var guidUserId)) return Result<GetAllCampaignResponse>.Failure("Invalid User ID format.");
+            var user = await userRepository.GetByIdAsync(guidUserId);
             if (user is null)
             {
-                return Result<IEnumerable<CampaignResponse>>.Failure("User Not Logged In");
+                return Result<GetAllCampaignResponse>.Failure("User Not Logged In");
             }
 
-            var response = await _campaignRepository.GetAllAsync(userId);
-            if (!response.Any())
-            {
-                return Result<IEnumerable<CampaignResponse>>.Failure("Failed to retrieve campaigns");
-            }
-            return Result<IEnumerable<CampaignResponse>>.Success(response.Adapt<IEnumerable<CampaignResponse>>());
+            var result = await campaignRepository.GetAllAsync(guidUserId);
+            var response = new GetAllCampaignResponse(result.Adapt<IEnumerable<CampaignResponse>>(), result.campaignLenght);
+            return Result<GetAllCampaignResponse>.Success(response);
         }
+        public async Task<Result<GetAllCampaignResponse>> GetAllByUserId(string userId, int page,int pageSize)
+        {
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<GetAllCampaignResponse>.Failure("Invalid User ID format.");
+            var user = await userRepository.GetByIdAsync(guidUserId);
+            if (user is null)
+            {
+                return Result<GetAllCampaignResponse>.Failure("User Not Logged In");
+            }
+
+            var result = await campaignRepository.GetAllAsync(guidUserId, page, pageSize);
+            var response = new GetAllCampaignResponse(result.campaign.Adapt<IEnumerable<CampaignResponse>>(), result.campaignLenght);
+            return Result<GetAllCampaignResponse>.Success(response);
+        }
+
 
         public async Task<Result<CampaignResponse>> GetById(Guid id)
         {
-            var response = await _campaignRepository.GetByIdAsync(id);
+            var response = await campaignRepository.GetByIdAsync(id);
             if (response is null)
             {
                 return Result<CampaignResponse>.Failure("Failed to retrieve campaign");
@@ -127,14 +124,22 @@ namespace RpgDex.Application.Services
             return Result<CampaignResponse>.Success(response.Adapt<CampaignResponse>());
         }
 
-        public async Task<Result<CampaignResponse>> Update(UpdateCampaignRequest request)
+        public async Task<Result<CampaignResponse>> Update(string userId,UpdateCampaignRequest request)
         {
-            var campaign = await _campaignRepository.GetByIdAsync(request.Id);
+            var checkupdateCampaignRequest = updateCampaignRequestValidator.Validate(request);
+            if (!checkupdateCampaignRequest.IsValid) return checkupdateCampaignRequest.ReturnErrors<CampaignResponse>();
+
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<CampaignResponse>.Failure("Invalid User ID format.");
+
+            var campaign = await campaignRepository.GetByIdAsync(request.Id);
             if (campaign is null)
             {
                 return Result<CampaignResponse>.Failure("Campaign not found");
             }
-            if(campaign.PlayerIds.Count() > request.MaxPlayers)
+
+            if(!campaign.GameMasterId.Equals(guidUserId)) Result<CampaignResponse>.Failure("Logged User isn't the game master");
+
+            if (campaign.PlayerIds.Count() > request.MaxPlayers)
             {
                 return Result<CampaignResponse>.Failure("Remove players before reducing campaign capacity");
             }
@@ -146,7 +151,7 @@ namespace RpgDex.Application.Services
             {
                 try
                 {
-                    campaign.IconPath = await _fileService.UploadFileAsync(request.Icon, campaign.Id.ToString());
+                    campaign.IconPath = await fileService.UploadFileAsync(request.Icon, campaign.Id.ToString());
                 }
                 catch
                 {
@@ -154,7 +159,7 @@ namespace RpgDex.Application.Services
                 }
             }
 
-            var result = await _campaignRepository.UpdateAsync(campaign);
+            var result = await campaignRepository.UpdateAsync(campaign);
 
             if(result is null)
             {
@@ -164,9 +169,19 @@ namespace RpgDex.Application.Services
             return Result<CampaignResponse>.Success(result.Adapt<CampaignResponse>());
         }
 
-        public async Task<Result<bool>> SetActiveState(Guid Id, bool activeState)
+        public async Task<Result<bool>> SetActiveState(string userId, CampaignSetActiveStateRequest request)
         {
-            var result = await _campaignRepository.SetActiveState(Id, activeState);
+
+            var campaign = await campaignRepository.GetByIdAsync(request.Id);
+            if (campaign is null)
+            {
+                return Result<bool>.Failure("Campaign not found");
+            }
+
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<bool>.Failure("Invalid User ID format");
+            if(!campaign.GameMasterId.Equals(guidUserId)) return Result<bool>.Failure("Logged user isn't the game master");
+
+            var result = await campaignRepository.SetActiveState(request.Id, request.State);
             if(!result)
             {
                 return Result<bool>.Failure("Failed to update campaign state");
@@ -174,32 +189,35 @@ namespace RpgDex.Application.Services
             return Result<bool>.Success(result);
         }
 
-        public async Task<Result<string>> AddPlayer(JoinCampaignRequest request)
+        public async Task<Result<string>> AddPlayer(string userId, JoinCampaignRequest request)
         {
-            var campaign = await _campaignRepository.GetByIdAsync(request.CampaignId);
+            var campaign = await campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaign is null)
             {
                 return Result<string>.Failure("Campaign not found");
             }
             //Campaign found
 
-            var player = await _userRepository.GetByIdAsync(request.PlayerId);
-            if(player is null)
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<string>.Failure("Invalid User ID format.");
+
+
+            var user = await userRepository.GetByIdAsync(guidUserId);
+            if(user is null)
             {
-                return Result<string>.Failure("Player not found");
+                return Result<string>.Failure("User not found");
             }
             //Player found
             var isValid = ValidatePassword(campaign, request.Password);
             if (!isValid) {
                 return Result<string>.Failure("Invalid Password");
             }
-            var (message, IsSuccess) = campaign.TryAddPlayer(request.PlayerId);
+            var (message, IsSuccess) = campaign.TryAddPlayer(guidUserId);
             if (!IsSuccess)
             {
                 return Result<string>.Failure(message);
             }
 
-            var result = await _campaignRepository.UpdateAsync(campaign);
+            var result = await campaignRepository.UpdateAsync(campaign);
             if(result is null)
             {
                 return Result<string>.Failure("Failed to update campaign");
@@ -208,14 +226,18 @@ namespace RpgDex.Application.Services
             return Result<string>.Success("Player added to campaign successfully");
         }
 
-        public async Task<Result<string>> AddCharacter(AddCharacterToCampaignRequest request)
+        public async Task<Result<string>> AddCharacter(string userId, AddCharacterToCampaignRequest request)
         {
-            var characterFound = await _characterRepository.GetByIdAsync(request.CharacterId);
+            var characterFound = await characterRepository.GetByIdAsync(request.CharacterId);
             if(characterFound is null) {
                 return Result<string>.Failure("Character not found");
             }
             //Character found
-            var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
+
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<string>.Failure("Invalid User ID format");
+            if(!characterFound.UserId.Equals(guidUserId)) return Result<string>.Failure("Character isn't from logged user");
+
+            var campaignFound = await campaignRepository.GetByIdAsync(request.CampaignId);
             if(campaignFound is null) {
                 return Result<string>.Failure("Campaign not found");
             }
@@ -227,7 +249,7 @@ namespace RpgDex.Application.Services
             }
 
 
-            var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
+            var updatedCampaign = await campaignRepository.UpdateAsync(campaignFound);
             if(updatedCampaign is null)
             {
                 return Result<string>.Failure("Failed to update campaign");
@@ -236,29 +258,25 @@ namespace RpgDex.Application.Services
         }
 
 
-        public async Task<Result<string>> AcceptCharacter(AcceptCharacterToCampaignRequest request)
+        public async Task<Result<string>> AcceptCharacter(string userId, AcceptCharacterToCampaignRequest request)
         {
-            var characterFound = await _characterRepository.GetByIdAsync(request.CharacterId);
+            var characterFound = await characterRepository.GetByIdAsync(request.CharacterId);
             if (characterFound is null)
             {
                 return Result<string>.Failure("Character not found");
             }
             //Character found
 
-            var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
+            var campaignFound = await campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaignFound is null)
             {
                 return Result<string>.Failure("Campaign not found");
             }
             //Campaign found
-            var userFound = await _userRepository.GetByIdAsync(request.UserId);
-            if (userFound is null)
-            {
-                return Result<string>.Failure("Logged-in user not found");
-            }
-            //User found
 
-            var isUserGameMaster = campaignFound.GameMasterId == userFound.Id;
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<string>.Failure("Invalid User ID format");
+
+            var isUserGameMaster = campaignFound.GameMasterId.Equals(guidUserId);
             if (!isUserGameMaster)
             {
                 return Result<string>.Failure("Only the game master can accept or reject characters");
@@ -282,7 +300,7 @@ namespace RpgDex.Application.Services
 
             //Character accepted into campaign
 
-            var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
+            var updatedCampaign = await campaignRepository.UpdateAsync(campaignFound);
             if (updatedCampaign is null)
             {
                 return Result<string>.Failure("Failed to update campaign");
@@ -290,15 +308,17 @@ namespace RpgDex.Application.Services
             return Result<string>.Success(chracterAdded.message);
         }
 
-        public async Task<Result<string>> RemovePlayer(RemovePlayerFromCampaignRequest request)
+        public async Task<Result<string>> RemovePlayer(string userId, RemovePlayerFromCampaignRequest request)
         {
-            var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
+            var campaignFound = await campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaignFound is null)
             {
                 return Result<string>.Failure("Campaign not found");
             }
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<string>.Failure("Invalid User ID format");
+
             //User found
-            var isUserGameMaster = campaignFound.GameMasterId == request.IssuerPlayerId;
+            var isUserGameMaster = campaignFound.GameMasterId.Equals(guidUserId);
             if (!isUserGameMaster)
             {
                 return Result<string>.Failure("Only the game master can kick players");
@@ -313,7 +333,7 @@ namespace RpgDex.Application.Services
             {
                 return Result<string>.Failure(message);
             }
-            var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
+            var updatedCampaign = await campaignRepository.UpdateAsync(campaignFound);
             if (updatedCampaign is null)
             {
                 return Result<string>.Failure("Failed to update campaign");
@@ -322,17 +342,24 @@ namespace RpgDex.Application.Services
             return Result<string>.Success(message);
         }
 
-        public async Task<Result<string>> UpdateConfiguration(UpdateCampaignSettingsRequest request)
+        public async Task<Result<string>> UpdateConfiguration(string userId, UpdateCampaignSettingsRequest request)
         {
-            var campaignFound = await _campaignRepository.GetByIdAsync(request.CampaignId);
+            var campaignFound = await campaignRepository.GetByIdAsync(request.CampaignId);
             if (campaignFound is null)
             {
                 return Result<string>.Failure("Campaign not found");
             }
 
-            campaignFound.UpdateSettings(request.Adapt<CampaignSettings>());
+            if (!Guid.TryParse(userId, out var guidUserId)) return Result<string>.Failure("Invalid User ID format");
+            var isUserGameMaster = campaignFound.GameMasterId.Equals(guidUserId);
 
-            var updatedCampaign = await _campaignRepository.UpdateAsync(campaignFound);
+
+            if (!isUserGameMaster)
+            {
+                return Result<string>.Failure("Only the game master can update configurations");
+            }
+            campaignFound.UpdateSettings(request.Adapt<CampaignSettings>());
+            var updatedCampaign = await campaignRepository.UpdateAsync(campaignFound);
             if (updatedCampaign is null)
             {
                 return Result<string>.Failure("Failed to update campaign settings");

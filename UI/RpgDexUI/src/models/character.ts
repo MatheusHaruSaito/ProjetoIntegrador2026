@@ -5,5 +5,6 @@ export interface Character {
   name: string;
   createdAt: Date;
   description?: string;
+  lastAccess: Date;
   properties?: Record<string, any>;
 }

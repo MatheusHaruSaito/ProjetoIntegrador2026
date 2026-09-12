@@ -98,6 +98,7 @@ namespace RpgDex.Infrastructure.Services
                 ValidIssuer = _settings.Issuer,
                 ValidAudience = _settings.Audience,
                 ValidateIssuerSigningKey = true,
+                ValidateLifetime = false,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key)),
             };
             var tokenHandler = new JwtSecurityTokenHandler();

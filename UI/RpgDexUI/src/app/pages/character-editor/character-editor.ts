@@ -81,6 +81,7 @@ export class CharacterEditor implements OnInit {
         this.selectedIconFile = null;
         this.iconPreviewUrl = '';
         this.captureSavedState();
+        this.characterService.PatchLastAccess(id).subscribe();
         this.cdr.detectChanges();
       },
       error: () => this.router.navigate(['/personagens']),
@@ -164,6 +165,7 @@ export class CharacterEditor implements OnInit {
     for (const [k, v] of Object.entries(node)) this.walkNode(v, k, out);
   }
 
+  // ── Grupos ─────────────────────────────────────────────
   addGroup(): void {
     this.groups.push({ title: '', entries: [] });
   }
@@ -268,20 +270,28 @@ export class CharacterEditor implements OnInit {
           this.isEditing = false;
           this.successMessage = 'Personagem salvo com sucesso!';
 
-          setTimeout(() => {
-            this.successMessage = '';
-            this.cdr.detectChanges();
-          }, 3000);
-        },
-        error: (err) => {
-          const body = err?.error;
-          this.errorMessage =
-            (body?.errors ? (Object.values(body.errors).flat() as string[])[0] : null) ??
-            body?.message ??
-            body?.title ??
-            'Erro ao salvar.';
-        },
-      });
+        this.captureSavedState();
+        this.selectedIconFile = null;
+
+        this.isEditing = false;
+        this.successMessage = 'Personagem salvo com sucesso!';
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.successMessage = '';
+          this.cdr.detectChanges();
+        }, 3000);
+      },
+      error: (err) => {
+        this.isSaving = false;
+        const body = err?.error;
+        this.errorMessage =
+          (body?.errors ? (Object.values(body.errors).flat() as string[])[0] : null) ??
+          body?.message ??
+          body?.title ??
+          'Erro ao salvar.';
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   confirmDelete(): void {

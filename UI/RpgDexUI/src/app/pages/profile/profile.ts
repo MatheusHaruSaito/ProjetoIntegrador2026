@@ -47,6 +47,8 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.initTheme();
     this.loadUser();
+    this.loadCharacterPreview();
+    this.loadCampaignPreview();
   }
 
   private initTheme(): void {
@@ -82,8 +84,6 @@ export class ProfileComponent implements OnInit {
 
         if (this.user?.id) {
           this.loadAuthOptions(this.user.id);
-          this.loadCharacterPreview();
-          this.loadCampaignPreview();
         }
       },
       error: (err) => {
@@ -106,14 +106,10 @@ export class ProfileComponent implements OnInit {
   }
 
   private loadCharacterPreview(): void {
-    const userId = this.authService.getLoggedUserId();
-    if (!userId) return;
-
-    this.characterService.GetAll(userId).subscribe({
+    this.characterService.GetAllByPage(1, 3).subscribe({
       next: (response) => {
-        const all: Character[] = response.data ?? [];
-        this.characterTotal = all.length;
-        this.characterPreview = all.slice(0, 3);
+        this.characterTotal = response.data!.characterLenght;
+        this.characterPreview = response.data?.characters ?? [];
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Erro ao carregar personagens', err),
@@ -137,17 +133,12 @@ export class ProfileComponent implements OnInit {
     const userId = this.authService.getLoggedUserId();
     if (!userId) return;
 
-    this.campaignService.GetAll().subscribe({
+    this.campaignService.GetAllByUserPage(0, 3).subscribe({
       next: (response) => {
-        const allCampaigns: Campaign[] = response.data ?? [];
-
-        const userCampaigns = allCampaigns.filter(
-          (c) => c.gameMasterId === userId || (c.playerIds && c.playerIds.includes(userId)),
-        );
-
-        this.campaignTotal = userCampaigns.length;
-
-        this.campaignPreview = userCampaigns.slice(0, 3).map((c) => ({
+        const allCampaigns: Campaign[] = response.data?.campaigns ?? [];
+        //Refatorar
+        this.campaignTotal = response.data!.campaignLenght;
+        this.campaignPreview = allCampaigns.map((c) => ({
           id: c.id,
           title: c.title,
           role: c.gameMasterId === userId ? 'Mestre' : 'Jogador',

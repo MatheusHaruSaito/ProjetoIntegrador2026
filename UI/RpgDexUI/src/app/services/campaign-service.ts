@@ -11,6 +11,8 @@ import { AddCharacterToCampaignRequest } from '../../models/AddCharacterToCampai
 import { AcceptCharacterToCampaignRequest } from '../../models/AcceptCharacterToCampaignRequest';
 import { RemovePlayerFromCampaignRequest } from '../../models/removePlayerFromCampaignRequest';
 import { UpdateCampaignSettingsRequest } from '../../models/updateCampaignSettingsRequest';
+import { CampaignSetActiveStateRequest } from '../../models/campaignSetActiveStateRequest';
+import { GetAllCampaignResponse } from '../../models/getAllCampaignResponse';
 @Injectable({
   providedIn: 'root',
 })
@@ -22,12 +24,20 @@ export class CampaignService {
 
   Post(request: CreateCampaignRequest | FormData): Observable<ApiResponse<Campaign>> {
     return this.http.post<ApiResponse<Campaign>>(`${this.env}`, request);
-  } 
-  GetAll(): Observable<ApiResponse<Campaign[]>> {
-    return this.http.get<ApiResponse<Campaign[]>>(`${this.env}`);
   }
-  GetAllByUserId(userId: string): Observable<ApiResponse<Campaign[]>> {
-    return this.http.get<ApiResponse<Campaign[]>>(`${this.env}/${userId}/All`);
+  GetAll(): Observable<ApiResponse<GetAllCampaignResponse>> {
+    return this.http.get<ApiResponse<GetAllCampaignResponse>>(`${this.env}`);
+  }
+  // GetAllByUser(): Observable<ApiResponse<Campaign[]>> {
+  //   return this.http.get<ApiResponse<Campaign[]>>(`${this.env}/All`);
+  // }
+  GetAllByUserPage(
+    page: number,
+    pageSize: number,
+  ): Observable<ApiResponse<GetAllCampaignResponse>> {
+    return this.http.get<ApiResponse<GetAllCampaignResponse>>(
+      `${this.env}/All/${page}/${pageSize}`,
+    );
   }
   GetById(Id: String): Observable<ApiResponse<Campaign>> {
     return this.http.get<ApiResponse<Campaign>>(`${this.env}/${Id}`);
@@ -52,5 +62,9 @@ export class CampaignService {
   }
   UpdateSettings(request: UpdateCampaignSettingsRequest): Observable<ApiResponse<String>> {
     return this.http.put<ApiResponse<String>>(`${this.env}/UpdateSettings`, request);
+  }
+  //bad idea, refactor this later to just deactive
+  SetActiveState(request: CampaignSetActiveStateRequest): Observable<ApiResponse<String>> {
+    return this.http.put<ApiResponse<String>>(`${this.env}/SetActiveState`, request);
   }
 }

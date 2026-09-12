@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using RpgDex.Application.Interfaces;
 using RpgDex.Application.Dto;
 using RpgDex.WebApi.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 
 
@@ -10,10 +12,11 @@ namespace RpgDex.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-
+        private string currentUser => User.FindFirst(ClaimTypes.NameIdentifier).Value;
         public UserController(IUserService userService)
         {
             _userService = userService;
@@ -25,10 +28,10 @@ namespace RpgDex.WebApi.Controllers
             var result = await _userService.GetUserById(Id);
             return result.ToIActionResult();
         }
-        [HttpPut("{Id}")]
-        public async Task<IActionResult> UpdateUserProfile(Guid Id,UpdateUserProfileDTO updateUserProfileDTO)
+        [HttpPut]
+        public async Task<IActionResult> UpdateUserProfile(UpdateUserProfileDTO updateUserProfileDTO)
         {
-            var result = await _userService.UpdateUserProfileAsync(Id, updateUserProfileDTO);
+            var result = await _userService.UpdateUserProfileAsync(currentUser, updateUserProfileDTO);
             return result.ToIActionResult();
         }
 
